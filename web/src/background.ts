@@ -68,7 +68,7 @@ const createResult = (msg: any) => {
         Browser.windows.getCurrent(),
     ]).then(async ([tokenData, apiData, window]) => {
         //Pass the Chain Parameters by URLx
-        console.log('APIDATA: ', apiData)
+        console.log('Api Data: ', apiData)
         const queryString = new URLSearchParams({
           id: msg.id,
           asset: allowance.asset,
