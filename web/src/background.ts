@@ -26,7 +26,7 @@ Browser.runtime.onConnect.addListener(init);
 Browser.runtime.onMessage.addListener((data)=>{
     const responsePort = messagePorts[data.id];
     console.log(data);
-
+    
     if(data.data) {
         approvedMessages.push(data);
     }

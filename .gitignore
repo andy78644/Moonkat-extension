@@ -1,2 +1,6 @@
+*.log
+**/node_modules
 .DS_Store
 cloud_sql_proxy
+.vscode
+node_modules/
