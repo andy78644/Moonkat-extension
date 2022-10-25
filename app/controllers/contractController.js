@@ -3,7 +3,7 @@ const Contract = db.contracts;
 const Op = db.Sequelize.Op;
 // Get the present contract
 exports.findOne = (req, res) => {
-  console.log('Start Get contract')
+  console.log('Start Get Contract')
   const address = req.params.address;
   Contract.findByPk(address)
   .then(data => {
