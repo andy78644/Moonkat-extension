@@ -25,8 +25,8 @@ jobs:
           workload_identity_provider: projects/1010737491554/locations/global/workloadIdentityPools/my-pool/providers/my-provider
           service_account: moonkat@mineral-trainer-365806.iam.gserviceaccount.com
       - name: Building and pushing the image
-        uses: ./
-        # uses: RafikFarhad/push-to-gcr-github-action@v5-beta # <- use this on your workflow
+        #uses: ./
+        uses: RafikFarhad/push-to-gcr-github-action@v5-beta # <- use this on your workflow
         with:
           # gcloud_service_key: ${{ secrets.JSON_GCLOUD_SERVICE_ACCOUNT_JSON }} # <- not needed when used with google-github-actions/auth@v0
           registry: gcr.io
