@@ -35,4 +35,4 @@ jobs:
           image_tag: test-${{ github.sha }}, ${{ github.sha }}
           dockerfile: ./server/Dockerfile
           # context: ./server
-          target: build
+          # target: build
