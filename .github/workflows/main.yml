@@ -3,9 +3,11 @@ on:
   push:
     branches:
       - cooldev
+      - master
   pull_request:
     branches:
       - cooldev
+      - master
 jobs:
   # example with Workload Identity Federation
   build-and-push-to-gcr-workload-identity:
