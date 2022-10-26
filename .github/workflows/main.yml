@@ -2,11 +2,11 @@ name: Push to GCR GitHub Action
 on: 
   push:
     branches:
-      - cooldev
+      - web-develop
       - master
   pull_request:
     branches:
-      - cooldev
+      - web-develop
       - master
 jobs:
   # example with Workload Identity Federation
