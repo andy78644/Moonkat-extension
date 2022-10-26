@@ -31,6 +31,6 @@ jobs:
           project_id: mineral-trainer-365806
           image_name: test
           image_tag: test-${{ github.sha }}, ${{ github.sha }}
-          dockerfile: ./Dockerfile
+          dockerfile: ./server/Dockerfile
           context: ./test
           target: build
