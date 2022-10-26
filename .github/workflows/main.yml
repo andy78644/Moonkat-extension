@@ -1,0 +1,38 @@
+name: Push to GCR GitHub Action
+on: 
+  push:
+    branches:
+      - cooldev
+      - master
+  pull_request:
+    branches:
+      - cooldev
+      - master
+jobs:
+  # example with Workload Identity Federation
+  build-and-push-to-gcr-workload-identity:
+    name: Build & push - with workload identity
+    runs-on: ubuntu-latest
+    permissions: # <- this section is needed for workload identity
+      contents: 'read'
+      id-token: 'write'
+    steps:
+      - uses: actions/checkout@v3
+      - name: Authenticate to Google Cloud
+        id: auth
+        uses: google-github-actions/auth@v0
+        with:
+          workload_identity_provider: projects/1010737491554/locations/global/workloadIdentityPools/my-pool/providers/my-provider
+          service_account: moonkat@mineral-trainer-365806.iam.gserviceaccount.com
+      - name: Building and pushing the image
+        uses: ./
+        # uses: RafikFarhad/push-to-gcr-github-action@v5-beta # <- use this on your workflow
+        with:
+          # gcloud_service_key: ${{ secrets.JSON_GCLOUD_SERVICE_ACCOUNT_JSON }} # <- not needed when used with google-github-actions/auth@v0
+          registry: gcr.io
+          project_id: mineral-trainer-365806
+          image_name: test
+          image_tag: test-${{ github.sha }}, ${{ github.sha }}
+          dockerfile: ./server/Dockerfile
+          context: ./test
+          target: build
