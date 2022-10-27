@@ -4,7 +4,7 @@ FROM --platform=linux/amd64 node:12
 # Create app directory in the image file
 WORKDIR /usr/scr/app
 # Get the node module package
-COPY package*.json ./
+COPY ./server/package*.json ./
 RUN npm install
 # Bundle app source
 COPY . .
