@@ -7,7 +7,7 @@ WORKDIR /usr/scr/app
 COPY ./server/package*.json ./
 RUN npm install
 # Bundle app source
-COPY . .
+COPY ./server .
 # The Application Port
 ENV PORT=8080
 # Run the Application
