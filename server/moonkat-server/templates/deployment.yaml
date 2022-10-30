@@ -3,9 +3,7 @@ kind: Deployment
 metadata:
   name: {{ include "moonkat-server.fullname" . }}
 spec:
-  {{- if not .Values.autoscaling.enabled }}
   replicas: {{ .Values.replicaCount }}
-  {{- end }}
   selector:
     matchLabels:
       app: {{ include "moonkat-server.fullname" . }}
