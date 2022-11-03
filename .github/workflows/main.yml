@@ -48,7 +48,7 @@ jobs:
           git pull origin ${{ github.ref }}
       - name: Modifiy the specific files using scripts
         run: |
-          sed -i '11c\    tag: ${{ github.sha }}' server/moonkat-server/values.yaml
+          sed -i '11c\  tag: ${{ github.sha }}' server/moonkat-server/values.yaml
       - name: Commit changes
         run: |
           git config --global user.name "Github Action"
