@@ -30,7 +30,7 @@ jobs:
         with:
           # gcloud_service_key: ${{ secrets.JSON_GCLOUD_SERVICE_ACCOUNT_JSON }} # <- not needed when used with google-github-actions/auth@v0
           registry: gcr.io
-          project_id: mineral-trainer-365806
+          project_id: gogolook-compass
           image_name: test
           image_tag: test-${{ github.sha }}, ${{ github.sha }}
           dockerfile: ./server/Dockerfile
