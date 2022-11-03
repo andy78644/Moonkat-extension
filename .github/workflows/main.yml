@@ -36,3 +36,27 @@ jobs:
           dockerfile: ./server/Dockerfile
           # context: ./server
           # target: build
+  commit-image-tag:
+    needs: build-and-push-to-gcr-workload-identity
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2.3.2
+
+      - name: update repo
+        run: |
+          git pull origin ${{ github.ref }}
+      - name: Modifiy the specific files using scripts
+        run: |
+          sed -i '11c\    tag: ${{ github.sha }}' server/moonkat-server/values.yaml
+      - name: Commit changes
+        run: |
+          git config --global user.name "Github Action"
+          git config --global user.email "github.action@git"
+          git add server/moonkat-server/values.yaml
+          git commit -m "commit new image tag"
+      - name: push
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          branch: ${{ github.ref }}
