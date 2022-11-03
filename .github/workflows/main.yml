@@ -31,8 +31,8 @@ jobs:
           # gcloud_service_key: ${{ secrets.JSON_GCLOUD_SERVICE_ACCOUNT_JSON }} # <- not needed when used with google-github-actions/auth@v0
           registry: gcr.io
           project_id: gogolook-compass
-          image_name: test
-          image_tag: test-${{ github.sha }}, ${{ github.sha }}
+          image_name: moonkat-app
+          image_tag: ${{ github.sha }}
           dockerfile: ./server/Dockerfile
           # context: ./server
           # target: build
