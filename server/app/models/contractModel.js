@@ -1,22 +1,21 @@
-// Define the contract table
 module.exports = (sequelize, Sequelize) => {
     const Contract = sequelize.define("Contract", {
         address: {
             type: Sequelize.STRING,
             primaryKey: true
         },
-        createTime: {
+        tokentype: {
             type: Sequelize.STRING
         },
-        safe: {
-            type: Sequelize.INTEGER
+        holders: {
+            type: Sequelize.STRING
         },
-        neutral: {
-            type: Sequelize.INTEGER
+        balance: {
+            type: Sequelize.FLOAT
         },
-        danger: {
-            type: Sequelize.INTEGER
-        },
+        createTime: {
+            type: Sequelize.STRING
+        }
     });
     return Contract;
 }
