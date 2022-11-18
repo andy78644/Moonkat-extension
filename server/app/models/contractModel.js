@@ -1,10 +1,10 @@
 module.exports = (sequelize, Sequelize) => {
-    const Contract = sequelize.define("Contract", {
+    const Contract = sequelize.define('Contract', {
         address: {
             type: Sequelize.STRING,
             primaryKey: true
         },
-        tokentype: {
+        tokenType: {
             type: Sequelize.STRING
         },
         holders: {
@@ -15,7 +15,28 @@ module.exports = (sequelize, Sequelize) => {
         },
         createTime: {
             type: Sequelize.STRING
-        }
+        },
+        lastTransactionTime: {
+            type: Sequelize.DATE
+        },
+        numberOfTransaction: {
+            type: Sequelize.INTEGER
+        },
+        reserveSpotOne: {
+            type: Sequelize.STRING
+        },
+        reserveSpotTwo: {
+            type: Sequelize.STRING
+        },
+        reserveSpotThree: {
+            type: Sequelize.STRING
+        },
+        reserveSpotFour: {
+            type: Sequelize.STRING
+        },
+        reserveSpotFive: {
+            type: Sequelize.STRING
+        }   
     });
     return Contract;
 }
