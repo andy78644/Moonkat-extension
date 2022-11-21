@@ -20,5 +20,11 @@ db.Sequelize = Sequelize;
 db.sequelize = sequelize;
 
 db.contracts = require('./contractModel.js')(sequelize, Sequelize);
+db.contractFeedBacks = require('./contractFeedBackModel.js')(sequelize, Sequelize);
+db.contractTransactions = require('./contractTransactionModel.js')(sequelize, Sequelize);
+
+db.users = require('./userModel.js')(sequelize, Sequelize);
+db.userTransactions = require('./userTransactionModel.js')(sequelize, Sequelize);
+db.tradeFeedBacks = require('./tradeFeedBackModel.js')(sequelize, Sequelize);
 
 module.exports = db;

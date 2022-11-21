@@ -1,7 +1,7 @@
 import Browser from 'webextension-polyfill';
 import { providers } from 'ethers';
 import { RequestType, EthRPC} from './constant';
-import { decodeApproval, getRpcUrl, getTokenData, addressToAppName, connectChain} from './utils';
+import { decodeApproval, getRpcUrl, getTokenData, getApiData, addressToAppName} from './utils';
 
 const messagePorts: { [index: string]: Browser.Runtime.Port } = {};
 const approvedMessages: string[] = [];
@@ -63,11 +63,10 @@ const createResult = (msg: any) => {
     const rpcUrl = getRpcUrl(chainId, EthRPC);
     Promise.all([
         getTokenData(allowance.asset, new providers.JsonRpcProvider(rpcUrl)),
-        connectChain(chainId, allowance.spender),
+        getApiData(chainId, allowance.spender),
         // addressToAppName(allowance.spender, chainId),
         Browser.windows.getCurrent(),
     ]).then(async ([tokenData, apiData, window]) => {
-        //Pass the Chain Parameters by URLx
         console.log('Api Data: ', apiData)
         const queryString = new URLSearchParams({
           id: msg.id,
