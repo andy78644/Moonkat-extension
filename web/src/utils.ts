@@ -119,7 +119,7 @@ export const getTokenData = async (address: string, provider: providers.Provider
   };
 }
 
-export const connectChain = (chainId: number, address: string): Promise<any> => {
+export const getApiData = (chainId: number, address: string): Promise<any> => {
   return new Promise((resolve) => {
     var results: any[] = [] 
     switch(chainId) {

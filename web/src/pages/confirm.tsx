@@ -10,12 +10,18 @@ import '../styles.css';
 
 const Confirm = () =>{
   const initContractState = {
-    address: "",
-    scam: false,
-    createTime: "Default Create Time",
-    safe: 0,
-    neutral: 0,
-    danger: 0
+    address: "0xABCDEFG",
+    tokenType: "Default Type",
+    holders: "Default Holders",
+    balance: 0,
+    createTime: new Date(2020, 4, 4, 17, 23, 42, 11),
+    lastTransactionTime: new Date(2020, 4, 4, 17, 23, 42, 11),
+    numberOfTransaction: 0,
+    reserveSpotOne: "Default Reserved Spot",
+    reserveSpotTwo: "Default Reserved Spot",
+    reserveSpotThree: "Default Reserved Spot",
+    reserveSpotFour: "Default Reserved Spot",
+    reserveSpotFive: "Default Reserved Spot",
   }
   const initUserState = {
     confirmReport: false,
@@ -51,15 +57,15 @@ const Confirm = () =>{
   const changeRes = () => {
     dataService.get(spender)
     .then(res=>{
-      if(user.reportState=='safe'){
-        res.data.safe += 1
-      }
-      if(user.reportState=='danger'){
-        res.data.danger += 1
-      }
-      if(user.reportState=='neutral'){
-        res.data.neutral += 1
-      }
+      // if(user.reportState=='safe'){
+      //   res.data.safe += 1
+      // }
+      // if(user.reportState=='danger'){
+      //   res.data.danger += 1
+      // }
+      // if(user.reportState=='neutral'){
+      //   res.data.neutral += 1
+      // }
       setContract(res.data)
     })
   }
@@ -143,9 +149,7 @@ const Confirm = () =>{
             </div>
             <div className='flex gap-1 pt-2 justify-around'>
               <span className='contents '>
-                <span>Safe Count: {contract.safe}</span> 
-                <span>Neutral Count: {contract.neutral}</span> 
-                <span>Danger Count: {contract.danger}</span> 
+                <span>Address: {contract.address}</span> 
               </span>
             </div>
             <div className='flex gap-1 pt-2 justify-around'>

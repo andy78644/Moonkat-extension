@@ -4,7 +4,7 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "dev:chrome": "cross-env TARGET_BROWSER=chrome webpack --config webpack/webpack.dev.js --watch",
+    "dev:chrome": "TARGET_BROWSER=chrome webpack --config webpack/webpack.dev.js --watch",
     "build": "run-p build:*"
   },
   "devDependencies": {
