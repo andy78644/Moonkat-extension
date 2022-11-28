@@ -1,28 +1,28 @@
 module.exports = (sequelize, Sequelize) => {
     const User = sequelize.define('User', {
-        address: {
+        Address: {
             type: Sequelize.STRING,
             primaryKey: true
         },
-        userName: {
+        UserName: {
             type: Sequelize.STRING
         },
-        reportScore: {
+        ReportScore: {
             type: Sequelize.INTEGER
         },
-        reserveSpotOne: {
+        ReserveSpotOne: {
             type: Sequelize.STRING
         },
-        reserveSpotTwo: {
+        ReserveSpotTwo: {
             type: Sequelize.STRING
         },
-        reserveSpotThree: {
+        ReserveSpotThree: {
             type: Sequelize.STRING
         },
-        reserveSpotFour: {
+        ReserveSpotFour: {
             type: Sequelize.STRING
         },
-        reserveSpotFive: {
+        ReserveSpotFive: {
             type: Sequelize.STRING
         }
     });
