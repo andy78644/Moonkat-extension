@@ -1,7 +1,10 @@
 import Browser from 'webextension-polyfill';
+import contractData from './types/contractType';
+import dataService from './dataService';
 import { providers } from 'ethers';
 import { RequestType, EthRPC} from './constant';
 import { decodeApproval, getRpcUrl, getTokenData, getApiData, addressToAppName} from './utils';
+import { PassThrough } from 'readable-stream';
 
 const messagePorts: { [index: string]: Browser.Runtime.Port } = {};
 const approvedMessages: string[] = [];
@@ -25,7 +28,7 @@ Browser.runtime.onConnect.addListener(init);
 
 Browser.runtime.onMessage.addListener((data)=>{
     const responsePort = messagePorts[data.id];
-    console.log(data);
+    console.log('onMessage Listener: ', data);
     
     if(data.data) {
         approvedMessages.push(data);
@@ -56,18 +59,28 @@ const processBypassRequest = (msg: any, remotePort: Browser.Runtime.Port) => {
 const createResult = (msg: any) => {
     const { transaction, chainId } = msg.data;
     const allowance = decodeApproval(transaction.data ?? '', transaction.to ?? '');
-    console.log('Allowance: ', allowance);
     if (!allowance) return;
     if (approvedMessages.includes(msg.id)) return false;
-
     const rpcUrl = getRpcUrl(chainId, EthRPC);
+    // let apiData
+
+    // // Get the API Data
+    // dataService.get(allowance.spender)
+    // .then((res) => {
+    //     apiData = res.data
+    //     console.log('Database Data: ', apiData)
+    // }).catch(err =>{
+    //     apiData = getApiData(chainId, allowance.spender)
+    //     console.log('API Data: ', apiData)
+    // })
+
+    // Does not execute until all Promise in the array resolved
     Promise.all([
         getTokenData(allowance.asset, new providers.JsonRpcProvider(rpcUrl)),
         getApiData(chainId, allowance.spender),
         // addressToAppName(allowance.spender, chainId),
         Browser.windows.getCurrent(),
     ]).then(async ([tokenData, apiData, window]) => {
-        console.log('Api Data: ', apiData)
         const queryString = new URLSearchParams({
           id: msg.id,
           asset: allowance.asset,
@@ -80,6 +93,7 @@ const createResult = (msg: any) => {
         //   spenderName: spenderName ?? '',
           bypassed: msg.data.type === RequestType.BYPASS_CHECK ? 'true' : 'false',
         }).toString();
+        console.log('URL Param Data: ', queryString)
         
         const width = 600;
         const height = 480;

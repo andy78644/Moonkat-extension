@@ -11,7 +11,9 @@ db.sequelize.sync()
       console.log("Failed to sync db: " + err.message);
 });
 
+// Set to resolve the Cross Origin Request
 var corsOptions = {
+  // The Source of the request
   origin: "http://localhost:8080"
 };
 
