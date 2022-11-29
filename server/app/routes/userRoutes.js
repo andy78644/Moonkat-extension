@@ -1,9 +1,9 @@
 module.exports = app => {
-    const contracts = require("../controllers/userController.js");
+    const user = require("../controllers/userController.js");
     var router = require("express").Router();
 
     // Find a User
-    router.get("/:address", users.findOne);
+    router.get("/:address", user.getByAddress);
     
     app.use('/api/users', router);
   };
