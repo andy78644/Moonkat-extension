@@ -129,6 +129,7 @@ export const getApiData = (chainId: number, address: string): Promise<any> => {
       // Polygon Chain
       case 137:
         // Get Balance
+        console.log('Polygon');
         axios.request({
           url: 'https://api.polygonscan.com/api',
           method: 'post',

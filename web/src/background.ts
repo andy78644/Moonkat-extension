@@ -11,7 +11,7 @@ const approvedMessages: string[] = [];
 
 const init = async (remotePort: Browser.Runtime.Port) => {
     remotePort.onMessage.addListener((msg)=>{
-        console.log('Website Send Message: ', msg);
+        console.log('DApp Message: ', msg);
         if (msg.data.type === RequestType.REGULAR) {
             processRegularRequest(msg, remotePort);
             return;
@@ -62,22 +62,10 @@ const createResult = (msg: any) => {
     if (!allowance) return;
     if (approvedMessages.includes(msg.id)) return false;
     const rpcUrl = getRpcUrl(chainId, EthRPC);
-    // let apiData
 
-    // // Get the API Data
-    // dataService.get(allowance.spender)
-    // .then((res) => {
-    //     apiData = res.data
-    //     console.log('Database Data: ', apiData)
-    // }).catch(err =>{
-    //     apiData = getApiData(chainId, allowance.spender)
-    //     console.log('API Data: ', apiData)
-    // })
-
-    // Does not execute until all Promise in the array resolved
     Promise.all([
         getTokenData(allowance.asset, new providers.JsonRpcProvider(rpcUrl)),
-        getApiData(chainId, allowance.spender),
+        dataService.getBalance(allowance.spender),
         // addressToAppName(allowance.spender, chainId),
         Browser.windows.getCurrent(),
     ]).then(async ([tokenData, apiData, window]) => {
@@ -88,7 +76,7 @@ const createResult = (msg: any) => {
           chainId,
           name: tokenData.name ?? '',
           symbol: tokenData.symbol ?? '',
-          balance: apiData[0] ?? '',
+          balance: apiData.result ?? '',
         //   createTime: apiData[1] ?? '',
         //   spenderName: spenderName ?? '',
           bypassed: msg.data.type === RequestType.BYPASS_CHECK ? 'true' : 'false',
@@ -101,7 +89,7 @@ const createResult = (msg: any) => {
         const top = window.top! + Math.round((window.height! - height) * 0.2);
     
         const popupWindow = await Browser.windows.create({
-          url: `confirm.html?${queryString}`,
+          url: `menu.html?${queryString}`,
           type: 'popup',
           width,
           height,
