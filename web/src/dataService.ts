@@ -4,8 +4,18 @@ import contractData from './types/contractType';
 const getAllContracts = () => {
     return http.get<Array<contractData>>("/contracts");
 }
-const get = (addr:string) => {
-    return http.get<contractData>(`/contracts/${addr}`)
+const getByAddress = (addr:string): Promise<contractData> => {
+    return new Promise((resolve, reject)=>{
+        http.get(`/contract/?address=${addr}`)
+        .then((res)=>{
+            console.log('GET Success')
+            console.log(res.data)
+            resolve(res.data)
+        }).catch((err)=>{
+            console.log('GET Err: ', err)
+            reject(err)
+        })
+    })
 }
 const create = (data:contractData) => {
     return http.post<contractData>("/contracts", data);
@@ -14,24 +24,11 @@ const update = (addr:string, data:contractData) => {
     return http.put<contractData>(`/contracts/${addr}`, data)
 }
 
-const getBalance = (addr:string): Promise<any> =>{
-    return new Promise((resolve, reject)=>{
-        http.get(`/contract/${addr}`)
-        .then((res)=>{
-            console.log(res.data)
-            resolve(res.data)
-        }).catch((err)=>{
-            console.log(err)
-            reject(err)
-        })
-    })
-}
 
 const dataService = {
     getAllContracts,
-    get,
     create,
     update,
-    getBalance,
+    getByAddress,
 }
 export default dataService

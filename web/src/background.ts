@@ -62,13 +62,13 @@ const createResult = (msg: any) => {
     if (!allowance) return;
     if (approvedMessages.includes(msg.id)) return false;
     const rpcUrl = getRpcUrl(chainId, EthRPC);
-
+    let d: any
+    d = dataService.getByAddress(allowance.spender)
     Promise.all([
         getTokenData(allowance.asset, new providers.JsonRpcProvider(rpcUrl)),
-        dataService.getBalance(allowance.spender),
         // addressToAppName(allowance.spender, chainId),
         Browser.windows.getCurrent(),
-    ]).then(async ([tokenData, apiData, window]) => {
+    ]).then(async ([tokenData, window]) => {
         const queryString = new URLSearchParams({
           id: msg.id,
           asset: allowance.asset,
@@ -76,8 +76,6 @@ const createResult = (msg: any) => {
           chainId,
           name: tokenData.name ?? '',
           symbol: tokenData.symbol ?? '',
-          balance: apiData.result ?? '',
-        //   createTime: apiData[1] ?? '',
         //   spenderName: spenderName ?? '',
           bypassed: msg.data.type === RequestType.BYPASS_CHECK ? 'true' : 'false',
         }).toString();
