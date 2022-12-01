@@ -62,8 +62,6 @@ const createResult = (msg: any) => {
     if (!allowance) return;
     if (approvedMessages.includes(msg.id)) return false;
     const rpcUrl = getRpcUrl(chainId, EthRPC);
-    let d: any
-    d = dataService.getByAddress(allowance.spender)
     Promise.all([
         getTokenData(allowance.asset, new providers.JsonRpcProvider(rpcUrl)),
         // addressToAppName(allowance.spender, chainId),

@@ -21,7 +21,7 @@ export const Transfer = (contract:contractData) =>{
     <div className="flex flex-col gap-3">
       <div className="flex flex-wrap justify-center items-center gap-2 bg-black">
         <div className="font-bold text-lg text-white"> {symbol} </div>
-        <div className="font-bold text-lg text-white"> {contract.address} </div>
+        <div className="font-bold text-lg text-white"> {contract.Address} </div>
       </div>
       <div className='flex flex-row flex-nowrap gap-3 bg-black'>
         <div className='text-white'> {contractFeedBack.nameTag} </div>
@@ -35,7 +35,7 @@ export const Transfer = (contract:contractData) =>{
                     <div className="flex flex-col space-y-1">
                         <h2 className="text-lg font-bold sm:text-2xl text-white">Contract Balance</h2>
                         <div className="px-2 text-s rounded-full sm:px-4 sm:py-1 text-white">
-                            {contract.balance}
+                            {contract.Balance}
                         </div>
                     </div>
                 </div>
