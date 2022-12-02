@@ -54,8 +54,7 @@ const Menu = () =>{
         const fetchContract = async () => {
             await dataService.getByAddress(spender)
             .then(res => {
-                initContractState.Address = '0x0' + res.Address + '1111'
-                setContract(initContractState)
+                setContract(res)
                 setHasLoaded(true)
             })
         }
