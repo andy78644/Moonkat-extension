@@ -1,14 +1,17 @@
 import Browser from 'webextension-polyfill';
+import contractData from './types/contractType';
+import dataService from './dataService';
 import { providers } from 'ethers';
 import { RequestType, EthRPC} from './constant';
 import { decodeApproval, getRpcUrl, getTokenData, getApiData, addressToAppName} from './utils';
+import { PassThrough } from 'readable-stream';
 
 const messagePorts: { [index: string]: Browser.Runtime.Port } = {};
 const approvedMessages: string[] = [];
 
 const init = async (remotePort: Browser.Runtime.Port) => {
     remotePort.onMessage.addListener((msg)=>{
-        console.log('Website Send Message: ', msg);
+        console.log('DApp Message: ', msg);
         if (msg.data.type === RequestType.REGULAR) {
             processRegularRequest(msg, remotePort);
             return;
@@ -25,7 +28,7 @@ Browser.runtime.onConnect.addListener(init);
 
 Browser.runtime.onMessage.addListener((data)=>{
     const responsePort = messagePorts[data.id];
-    console.log(data);
+    console.log('onMessage Listener: ', data);
     
     if(data.data) {
         approvedMessages.push(data);
@@ -56,18 +59,14 @@ const processBypassRequest = (msg: any, remotePort: Browser.Runtime.Port) => {
 const createResult = (msg: any) => {
     const { transaction, chainId } = msg.data;
     const allowance = decodeApproval(transaction.data ?? '', transaction.to ?? '');
-    console.log('Allowance: ', allowance);
     if (!allowance) return;
     if (approvedMessages.includes(msg.id)) return false;
-
     const rpcUrl = getRpcUrl(chainId, EthRPC);
     Promise.all([
         getTokenData(allowance.asset, new providers.JsonRpcProvider(rpcUrl)),
-        getApiData(chainId, allowance.spender),
         // addressToAppName(allowance.spender, chainId),
         Browser.windows.getCurrent(),
-    ]).then(async ([tokenData, apiData, window]) => {
-        console.log('Api Data: ', apiData)
+    ]).then(async ([tokenData, window]) => {
         const queryString = new URLSearchParams({
           id: msg.id,
           asset: allowance.asset,
@@ -75,11 +74,10 @@ const createResult = (msg: any) => {
           chainId,
           name: tokenData.name ?? '',
           symbol: tokenData.symbol ?? '',
-          balance: apiData[0] ?? '',
-        //   createTime: apiData[1] ?? '',
         //   spenderName: spenderName ?? '',
           bypassed: msg.data.type === RequestType.BYPASS_CHECK ? 'true' : 'false',
         }).toString();
+        console.log('URL Param Data: ', queryString)
         
         const width = 600;
         const height = 480;
@@ -87,7 +85,7 @@ const createResult = (msg: any) => {
         const top = window.top! + Math.round((window.height! - height) * 0.2);
     
         const popupWindow = await Browser.windows.create({
-          url: `confirm.html?${queryString}`,
+          url: `menu.html?${queryString}`,
           type: 'popup',
           width,
           height,

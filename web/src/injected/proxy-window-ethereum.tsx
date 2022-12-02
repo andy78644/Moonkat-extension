@@ -35,7 +35,7 @@ const overrideWindowEthereum = () => {
         const isOk = await sendAndAwaitResponseFromStream(stream, { transaction, chainId });
 
         if (!isOk) {
-          throw ethErrors.provider.userRejectedRequest('ComPas: User denied transaction signature.');
+          throw ethErrors.provider.userRejectedRequest('Moonkat: User denied transaction signature.');
         }
       }
       else if (request?.method === 'eth_signedDataV3' || request?.method === 'eth_signedDataV3') {

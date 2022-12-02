@@ -11,7 +11,9 @@ db.sequelize.sync()
       console.log("Failed to sync db: " + err.message);
 });
 
+// Set to resolve the Cross Origin Request
 var corsOptions = {
+  // The Source of the request
   origin: "http://localhost:8080"
 };
 
@@ -30,7 +32,11 @@ app.get("/", (req, res) => {
 
 // set port, listen for requests
 const PORT = process.env.PORT || 8080;
-require("./app/routes/contractRoutes")(app);
+const contract = require("./app/routes/contractRoutes");
+app.use("/contract", contract)
+const user = require("./app/routes/UserRoutes");
+app.use("/user", user)
+
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}.`);
