@@ -1,5 +1,7 @@
 import http from './local';
 import contractData from './types/contractType';
+import contractFeedBack from './types/contractFeedBackType';
+
 // This file is to send axios request to the MySQL database
 const getAllContracts = () => {
     return http.get<Array<contractData>>("/contracts");
@@ -23,6 +25,9 @@ const create = (data:contractData) => {
 const update = (addr:string, data:contractData) => {
     return http.put<contractData>(`/contracts/${addr}`, data)
 }
+const uploadReport = (feedBack: contractFeedBack, addr:string) => {
+    return http.post<contractFeedBack>(`/contractFeedBack/${addr}`, feedBack)
+}
 
 
 const dataService = {
@@ -30,5 +35,6 @@ const dataService = {
     create,
     update,
     getByAddress,
+    uploadReport
 }
 export default dataService

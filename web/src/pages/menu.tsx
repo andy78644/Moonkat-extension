@@ -7,6 +7,7 @@ import { Report } from './report';
 import Browser from 'webextension-polyfill';
 import Button from '../components/button';
 import contractData from '../types/contractType';
+import contractFeedBack from '../types/contractFeedBackType';
 
 
 const Menu = () =>{
@@ -16,11 +17,9 @@ const Menu = () =>{
     if (spender === null) return (<div>ERROR: Spender Address === NULL</div>);
     const id = params.get('id');
     const chainId = Number(params.get('chainId'));
-    // const createtime = params.get('createTime');
     // const explorerUrl = getExplorerUrl(chainId);
     // const name = params.get('name');
     // const asset = params.get('asset');
-    // const address = params.get('address');
     // const spenderName = params.get('spenderName');
     // const bypassed = params.get('bypassed') === 'true';
 
@@ -44,23 +43,43 @@ const Menu = () =>{
     const initUserState = {
         showState: ''
     }
+    const initContractFeedBack = {
+        Provider: 'Mock Provider',
+        Address: 'Mock Address',
+        Category: 'Mock Category',
+        Name: 'Mock Name',
+        Tag: ['Mock Tag 1', 'Mock Tag 2']
+    }
     
+    const [contractFeedBack, setContractFeedBack] = useState<contractFeedBack>(initContractFeedBack);
     const [contractState, setContract] = useState<contractData>(initContractState);
     const [userState, setUserState] = useState(initUserState);
     const [hasLoaded, setHasLoaded] = useState(false);
 
 
     useEffect(() => {
-        const fetchContract = async () => {
-            await dataService.getByAddress(spender)
-            .then(res => {
+        const fetchData = async () => {
+            Promise.all([
+                dataService.getByAddress(spender)
+                //getContractFeedBack
+            ])
+            .then(async ([res]) => {
                 setContract(res)
+                let tmpFB = {
+                    Provider: '',
+                    Address: spender,
+                    Category: 'fetch Cat',
+                    Name: 'fetch Name',
+                    Tag:['fetch Feat 1 ', 'fetch Feat 2']
+                }
+                setContractFeedBack(tmpFB)
                 setHasLoaded(true)
             })
         }
-        fetchContract()
+        fetchData()
         .catch(e => {
             setContract(initContractState)
+            setContractFeedBack(initContractFeedBack)
             setHasLoaded(true)
         });
     }, [])
@@ -104,7 +123,7 @@ const Menu = () =>{
         else if(userState.showState === 'report'){
             return(
             <React.Fragment>
-                <Report nameTag={''} categoryTag={''} featureTag={''} />
+                <Report {... contractFeedBack}/>
                 <div className="flex flex-row gap-1 justify-around">
                     <Button onClick={() => changeSection('transfer')}> Transfer </Button>
                     <Button onClick={() => changeSection('report')}> Report </Button>
@@ -129,7 +148,6 @@ const Menu = () =>{
         }
     }
 }
-
 
 ReactDom.render(
     <React.StrictMode>
