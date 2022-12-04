@@ -11,11 +11,14 @@ export const Transfer = (contract:contractData) =>{
   const params = new URLSearchParams(window.location.search);
   const symbol = params.get('symbol');
   const initContractFeedBack = {
-    nameTag: "Init Name Tag",
-    categoryTag: "Init Category Tag",
-    featureTag: "Init Feature Tag"
-  }
-  const [contractFeedBack, setContractFeedBack] = useState<contractFeedBack>(initContractFeedBack);
+    Provider: 'Mock Provider',
+    Address: 'Mock Address',
+    Category: 'Mock Category',
+    Name: 'Mock Name',
+    Tag: ['Mock Tag 1', 'Mock Tag 2']
+}
+
+const [contractFeedBack, setContractFeedBack] = useState<contractFeedBack>(initContractFeedBack);
   return ( 
     <>
     <div className="flex flex-col gap-3">
@@ -24,9 +27,9 @@ export const Transfer = (contract:contractData) =>{
         <div className="font-bold text-lg text-white"> {contract.Address} </div>
       </div>
       <div className='flex flex-row flex-nowrap gap-3 bg-black'>
-        <div className='text-white'> {contractFeedBack.nameTag} </div>
-        <div className='text-white'> {contractFeedBack.categoryTag} </div>
-        <div className='text-white'> {contractFeedBack.featureTag } </div>
+        <div className='text-white'> {contractFeedBack.Name} </div>
+        <div className='text-white'> {contractFeedBack.Tag[0]} </div>
+        <div className='text-white'> {contractFeedBack.Tag[1] } </div>
       </div>
       <div className='flex flex-col'>
             <div className='flex justify-start border cursor-pointer rounded-xl flex-col bg-zinc-800'>
@@ -59,12 +62,3 @@ export const Transfer = (contract:contractData) =>{
     </>
   );
 };
-
-
-
-// ReactDom.render(
-//     <React.StrictMode>
-//       <Transfer {... contract}/>
-//     </React.StrictMode>,
-//     document.getElementById('root')
-// );
