@@ -33,9 +33,12 @@ app.get("/", (req, res) => {
 // set port, listen for requests
 const PORT = process.env.PORT || 8080;
 const contract = require("./app/routes/contractRoutes");
-app.use("/contract", contract)
+app.use("/api/contract", contract)
 const user = require("./app/routes/UserRoutes");
-app.use("/user", user)
+app.use("/api/user", user)
+const report = require("./app/routes/reportRoutes");
+app.use("/api/report", report)
+//require("./app/routes/apiRoutes");
 
 
 app.listen(PORT, () => {
