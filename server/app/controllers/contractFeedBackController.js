@@ -12,8 +12,8 @@ exports.reportFeedback = (req, res) => {
     const report = {
         Provider: req.body.Provider,
         ReportedContract: req.body.Address,
-        Category: req.body.Category,
-        Nametag: req.body.Nametag,
+        CategoryTag: req.body.Category,
+        NameTag: req.body.Name,
         FeatureTagOne: req.body.Tag[0],
         FeatureTagTwo: req.body.Tag[1],
         FeatureTagThree: req.body.Tag[2]
@@ -21,7 +21,18 @@ exports.reportFeedback = (req, res) => {
   
     ContractFeedBacks.create(report)
         .then(data => {
-          res.send(data)
+            const report = {
+                "Provider": data.Provider,
+                "Address" : data.ReportedContract,
+                "Category" : data.CategoryTag,
+                "Name": data.NameTag,
+                "Tag":[
+                    data.FeatureTagOne,
+                    data.FeatureTagTwo,
+                    data.FeatureTagThree
+                ]
+            };
+            res.status(201).send(report)
         })
         .catch(err => {
           res.status(500).send({
@@ -40,27 +51,24 @@ exports.getFeedback = (req, res) => {
         "Provider",
         "ReportedContract",
         "CategoryTag",
-        "Nametag",
+        "NameTag",
         "FeatureTagOne",
         "FeatureTagTwo",
         "FeatureTagThree",
     ];
     ContractFeedBacks.findAll( {where: condition, attributes: reportQuery})
     .then(contractFeedBacks => {
-        //console.log(contractFeedBacks[0].Provider)
-        //contractFeedBacks = JSON.stringify(contractFeedBacks[0]);
-        //console.log(contractFeedBacks)
         const report = {
             "Address" : contractFeedBacks[0].ReportedContract,
-            "CategoryTag" : contractFeedBacks[0].CategoryTag,
-            "Nametag": contractFeedBacks[0].Nametag,
+            "Category" : contractFeedBacks[0].CategoryTag,
+            "Name": contractFeedBacks[0].NameTag,
             "Tag":[
                 contractFeedBacks[0].FeatureTagOne,
                 contractFeedBacks[0].FeatureTagTwo,
                 contractFeedBacks[0].FeatureTagThree
             ]
         };
-        res.status(201).send(
+        res.status(200).send(
             JSON.stringify(report)
         )
     })
@@ -74,4 +82,6 @@ exports.getFeedback = (req, res) => {
         
         
 };
+
+
 
