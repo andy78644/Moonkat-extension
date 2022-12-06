@@ -18,8 +18,7 @@ exports.getByAddress = (req, res) => {
   Contract.findByPk(address)
   .then(contract => {
     if(contract){
-      console.log("found")
-      res.send(contract);
+      res.send(JSON.stringify(contract));
     } 
     else {
       console.log("not found")
@@ -41,7 +40,7 @@ exports.getByAddress = (req, res) => {
         .catch(err => {
           res.status(500).send({
             message:
-              err.message || "Some error occurred while creating the Tutorial."
+              err.message || "error"
           });
         })
         
