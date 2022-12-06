@@ -36,7 +36,7 @@ exports.reportFeedback = (req, res) => {
 exports.getFeedback = (req, res) => {
     var ReportedContract = req.query.address;
     var condition = ReportedContract ? { ReportedContract: { [Op.like]: `%${ReportedContract}%` } } : null;
-    const report = [
+    const reportQuery = [
         "Provider",
         "ReportedContract",
         "CategoryTag",
@@ -45,13 +45,23 @@ exports.getFeedback = (req, res) => {
         "FeatureTagTwo",
         "FeatureTagThree",
     ];
-    ContractFeedBacks.findAll( {where: condition, attributes: report})
+    ContractFeedBacks.findAll( {where: condition, attributes: reportQuery})
     .then(contractFeedBacks => {
-        console.log(contractFeedBacks[0])
-        contractFeedBacks = JSON.stringify(contractFeedBacks[0]);
-        console.log(contractFeedBacks)
+        //console.log(contractFeedBacks[0].Provider)
+        //contractFeedBacks = JSON.stringify(contractFeedBacks[0]);
+        //console.log(contractFeedBacks)
+        const report = {
+            "Address" : contractFeedBacks[0].ReportedContract,
+            "CategoryTag" : contractFeedBacks[0].CategoryTag,
+            "Nametag": contractFeedBacks[0].Nametag,
+            "Tag":[
+                contractFeedBacks[0].FeatureTagOne,
+                contractFeedBacks[0].FeatureTagTwo,
+                contractFeedBacks[0].FeatureTagThree
+            ]
+        };
         res.status(201).send(
-            contractFeedBacks
+            JSON.stringify(report)
         )
     })
     .catch(err => {
