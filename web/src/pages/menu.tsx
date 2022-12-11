@@ -45,10 +45,10 @@ const Menu = () =>{
     }
     const initContractFeedBack = {
         Provider: 'Mock Provider',
-        Address: 'Mock Address',
-        Category: 'Mock Category',
-        Name: 'Mock Name',
-        Tag: ['Mock Tag 1', 'Mock Tag 2']
+        ReportedContract: 'Mock Address',
+        CategoryTag: 'Mock Category',
+        NameTag: 'Mock Name',
+        Tag: ['Mock Tag 1', 'Mock Tag 2', 'Mock Tag 3']
     }
     
     const [contractFeedBack, setContractFeedBack] = useState<contractFeedBack>(initContractFeedBack);
@@ -59,20 +59,24 @@ const Menu = () =>{
 
     useEffect(() => {
         const fetchData = async () => {
-            Promise.all([
+            let fetchContract = new Promise((res, rej) =>{
                 dataService.getByAddress(spender)
-                //getContractFeedBack
+            }).catch((rej) => {
+                setContract(initContractState)
+            })
+            let fetchContractFeedBack = new Promise((res, rej) =>{
+                dataService.getFeedBackByAddress(spender)
+            }).catch((rej) => {
+                setContractFeedBack(initContractFeedBack)
+            })
+            Promise.all([
+                fetchContract
+                // fetchContractFeedBack
             ])
-            .then(async ([res]) => {
-                setContract(res)
-                let tmpFB = {
-                    Provider: '',
-                    Address: spender,
-                    Category: 'fetch Cat',
-                    Name: 'fetch Name',
-                    Tag:['fetch Feat 1 ', 'fetch Feat 2']
-                }
-                setContractFeedBack(tmpFB)
+            .then(async ([contractRes]) => {
+                setHasLoaded(true)
+            })
+            .catch((rej) => {
                 setHasLoaded(true)
             })
         }
@@ -81,7 +85,7 @@ const Menu = () =>{
             setContract(initContractState)
             setContractFeedBack(initContractFeedBack)
             setHasLoaded(true)
-        });
+        })
     }, [])
 
     const extensionResponse = async (data: boolean) => {

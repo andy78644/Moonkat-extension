@@ -19,14 +19,37 @@ const getByAddress = (addr:string): Promise<contractData> => {
         })
     })
 }
+const getFeedBackByAddress = (addr:string): Promise<any> => {
+    return new Promise((resolve, reject)=>{
+        http.get(`/report/?address=${addr}`)
+        .then((res)=>{
+            console.log('GET Success')
+            console.log(res.data)
+            resolve(res.data)
+        }).catch((err)=>{
+            console.log('GET Err: ', err)
+            reject(err)
+        })
+    })
+}
 const create = (data:contractData) => {
     return http.post<contractData>("/contracts", data);
 }
 const update = (addr:string, data:contractData) => {
     return http.put<contractData>(`/contracts/${addr}`, data)
 }
-const uploadReport = (feedBack: contractFeedBack, addr:string) => {
-    return http.post<contractFeedBack>(`/contractFeedBack/${addr}`, feedBack)
+const postFeedBackByAddress = (addr:string, feedBack: contractFeedBack) => {
+    return new Promise((resolve, reject)=>{
+        http.post(`/report/?address=${addr}`, feedBack)
+        .then((res)=>{
+            console.log('POST Success')
+            console.log(res.data)
+            resolve(res.data)
+        }).catch((err)=>{
+            console.log('POST Err: ', err)
+            reject(err)
+        })
+    })
 }
 
 
@@ -35,6 +58,7 @@ const dataService = {
     create,
     update,
     getByAddress,
-    uploadReport
+    getFeedBackByAddress,
+    postFeedBackByAddress
 }
 export default dataService

@@ -16,7 +16,6 @@ export const Report = (feedBack: contractFeedBack) =>{
     const [featureTagReport, setfeatureTagReport] = useState('')
     // const [contractFeedBack, setContractFeedBack] = useState<contractFeedBack>(initContractFeedBack)
     const [isReported, setisReported] = useState(false)
-
     // const finishReport = async () =>{
     //     let tmp: contractFeedBack = {
     //         nameTag: nameTagReport,
@@ -27,7 +26,8 @@ export const Report = (feedBack: contractFeedBack) =>{
     //     setisReported(true)
     // }
     const handleSubmit = () =>{
-        //dataService.uploadReport(contractFeedBack)
+        let address = feedBack.ReportedContract
+        dataService.postFeedBackByAddress(address, feedBack)
     }
 
     return (
@@ -43,12 +43,12 @@ export const Report = (feedBack: contractFeedBack) =>{
                     <label className='text-white'>Feature Tag: 
                         <input className='text-zinc-500' type={'text'} value={featureTagReport} onChange={(e)=>setfeatureTagReport(e.target.value)} placeholder='Feature'></input>
                     </label>
-                    <input type={'submit'} value="Press to report"/>
+                    <button type={'submit'} value="Press to report"/>
                 </form>
                 <div className='flex flex-row'>
                     <div>Test Obj Data: </div>
-                    <div>{feedBack.Name}</div>
-                    <div>{feedBack.Category}</div>
+                    <div>{feedBack.NameTag}</div>
+                    <div>{feedBack.CategoryTag}</div>
                     <div>{feedBack.Tag[0]}</div>
                 </div>
             </div>

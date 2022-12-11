@@ -18,7 +18,7 @@ export const Transfer = (contract:contractData) =>{
     Tag: ['Mock Tag 1', 'Mock Tag 2']
 }
 
-const [contractFeedBack, setContractFeedBack] = useState<contractFeedBack>(initContractFeedBack);
+// const [contractFeedBack, setContractFeedBack] = useState<contractFeedBack>(initContractFeedBack);
   return ( 
     <>
     <div className="flex flex-col gap-3">
@@ -27,9 +27,9 @@ const [contractFeedBack, setContractFeedBack] = useState<contractFeedBack>(initC
         <div className="font-bold text-lg text-white"> {contract.Address} </div>
       </div>
       <div className='flex flex-row flex-nowrap gap-3 bg-black'>
-        <div className='text-white'> {contractFeedBack.Name} </div>
-        <div className='text-white'> {contractFeedBack.Tag[0]} </div>
-        <div className='text-white'> {contractFeedBack.Tag[1] } </div>
+        <div className='text-white'> Developing Tag </div>
+        <div className='text-white'> Developing Tag </div>
+        <div className='text-white'> Developing Tag </div>
       </div>
       <div className='flex flex-col'>
             <div className='flex justify-start border cursor-pointer rounded-xl flex-col bg-zinc-800'>
