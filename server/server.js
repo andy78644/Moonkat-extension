@@ -2,14 +2,14 @@ const express = require("express");
 const cors = require("cors");
 
 const app = express();
-const db = require("./app/models");
-db.sequelize.sync()
-  .then(() => {
-      console.log("Synced db.");
-})
-  .catch((err) => {
-      console.log("Failed to sync db: " + err.message);
-});
+//const db = require("./app/models");
+//db.sequelize.sync()
+//  .then(() => {
+//      console.log("Synced db.");
+//})
+//  .catch((err) => {
+//      console.log("Failed to sync db: " + err.message);
+//});
 
 // Set to resolve the Cross Origin Request
 var corsOptions = {

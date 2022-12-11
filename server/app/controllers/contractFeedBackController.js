@@ -1,14 +1,17 @@
 const db = require("../models");
-const ContractFeedBacks = db.contractFeedBacks;
+const { ContractFeedBack, Contract }= db;
+//const Contracts = db.contracts;
 const Op = db.Sequelize.Op;
 const querystring = require('querystring');
 const getData = require('./getRequest.js');
+const contract = require("../models/contract");
+//const { mapFinderOptions } = require("sequelize/types/utils");
 //const db = require("../models");
 //const Contract = db.Contract;
 
 apiKey = 'NE2VP5S89SW4TGJSZPCKZHZN2NZ9XKWY4P'
 // Get the Contract with Specific Address
-exports.reportFeedback = (req, res) => {
+exports.reportFeedback = async (req, res) => {
     const report = {
         Provider: req.body.Provider,
         ReportedContract: req.body.Address,
@@ -19,34 +22,31 @@ exports.reportFeedback = (req, res) => {
         FeatureTagThree: req.body.Tag[2]
     };
   
-    ContractFeedBacks.create(report)
-        .then(data => {
-            const report = {
-                "Provider": data.Provider,
-                "Address" : data.ReportedContract,
-                "Category" : data.CategoryTag,
-                "Name": data.NameTag,
-                "Tag":[
-                    data.FeatureTagOne,
-                    data.FeatureTagTwo,
-                    data.FeatureTagThree
-                ]
-            };
-            res.status(201).send(report)
-        })
-        .catch(err => {
-          res.status(500).send({
-            message:
-              err.message || "Create failed"
-          });
-        })
-  
-  
-}; 
 
-exports.getFeedback = (req, res) => {
-    var ReportedContract = req.query.address;
-    var condition = ReportedContract ? { ReportedContract: { [Op.like]: `%${ReportedContract}%` } } : null;
+    ContractFeedBack.create(report)
+    .then(data => {
+        const report = {
+            "Provider": data.Provider,
+            "Address" : data.ReportedContract,
+            "Category" : data.CategoryTag,
+            "Name": data.NameTag,
+            "Tag":[
+                data.FeatureTagOne,
+                data.FeatureTagTwo,
+                data.FeatureTagThree
+            ]
+        };
+        res.status(201).send(report)
+    })
+    .catch(err => {
+        res.status(500).send({
+        message:
+            err.message || "Create failed"
+        });
+    })
+
+    var ReportedContract = req.body.Address;
+    var tagMap = new Map();
     const reportQuery = [
         "Provider",
         "ReportedContract",
@@ -56,32 +56,75 @@ exports.getFeedback = (req, res) => {
         "FeatureTagTwo",
         "FeatureTagThree",
     ];
-    ContractFeedBacks.findAll( {where: condition, attributes: reportQuery})
-    .then(contractFeedBacks => {
+    var condition = ReportedContract ? { ReportedContract: { [Op.like]: `%${ReportedContract}%` } } : null;
+    const contractFeedBacks = await ContractFeedBack.findAll( {where: condition, attributes: reportQuery})
+    contractFeedBacks.forEach(
+        (contractFeedBack) => {
+            //console.log(contractFeedBack);
+            if(tagMap.has(contractFeedBack.FeatureTagOne)) tagMap.set(contractFeedBack.FeatureTagOne, tagMap.get(contractFeedBack.FeatureTagOne)+1);
+            else  tagMap.set(contractFeedBack.FeatureTagOne, 1);
+            if(tagMap.has(contractFeedBack.FeatureTagTwo)) tagMap.set(contractFeedBack.FeatureTagTwo, tagMap.get(contractFeedBack.FeatureTagTwo)+1);
+            else  tagMap.set(contractFeedBack.FeatureTagTwo, 1);
+            if(tagMap.has(contractFeedBack.FeatureTagThree)) tagMap.set(contractFeedBack.FeatureTagThree, tagMap.get(contractFeedBack.FeatureTagThree)+1);
+            else  tagMap.set(contractFeedBack.FeatureTagThree, 1);
+        }
+    );
+    //console.log(tagMap);
+    tagMap[Symbol.iterator] = function* () {
+        yield* [...this.entries()].sort((a, b) => b[1] - a[1]);
+    }
+    //console.log(tagMap);
+    let featureTag = [null, null, null];
+    var count = 0;
+    tagMap.forEach(
+        (value, tag) => {
+            if(count == 3) return;
+            featureTag[count] = tag;
+            count++;
+            
+        }
+    )
+    //console.log(featureTag);
+    const updateTag = {
+        FeatureTagOne: featureTag[0],
+        FeatureTagTwo: featureTag[1],
+        FeatureTagThree: featureTag[2]
+    };
+    const contract = await Contract.findByPk(ReportedContract);
+    contract.update(updateTag);
+
+        
+  
+}; 
+
+exports.getFeedback = async (req, res) => {
+    var reportedContract = req.query.address;
+    const contract = await Contract.findByPk(reportedContract);
+    if(contract){
         const report = {
-            "Address" : contractFeedBacks[0].ReportedContract,
-            "Category" : contractFeedBacks[0].CategoryTag,
-            "Name": contractFeedBacks[0].NameTag,
+            "Address" : contract.ReportedContract,
+            "Category" : contract.CategoryTag,
+            "Name": contract.NameTag,
             "Tag":[
-                contractFeedBacks[0].FeatureTagOne,
-                contractFeedBacks[0].FeatureTagTwo,
-                contractFeedBacks[0].FeatureTagThree
+                contract.FeatureTagOne,
+                contract.FeatureTagTwo,
+                contract.FeatureTagThree
             ]
         };
         res.status(200).send(
             JSON.stringify(report)
         )
-    })
-    .catch(err => {
-        res.status(500).send({
-          message:
-            err.message || "error"
-        });
-    });
+    }
+    else {
+        res.status(500);
+    }
+    
         
         
         
 };
+
+
 
 
 
