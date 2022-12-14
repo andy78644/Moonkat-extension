@@ -22,6 +22,21 @@ module.exports = (sequelize, Sequelize) => {
         NumberOfTransaction: {
             type: Sequelize.INTEGER
         },
+        CategoryTag: {
+            type: Sequelize.STRING
+        },
+        NameTag: {
+            type: Sequelize.STRING
+        },
+        FeatureTagOne: {
+            type: Sequelize.STRING
+        },
+        FeatureTagTwo: {
+            type: Sequelize.STRING
+        },
+        FeatureTagThree: {
+            type: Sequelize.STRING
+        },
         ReserveSpotOne: {
             type: Sequelize.STRING
         },
