@@ -1,9 +1,22 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
+import React from "react";
+import ReactDOM from "react-dom/client";
 
+import Main from "./components/Main";
+
+const params = new URLSearchParams(window.location.search);
+
+// createRoot is an experiment feature so it doesn't have type
 // @ts-ignore
-import Main from './components/Main.tsx';
+const root = ReactDOM.createRoot(document.getElementById("root"));
 
-window.onload = function () {
-  ReactDOM.render(<Main />, document.getElementById('root'));
-};
+root.render(
+    <Main
+        id={params.get("id")}
+        asset={params.get("asset")}
+        spender={params.get("spender")}
+        chainId={params.get("chainId")}
+        name={params.get("name")}
+        symbol={params.get("symbol")}
+        bypassed={params.get("bypassed")}
+    />
+);
