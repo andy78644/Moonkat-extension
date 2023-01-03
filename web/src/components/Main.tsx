@@ -6,6 +6,8 @@ import Report from "./Report/Report";
 import Browser from "webextension-polyfill";
 import Button from "./Button";
 import contractData from "../types/contractType";
+import ContractInfo from "./ContractInfo";
+import Navbar from "./Navbar";
 
 type Props = {
     id: any;
@@ -77,22 +79,40 @@ const Main = (props: Props) => {
         }
         setUserState(userState)
     }
+
+    const section = userState.showSection;
+
     return (
         <div>
             {
                 hasLoaded
                     ?
-                    <React.Fragment>
-                        {userState.showSection === 'moreInfo' && <MoreInfo />}
-                        {userState.showSection === 'report' && <Report nameTag={''} categoryTag={''} featureTag={''} />}
-                        {userState.showSection === 'transfer' && <Transfer {...contractState} />}
-                        <div className="flex flex-row gap-1 justify-around">
-                            <Button onClick={() => changeSection('transfer')}> Transfer </Button>
-                            <Button onClick={() => changeSection('report')}> Report </Button>
-                            <Button onClick={() => changeSection('moreInfo')}> More Info </Button>
-                            <Button onClick={reject}> Reject </Button>
-                        </div>
-                    </React.Fragment>
+                    <div>
+                        <ContractInfo />
+                        {
+                            section === 'moreInfo' && 
+                            <MoreInfo />
+                        }
+                        {
+                            section === 'report' && 
+                            <Report 
+                                nameTag={''} 
+                                categoryTag={''} 
+                                featureTag={''} 
+                            />
+                        }
+                        {
+                            section === 'transfer' && 
+                            <Transfer 
+                                {...contractState} 
+                            />
+                        }
+                        <Navbar 
+                            section={userState.showSection} 
+                            onSection={changeSection} 
+                            onReject={reject} 
+                        />
+                    </div>
                     :
                     <div>
                         <h1>Loading ...</h1>
