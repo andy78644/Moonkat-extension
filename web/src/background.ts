@@ -10,20 +10,27 @@ const messagePorts: { [index: string]: Browser.Runtime.Port } = {};
 const approvedMessages: string[] = [];
 
 const init = async (remotePort: Browser.Runtime.Port) => {
+    console.log(remotePort.sender)
+    remotePort.onDisconnect.addListener((msg)=>{
+        console.log('Disconnect: ', msg);
+    });
     remotePort.onMessage.addListener((msg)=>{
         console.log('DApp Message: ', msg);
         if (msg.data.type === RequestType.REGULAR) {
+            console.log('regular request.');
+            console.log(msg);
             processRegularRequest(msg, remotePort);
             return;
         }
         if (msg.data.type === RequestType.BYPASS_CHECK) {
+            console.log('bypass request');
             processBypassRequest(msg, remotePort);
             return;
         }
     });
 };
 
-// Initlize the service
+// Entry
 Browser.runtime.onConnect.addListener(init);
 
 Browser.runtime.onMessage.addListener((data)=>{
@@ -42,6 +49,8 @@ Browser.runtime.onMessage.addListener((data)=>{
 })
 
 const processRegularRequest = (msg: any, remotePort: Browser.Runtime.Port) => {
+    console.log("In processRegularRequest: ");
+    console.log(msg);
     const res = createResult(msg);
     if (!res) {
         remotePort.postMessage({ id: msg.id, data: true });
@@ -57,8 +66,11 @@ const processBypassRequest = (msg: any, remotePort: Browser.Runtime.Port) => {
 };
 
 const createResult = (msg: any) => {
+    console.log(msg);
     const { transaction, chainId } = msg.data;
     const allowance = decodeApproval(transaction.data ?? '', transaction.to ?? '');
+    console.log("allowance asset: " + allowance?.asset);
+    console.log("allowance spender: " + allowance?.spender);
     if (!allowance) return;
     if (approvedMessages.includes(msg.id)) return false;
     const rpcUrl = getRpcUrl(chainId, EthRPC);
@@ -85,7 +97,7 @@ const createResult = (msg: any) => {
         const top = window.top! + Math.round((window.height! - height) * 0.2);
     
         const popupWindow = await Browser.windows.create({
-          url: `menu.html?${queryString}`,
+          url: `index.html?${queryString}`,
           type: 'popup',
           width,
           height,
