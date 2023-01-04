@@ -1,8 +1,13 @@
 import React, { ReactNode } from "react";
 
 interface Props {
+    // button
     children: ReactNode;
     onClick: () => void;
+
+    // // props
+    // buttonName: any;
+    // buttonIcon: any;
 }
 
 const NavButton = ({ children, onClick }: Props) => (

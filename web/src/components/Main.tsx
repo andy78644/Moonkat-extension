@@ -4,12 +4,11 @@ import Transfer from "./Transfer/Transfer";
 import MoreInfo from "./MoreInfo/MoreInfo";
 import Report from "./Report/Report";
 import Browser from "webextension-polyfill";
-import Button from "./Button";
 import contractData from "../types/contractType";
 import ContractInfo from "./ContractInfo";
 import Navbar from "./Navbar";
 
-type Props = {
+interface Props {
     id: any;
     asset: any;
     spender: any;
@@ -46,6 +45,7 @@ const Main = (props: Props) => {
     const [contractState, setContract] = useState<contractData>(initContractState);
     const [userState, setUserState] = useState(initUserState);
     const [hasLoaded, setHasLoaded] = useState(false);
+    const [verificationState, setVerificationState] = useState(false);
 
     // if (spender === null) return (<div>ERROR: Spender Address === NULL</div>);
 

@@ -1,11 +1,11 @@
 import React from "react";
 
 interface Props {
-    
+    reportState: any;
 }
 
-const InfoNavBar = () => {
+const Prompt = () => {
     return <div></div>;
 }
 
-export default InfoNavBar;
+export default Prompt;
