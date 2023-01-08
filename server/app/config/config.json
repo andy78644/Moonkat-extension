@@ -1,0 +1,24 @@
+{
+    "development": {
+      "username": "milkshakebro",
+      "password": "0000",
+      "database": "moonkat_development",
+      "host": "127.0.0.1",
+      "dialect": "mysql"
+    },
+    "test": {
+      "username": "milkshakebro",
+      "password": "0000",
+      "database": "moonkat_test",
+      "host": "127.0.0.1",
+      "dialect": "mysql"
+    },
+    "production": {
+      "username": "milkshakebro",
+      "password": "0000",
+      "database": "moonkat_production",
+      "host": "127.0.0.1",
+      "dialect": "mysql"
+    }
+  }
+  

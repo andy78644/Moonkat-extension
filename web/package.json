@@ -31,6 +31,9 @@
     "wext-manifest-webpack-plugin": "^1.2.1"
   },
   "dependencies": {
+    "@emotion/react": "^11.10.5",
+    "@emotion/styled": "^11.10.5",
+    "@mui/material": "^5.11.3",
     "@vespaiach/axios-fetch-adapter": "^0.3.0",
     "axios": "^0.27.2",
     "cross-env": "^7.0.3",

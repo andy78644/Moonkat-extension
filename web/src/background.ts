@@ -66,7 +66,7 @@ const processBypassRequest = (msg: any, remotePort: Browser.Runtime.Port) => {
 };
 
 const createResult = (msg: any) => {
-    // console.log(msg);
+    console.log(msg);
     const { transaction, chainId } = msg.data;
     const allowance = decodeApproval(transaction.data ?? '', transaction.to ?? '');
     // console.log("allowance asset: " + allowance?.asset);
