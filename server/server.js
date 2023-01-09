@@ -3,7 +3,6 @@ const cors = require("cors");
 
 const app = express();
 const db = require("./app/models");
-//./cloud_sql_proxy -instances=gogolook-compass:us-central1:moonkat-instance=tcp:1234
 db.sequelize.sync()
     .then(() => {
         console.log("Synced db.");
