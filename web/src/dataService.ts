@@ -51,7 +51,18 @@ const postFeedBackByAddress = (addr:string, feedBack: contractFeedBack) => {
         })
     })
 }
-
+const postTransactionSimulation = (transaction: any) =>{
+    return new Promise((resolve, reject) =>{
+        http.post(`/simulation/`, transaction)
+        .then((res) => {
+            console.log('POST Success')
+            console.log(res.data)
+        }).catch((err)=>{
+            console.log('POST Err: ', err)
+            reject(err)
+        })})
+    //send the txn detail
+}
 
 const dataService = {
     getAllContracts,
@@ -59,6 +70,7 @@ const dataService = {
     update,
     getByAddress,
     getFeedBackByAddress,
-    postFeedBackByAddress
+    postFeedBackByAddress,
+    postTransactionSimulation
 }
 export default dataService
