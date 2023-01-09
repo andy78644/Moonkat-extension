@@ -1,4 +1,4 @@
-const contracts = require("../controllers/contractController.js");
+const report = require("../controllers/contractFeedBackController");
 const express = require('express');
 const router = express.Router();
 //const db = require("../models");
@@ -13,8 +13,7 @@ router.get("/", (req, res) => {
   res.send('Hello from A!')
 });
 */
-router.get("/", contracts.getByAddress);
+router.get("/", report.getFeedback);
+router.post("/", report.reportFeedback);
 //app.use('/api/contracts', router);
 module.exports = router;
-
-

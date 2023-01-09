@@ -119,7 +119,7 @@ export const getTokenData = async (address: string, provider: providers.Provider
   };
 }
 
-export const connectChain = (chainId: number, address: string): Promise<any> => {
+export const getApiData = (chainId: number, address: string): Promise<any> => {
   return new Promise((resolve) => {
     var results: any[] = [] 
     switch(chainId) {
@@ -129,6 +129,7 @@ export const connectChain = (chainId: number, address: string): Promise<any> => 
       // Polygon Chain
       case 137:
         // Get Balance
+        console.log('Polygon');
         axios.request({
           url: 'https://api.polygonscan.com/api',
           method: 'post',
@@ -287,3 +288,110 @@ export function getExplorerUrl(chainId: number): string | undefined {
 
   return overrides[chainId] ?? explorer?.url;
 }
+
+
+// Get Contract Create Time
+// import web3
+
+// # The address of the contract you want to get the creation time for
+// contract_address = "0x..."
+
+// # Connect to the Ethereum network using Infura
+// w3 = web3.Web3(web3.Web3.HTTPProvider("https://mainnet.infura.io/v3/YOUR_INFURA_API_KEY"))
+
+// # Get the contract instance using its address
+// contract = w3.eth.contract(address=contract_address, abi=CONTRACT_ABI)
+
+// # Get the contract's creation time
+// creation_time = contract.functions.creation_timestamp().call()
+
+// # Print the creation time
+// print(creation_time)
+
+
+// Get Contract Token Type
+// import web3
+
+// # The address of the contract you want to get the token type for
+// contract_address = "0x..."
+
+// # Connect to the Ethereum network using Infura
+// w3 = web3.Web3(web3.Web3.HTTPProvider("https://mainnet.infura.io/v3/YOUR_INFURA_API_KEY"))
+
+// # Get the contract instance using its address
+// contract = w3.eth.contract(address=contract_address, abi=CONTRACT_ABI)
+
+// # Get the contract's token name and symbol
+// token_name = contract.functions.name().call()
+// token_symbol = contract.functions.symbol().call()
+
+// # Print the token type
+// print(f"{token_name} ({token_symbol})")
+
+
+// Last Transaction Time
+// import web3
+
+// # The address of the contract you want to get the last transaction time for
+// contract_address = "0x..."
+
+// # Connect to the Ethereum network using Infura
+// w3 = web3.Web3(web3.Web3.HTTPProvider("https://mainnet.infura.io/v3/YOUR_INFURA_API_KEY"))
+
+// # Get the contract instance using its address
+// contract = w3.eth.contract(address=contract_address, abi=CONTRACT_ABI)
+
+// # Get the contract's transaction history
+// transactions = contract.events.allEvents().getLogs()
+
+// # Find the latest transaction
+// last_transaction_time = 0
+// for tx in transactions:
+//     # Check if the transaction has a timestamp
+//     if "timestamp" in tx:
+//         # Update the latest transaction time if necessary
+//         last_transaction_time = max(last_transaction_time, tx["timestamp"])
+
+// # Print the last transaction time
+// print(last_transaction_time)
+
+
+// Total Transaction Amount
+// import web3
+
+// # The address of the contract you want to get the number of transactions for
+// contract_address = "0x..."
+
+// # Connect to the Ethereum network using Infura
+// w3 = web3.Web3(web3.Web3.HTTPProvider("https://mainnet.infura.io/v3/YOUR_INFURA_API_KEY"))
+
+// # Get the contract instance using its address
+// contract = w3.eth.contract(address=contract_address, abi=CONTRACT_ABI)
+
+// # Get the contract's transaction history
+// transactions = contract.events.allEvents().getLogs()
+
+// # Count the number of transactions
+// num_transactions = len(transactions)
+
+// # Print the number of transactions
+// print(num_transactions)
+
+
+// Contract Creator Address
+// import web3
+
+// # The address of the contract you want to get the creator address for
+// contract_address = "0x..."
+
+// # Connect to the Ethereum network using Infura
+// w3 = web3.Web3(web3.Web3.HTTPProvider("https://mainnet.infura.io/v3/YOUR_INFURA_API_KEY"))
+
+// # Get the contract instance using its address
+// contract = w3.eth.contract(address=contract_address, abi=CONTRACT_ABI)
+
+// # Get the contract's creator address
+// creator_address = contract.functions.creator().call()
+
+// # Print the creator address
+// print(creator_address)

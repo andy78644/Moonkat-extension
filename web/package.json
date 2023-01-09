@@ -4,12 +4,13 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "dev:chrome": "cross-env TARGET_BROWSER=chrome webpack --config webpack/webpack.dev.js --watch",
+    "dev:chrome": "TARGET_BROWSER=chrome webpack --config webpack/webpack.dev.js --watch",
     "build": "run-p build:*"
   },
   "devDependencies": {
     "@metamask/post-message-stream": "^6.0.0",
     "@types/jsonp": "^0.2.1",
+    "@types/node-fetch": "^2.6.2",
     "@types/object-hash": "^2.2.1",
     "@types/react": "^18.0.17",
     "@types/react-dom": "^18.0.6",
@@ -39,6 +40,7 @@
     "ethers": "^5.6.9",
     "postcss-loader": "^7.0.1",
     "postcss-preset-env": "^7.8.0",
+    "regenerator-runtime": "^0.13.11",
     "style-loader": "^3.3.1",
     "tailwindcss": "^3.1.8",
     "ts-loader": "^9.3.1",

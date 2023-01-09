@@ -1,14 +1,34 @@
-import Browser from 'webextension-polyfill';
+import Browser, { manifest } from 'webextension-polyfill';
 import { providers } from 'ethers';
 import { RequestType, EthRPC} from './constant';
-import { decodeApproval, getRpcUrl, getTokenData, addressToAppName, connectChain} from './utils';
-
+import { decodeApproval, getRpcUrl, getTokenData, getApiData, addressToAppName} from './utils';
+import dataService from './dataService';
 const messagePorts: { [index: string]: Browser.Runtime.Port } = {};
 const approvedMessages: string[] = [];
 
 const init = async (remotePort: Browser.Runtime.Port) => {
-    remotePort.onMessage.addListener((msg)=>{
-        console.log('Website Send Message: ', msg);
+    remotePort.onMessage.addListener(async (msg)=>{
+        console.log('DApp Message: ', msg);
+        msg.data.transaction.gasPrice = Number(msg.data.transaction.gasPrice)
+        msg.data.transaction.gas = Number(msg.data.transaction.gas)
+        msg.data.transaction.value = Number(msg.data.transaction.value)
+
+        delete msg.data.gas
+        msg.data.transaction.data = msg.data.transaction.input
+        delete msg.data.transaction.input
+        msg.data.transaction.gasLimit = msg.data.transaction.gasPrice+1000
+        // Here is the data waiting to go to HRE env
+        console.log('Txn Detail: ', msg.data.transaction)
+        let simRes = dataService.postTransactionSimulation(msg.data.transaction)
+        await fetch('http://127.0.0.1:8545/', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: msg.data.transaction
+        })
+        .then((res) =>{
+            let tmp = res.json()
+            console.log("These Tmp: ", tmp)
+        })
         if (msg.data.type === RequestType.REGULAR) {
             processRegularRequest(msg, remotePort);
             return;
@@ -25,7 +45,7 @@ Browser.runtime.onConnect.addListener(init);
 
 Browser.runtime.onMessage.addListener((data)=>{
     const responsePort = messagePorts[data.id];
-    console.log(data);
+    console.log('onMessage Listener: ', data);
     
     if(data.data) {
         approvedMessages.push(data);
@@ -56,19 +76,14 @@ const processBypassRequest = (msg: any, remotePort: Browser.Runtime.Port) => {
 const createResult = (msg: any) => {
     const { transaction, chainId } = msg.data;
     const allowance = decodeApproval(transaction.data ?? '', transaction.to ?? '');
-    console.log('Allowance: ', allowance);
     if (!allowance) return;
     if (approvedMessages.includes(msg.id)) return false;
-
     const rpcUrl = getRpcUrl(chainId, EthRPC);
     Promise.all([
         getTokenData(allowance.asset, new providers.JsonRpcProvider(rpcUrl)),
-        connectChain(chainId, allowance.spender),
         // addressToAppName(allowance.spender, chainId),
         Browser.windows.getCurrent(),
-    ]).then(async ([tokenData, apiData, window]) => {
-        //Pass the Chain Parameters by URLx
-        console.log('Api Data: ', apiData)
+    ]).then(async ([tokenData, window]) => {
         const queryString = new URLSearchParams({
           id: msg.id,
           asset: allowance.asset,
@@ -76,11 +91,10 @@ const createResult = (msg: any) => {
           chainId,
           name: tokenData.name ?? '',
           symbol: tokenData.symbol ?? '',
-          balance: apiData[0] ?? '',
-        //   createTime: apiData[1] ?? '',
         //   spenderName: spenderName ?? '',
           bypassed: msg.data.type === RequestType.BYPASS_CHECK ? 'true' : 'false',
         }).toString();
+        console.log('URL Param Data: ', queryString)
         
         const width = 600;
         const height = 480;
@@ -88,7 +102,7 @@ const createResult = (msg: any) => {
         const top = window.top! + Math.round((window.height! - height) * 0.2);
     
         const popupWindow = await Browser.windows.create({
-          url: `confirm.html?${queryString}`,
+          url: `menu.html?${queryString}`,
           type: 'popup',
           width,
           height,
