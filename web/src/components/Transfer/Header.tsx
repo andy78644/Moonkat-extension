@@ -3,13 +3,15 @@ import Browser from "webextension-polyfill";
 import Button from "@mui/material/Button"
 
 interface Props {
-    productType: any;
-    productAction: any;
+    tagState: boolean,
+    changeTag: any,
+    // productType: any;
+    // productAction: any;
 }
 
 var windowObj: Browser.Windows.Window;
 
-const Header = () => {
+const Header = (props: Props) => {
 
     const [reportPopOut, setReportPopOut] = useState(false);
     
@@ -44,7 +46,7 @@ const Header = () => {
         <div>
             NFT - MINTING
             <Button onClick={() => setReportPopOut(true)} variant="text">Report</Button> 
-            <Button variant="text">MoreTags</Button> 
+            <Button onClick={() => props.changeTag(!props.tagState)} variant="text">MoreTags</Button> 
         </div>
     )
 }

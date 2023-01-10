@@ -10,21 +10,17 @@ interface MoreInfo {
 }
 
 const MoreInfo = () => {
-    const [isTokenPage, setIsTokenPage] = useState(false);
+    const [page, setPage] = useState(0);
+
+    const changePage = (newPage: any) => {
+        setPage(newPage)
+    }
+
     return (
         <div>
-            <InfoNavBar />
-            {
-                isTokenPage
-                ?
-                <div>
-                    <Token />
-                </div>
-                :
-                <div>
-                    <Creator />
-                </div>
-            }
+            <InfoNavBar page={page} onChange={changePage}/>
+            { page == 0 && <Token /> }
+            { page == 1 && <Creator /> }
         </div>
     );
 };

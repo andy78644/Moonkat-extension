@@ -14,6 +14,7 @@ const Transfer = (props: Props) => {
   const [moreTags, setMoreTags] = useState(false);
   return (
     <div>
+      <Header tagState={moreTags} changeTag={setMoreTags}></Header>
       {
         moreTags
           ?
@@ -22,7 +23,6 @@ const Transfer = (props: Props) => {
           </div>
           :
           <div>
-            <Header></Header>
             <AssetsIn></AssetsIn>
           </div>
       }

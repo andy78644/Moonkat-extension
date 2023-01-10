@@ -8,6 +8,7 @@ interface Props {
 const Token = () => {
     return (
         <div>
+            Token Page
             <Info />
             <Info />
             <Info />

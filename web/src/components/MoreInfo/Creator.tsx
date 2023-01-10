@@ -8,6 +8,7 @@ interface Props {
 const Creator = () => {
     return (
         <div>
+            Creator Page
             <Info />
             <Info />
             <Info />
