@@ -1,6 +1,7 @@
 import http from './local';
 import contractData from './types/contractType';
 import contractFeedBack from './types/contractFeedBackType';
+import { send } from 'process';
 
 // This file is to send axios request to the MySQL database
 const getAllContracts = () => {
@@ -53,10 +54,14 @@ const postFeedBackByAddress = (addr:string, feedBack: contractFeedBack) => {
 }
 const postTransactionSimulation = (transaction: any) =>{
     return new Promise((resolve, reject) =>{
-        http.post(`/simulation/`, transaction)
+        let _transaction = JSON.stringify({
+            test:4567
+        })
+        http.post(`/simulate`, _transaction)
         .then((res) => {
             console.log('POST Success')
             console.log(res.data)
+            // resolve(res.data)
         }).catch((err)=>{
             console.log('POST Err: ', err)
             reject(err)

@@ -12,23 +12,14 @@ const init = async (remotePort: Browser.Runtime.Port) => {
         msg.data.transaction.gasPrice = Number(msg.data.transaction.gasPrice)
         msg.data.transaction.gas = Number(msg.data.transaction.gas)
         msg.data.transaction.value = Number(msg.data.transaction.value)
-
-        delete msg.data.gas
         msg.data.transaction.data = msg.data.transaction.input
+        delete msg.data.gas
         delete msg.data.transaction.input
         msg.data.transaction.gasLimit = msg.data.transaction.gasPrice+1000
         // Here is the data waiting to go to HRE env
         console.log('Txn Detail: ', msg.data.transaction)
         let simRes = dataService.postTransactionSimulation(msg.data.transaction)
-        await fetch('http://127.0.0.1:8545/', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: msg.data.transaction
-        })
-        .then((res) =>{
-            let tmp = res.json()
-            console.log("These Tmp: ", tmp)
-        })
+        
         if (msg.data.type === RequestType.REGULAR) {
             processRegularRequest(msg, remotePort);
             return;
