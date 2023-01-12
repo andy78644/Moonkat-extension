@@ -1,10 +1,10 @@
 import React, {useState, useEffect} from 'react';
 import ReactDOM from 'react-dom/client';
-import Browser from "webextension-polyfill";
 import TagBar from '../Transfer/MoreTags/TagBar';
 import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
 import ReportForm from './ReportForm';
+import Prompt from './Prompt'
 
 const params = new URLSearchParams(window.location.search);
 
@@ -14,12 +14,13 @@ const root = ReactDOM.createRoot(document.getElementById("root"));
 
 const Report = () =>{
     const [reportFlow, setReportFlow] = useState(0);
+    const [isPrompt, setPrompt] = useState(false);
     const handleSubmit = async () => {
-        const windowId = await Browser.windows.getCurrent()
-        Browser.windows.remove(windowId.id!)
+        setPrompt(true)
     }
     return (
         <div>
+            {isPrompt ? <Prompt submit={isPrompt} onSubmit={setPrompt} /> : <div></div>}
             <div>
                 Report Contract
             </div>
