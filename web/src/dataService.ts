@@ -52,12 +52,10 @@ const postFeedBackByAddress = (addr:string, feedBack: contractFeedBack) => {
         })
     })
 }
-const postTransactionSimulation = (transaction: any) =>{
+const postBlockNativeTransactionSimulation = (transaction: any) =>{
     return new Promise((resolve, reject) =>{
-        let _transaction = JSON.stringify({
-            test:4567
-        })
-        http.post(`/simulate`, _transaction)
+        let _transaction = JSON.stringify(transaction)
+        http.post(`api/simulate/bn`, _transaction)
         .then((res) => {
             console.log('POST Success')
             console.log(res.data)
@@ -76,6 +74,6 @@ const dataService = {
     getByAddress,
     getFeedBackByAddress,
     postFeedBackByAddress,
-    postTransactionSimulation
+    postBlockNativeTransactionSimulation
 }
 export default dataService

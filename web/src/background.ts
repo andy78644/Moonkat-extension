@@ -9,16 +9,18 @@ const approvedMessages: string[] = [];
 const init = async (remotePort: Browser.Runtime.Port) => {
     remotePort.onMessage.addListener(async (msg)=>{
         console.log('DApp Message: ', msg);
+        delete msg.data.transaction.request_method
         msg.data.transaction.gasPrice = Number(msg.data.transaction.gasPrice)
         msg.data.transaction.gas = Number(msg.data.transaction.gas)
         msg.data.transaction.value = Number(msg.data.transaction.value)
+        // Here is the data waiting to go to BlockNative API
+        console.log('Txn Detail: ', msg.data.transaction)
+        const simRes = dataService.postBlockNativeTransactionSimulation(msg.data.transaction)
         msg.data.transaction.data = msg.data.transaction.input
         delete msg.data.gas
+        delete msg.data.gasPrice
         delete msg.data.transaction.input
-        msg.data.transaction.gasLimit = msg.data.transaction.gasPrice+1000
         // Here is the data waiting to go to HRE env
-        console.log('Txn Detail: ', msg.data.transaction)
-        let simRes = dataService.postTransactionSimulation(msg.data.transaction)
         
         if (msg.data.type === RequestType.REGULAR) {
             processRegularRequest(msg, remotePort);

@@ -6,3 +6,5 @@ cloud_sql_proxy
 node_modules/
 server/app/config/*
 web/dist/*
+.env
+
