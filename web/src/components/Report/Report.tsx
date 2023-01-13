@@ -15,6 +15,14 @@ const root = ReactDOM.createRoot(document.getElementById("root"));
 const Report = () =>{
     const [reportFlow, setReportFlow] = useState(0);
     const [isPrompt, setPrompt] = useState(false);
+    const [addressName, setAddressName] = useState('');
+    const [detail, setDetail] = useState('');
+    const handleAddressName = async () => {
+
+    }
+    const handleDetailContract = async () => {
+        
+    }
     const handleSubmit = async () => {
         setPrompt(true)
     }
@@ -24,7 +32,7 @@ const Report = () =>{
             <div>
                 Report Contract
             </div>
-            <ReportForm />
+            <ReportForm operation={handleAddressName} placeholder="What's the address Name?"/>
             <div>
                 This is a malicious contract
             </div>
@@ -44,7 +52,7 @@ const Report = () =>{
                 <div>
                     More detail about the contract
                 </div>
-                <ReportForm />
+                <ReportForm operation={handleDetailContract} placeholder="Share more detail with the community"/>
                 <Button onClick={handleSubmit} variant="text">Send</Button>
             </div>
             }

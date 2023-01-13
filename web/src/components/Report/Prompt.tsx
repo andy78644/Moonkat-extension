@@ -26,7 +26,7 @@ const Prompt = (props: Props) => {
             if (windowId) 
                 Browser.windows.remove((await windowId).id!)
         }, 1000)
-    }, props.submit)
+    }, [props.submit])
     const handleClose = async () => {
         const windowId = getWindowId()
         props.onSubmit(false)
