@@ -7,6 +7,8 @@ import contractData from "../../types/contractType";
 import ContractInfo from "./ContractInfo";
 import Navbar from "./Navbar";
 
+import './Main.css'
+
 interface Props {
     id: any;
     asset: any;

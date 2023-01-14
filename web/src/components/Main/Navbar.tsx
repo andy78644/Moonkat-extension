@@ -1,6 +1,8 @@
 import React from "react";
 import NavButton from "./NavButton";
 
+import './Navbar.css'
+
 type Props = {
     section: any;
     onSection: any;

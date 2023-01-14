@@ -2,6 +2,8 @@ import React, {useState, useEffect} from "react";
 import Browser from "webextension-polyfill";
 import Button from "@mui/material/Button"
 
+import './Header.css'
+
 interface Props {
     tagState: boolean,
     changeTag: any,
@@ -43,10 +45,14 @@ const Header = (props: Props) => {
     }, [reportPopOut]);
 
     return (
-        <div>
-            NFT - MINTING
-            <Button onClick={() => setReportPopOut(true)} variant="text">Report</Button> 
-            <Button onClick={() => props.changeTag(!props.tagState)} variant="text">MoreTags</Button> 
+        <div id="header">
+            <div id="source">
+                NFT - MINTING
+            </div>
+            <div id="button">
+                <Button onClick={() => setReportPopOut(true)} variant="text">Report</Button> 
+                <Button onClick={() => props.changeTag(!props.tagState)} variant="text">MoreTags</Button> 
+            </div>
         </div>
     )
 }
