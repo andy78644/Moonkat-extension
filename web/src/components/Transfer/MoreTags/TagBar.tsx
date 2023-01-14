@@ -2,9 +2,9 @@ import React from "react";
 import Tag from "./Tag";
 
 interface Props {
-    tagNumber: any;
-    tagNames: any;
-    tagColors: any;
+    tagNumber: any,
+    tagNames: any,
+    tagColors: any
 }
 
 const TagBar = () => {

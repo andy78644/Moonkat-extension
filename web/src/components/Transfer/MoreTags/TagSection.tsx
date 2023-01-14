@@ -2,13 +2,13 @@ import React from "react";
 import TagBar from "./TagBar";
 
 interface Props {
-
+    tagBarName: any,
 }
 
-const TagSection = () => {
+const TagSection = (props: Props) => {
     return (
         <div>
-            OtherNames
+            {props.tagBarName}
             <div>
                 <TagBar />
             </div>

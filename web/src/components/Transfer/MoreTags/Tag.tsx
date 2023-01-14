@@ -6,7 +6,11 @@ interface Props {
 }
 
 const Tag = () => {
-    return <div></div>;
+    return (
+        <div id="Tag">
+            &emsp; Bakt token &emsp; Crypto monkey &emsp; Monkey token
+        </div>
+    );
 }
 
 export default Tag;
