@@ -1,19 +1,35 @@
 import React from "react";
-import NavButton from "./NavButton";
+import Box from '@mui/material/Box';
+import BottomNavigation from '@mui/material/BottomNavigation';
+import BottomNavigationAction from '@mui/material/BottomNavigationAction';
+import TransferIcon from '@mui/icons-material/SyncAlt';
+import InfoIcon from '@mui/icons-material/Info';
 
 import './Navbar.css'
+import { width } from "@mui/system";
 
-type Props = {
-    section: any;
-    onSection: any;
-    onReject: any;
+interface Props {
+    section: any,
+    onSection: any,
 }
 
 const Navbar = (props: Props) => {
     return (
-        <div className="flex flex-row gap-1 justify-around">
-            <NavButton onClick={() => props.onSection('transfer')}> Transfer </NavButton>
-            <NavButton onClick={() => props.onSection('moreInfo')}> More Info </NavButton>
+        <div>
+            <Box>
+                <BottomNavigation
+                    id="bottomNavigation"
+                    showLabels
+                    value={props.section === 'transfer' ? 0 : 1}
+                    onChange={(event, newValue) => {
+                        newValue = (newValue === 0 ? 'transfer' : 'moreinfo')
+                        props.onSection(newValue);
+                    }}
+                >
+                    <BottomNavigationAction id="transferIcon" label="Transfer" icon={<TransferIcon />} />
+                    <BottomNavigationAction id="moreInfoIcon" label="More Info" icon={<InfoIcon />} />
+                </BottomNavigation>
+            </Box>
         </div>
     )
 };

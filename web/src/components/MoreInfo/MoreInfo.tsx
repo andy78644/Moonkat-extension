@@ -5,6 +5,8 @@ import Token from './Token';
 import Creator from './Creator';
 import dataService from '../../dataService';
 
+import './MoreInfo.css'
+
 interface MoreInfo {
 
 }
@@ -17,7 +19,7 @@ const MoreInfo = () => {
     }
 
     return (
-        <div>
+        <div id="moreInfo">
             <InfoNavBar page={page} onChange={changePage}/>
             { page == 0 && <Token /> }
             { page == 1 && <Creator /> }

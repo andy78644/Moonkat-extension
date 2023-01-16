@@ -13,29 +13,17 @@ interface Props {
 const InfoNavBar = (props: Props) => {
     return (
         <div>
-            <Box sx={{
-                        bgcolor: 'yellow',
-                        '& .Mui-selected': {
-                        '& .MuiBottomNavigationAction-label': {
-                            fontSize: theme => theme.typography.caption,
-                            transition: 'none',
-                            fontWeight: 'bold',
-                            lineHeight: '20px'
-                        },
-                        '& .MuiSvgIcon-root, & .MuiBottomNavigationAction-label': {
-                            color: theme => theme.palette.secondary.main
-                        }
-                        }
-                    }}>
+            <Box>
                 <BottomNavigation
+                    id="infoNavBar"
                     showLabels
                     value={props.page}
                     onChange={(event, newValue) => {
                         props.onChange(newValue);
                     }}
                 >
-                    <BottomNavigationAction label="Token" />
-                    <BottomNavigationAction label="Creator" />
+                    <BottomNavigationAction id="transferIcon" label="Token"/>
+                    <BottomNavigationAction id="moreInfoIcon" label="Creator"/>
                 </BottomNavigation>
             </Box>
         </div>

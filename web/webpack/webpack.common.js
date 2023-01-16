@@ -63,16 +63,20 @@ module.exports = {
         use: ['style-loader', 'css-loader', 'postcss-loader'],
       },
       {
-          type: 'javascript/auto', // prevent webpack handling json with its own loaders,
-          test: /manifest\.json$/,
-          use: {
-            loader: 'wext-manifest-loader',
-            options: {
-              usePackageJSONVersion: true,
-            },
+        type: 'javascript/auto', // prevent webpack handling json with its own loaders,
+        test: /manifest\.json$/,
+        use: {
+          loader: 'wext-manifest-loader',
+          options: {
+            usePackageJSONVersion: true,
           },
-          exclude: /node_modules/,
+        },
+        exclude: /node_modules/,
       },
+      { 
+        test: /\.(png|jp(e*)g|svg|gif)$/, 
+        use: ['file-loader'], 
+      }
     ],
   },
 

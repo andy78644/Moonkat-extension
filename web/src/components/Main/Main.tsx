@@ -102,7 +102,6 @@ const Main = (props: Props) => {
                         <Navbar
                             section={userState.showSection}
                             onSection={changeSection}
-                            onReject={reject}
                         />
                     </div>
                     :

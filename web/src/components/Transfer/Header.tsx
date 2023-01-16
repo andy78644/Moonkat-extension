@@ -1,6 +1,9 @@
 import React, {useState, useEffect} from "react";
 import Browser from "webextension-polyfill";
 import Button from "@mui/material/Button"
+import IconButton from "@mui/material/IconButton"
+import CampaignIcon from '@mui/icons-material/Campaign';
+import FormatListBulletedIcon from '@mui/icons-material/FormatListBulleted';
 
 import './Header.css'
 
@@ -21,8 +24,8 @@ const Header = (props: Props) => {
         if (reportPopOut) {
             const createReportPopout = async () => {
                 const queryString = new URLSearchParams({})
-                const width = 600;
-                const height = 480;
+                const width = 300;
+                const height = 380;
                 const left = 500;
                 const top = 500;
                 windowObj = await Browser.windows.create({
@@ -47,11 +50,15 @@ const Header = (props: Props) => {
     return (
         <div id="header">
             <div id="source">
-                NFT - MINTING
+                NFT · MINTING
             </div>
             <div id="button">
-                <Button onClick={() => setReportPopOut(true)} variant="text">Report</Button> 
-                <Button onClick={() => props.changeTag(!props.tagState)} variant="text">MoreTags</Button> 
+                <IconButton onClick={() => setReportPopOut(true)}>
+                    <CampaignIcon sx={{fontSize: 23}} />
+                </IconButton> 
+                <IconButton onClick={() => props.changeTag(!props.tagState)}>
+                    <FormatListBulletedIcon sx={{fontSize: 20}} />
+                </IconButton> 
             </div>
         </div>
     )
