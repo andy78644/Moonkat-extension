@@ -10,7 +10,7 @@ interface Props {
 const Token = () => {
     return (
         <div id="token">
-            <Info infoName="Token Type" infoIcon="Diamond" infoContent="ERC-721"/>
+            <Info infoName="Token Type" infoIcon="Paid" infoContent="ERC-721"/>
             <Info infoName="Holders" infoIcon="Groups" infoContent="6186"/>
             <Info infoName="Create Time" infoIcon="Restore" infoContent="619 Days ago"/>
             <Info infoName="Total Transactions" infoIcon="CompareArrows" infoContent="112,718"/>

@@ -1,5 +1,13 @@
 #moreTags {
-    margin: 1rem 2rem 2rem 1rem;
+    border: solid 3px;
+    border-color: #DFD8C9;
+    margin: 1rem 1rem 2rem 1rem;
     border-radius: 0.5rem;
-    background-color: #DFD8C9;
+    background-color: #EFE8DB;
+}
+
+#moreTagsTitle {
+    padding: 0.5rem 0rem 1rem 0.8rem;
+    font-size: 1.1rem;
+    font-weight: 500;
 }

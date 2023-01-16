@@ -1,14 +1,16 @@
 import React from "react";
 
+import './Tag.css'
+
 interface Props {
-    tagName: any;
-    tagColor: any;
+    tagName: any,
+    tagDisable: boolean
 }
 
-const Tag = () => {
+const Tag = (props: Props) => {
     return (
-        <div id="Tag">
-            &emsp; Bakt token &emsp; Crypto monkey &emsp; Monkey token
+        <div id="tag">
+            {props.tagName}
         </div>
     );
 }

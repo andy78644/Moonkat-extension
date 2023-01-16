@@ -9,12 +9,54 @@ interface Props {
     
 }
 
+const tagExample1: any[] = [
+    {
+        name: "BAYC token",
+        color: "red",
+    },
+    {
+        name: "Bored Ape Yacht Club",
+        color: "red",
+    },
+    {
+        name: "Monkey MFT",
+        color: "red",
+    },
+]
+
+const tagExample2: any[] = [
+    {
+        name: "PFP",
+        color: "green",
+    },
+    {
+        name: "New Project",
+        color: "green",
+    },
+]
+
+const tagExample3: any[] = [
+    {
+        name: "Charity",
+        color: "blue",
+    },
+    {
+        name: "Sustainable",
+        color: "blue",
+    },
+    {
+        name: "Profitable",
+        color: "blue",
+    },
+]
+
 const MoreTags = () => {
     return (
         <div id="moreTags">
-            More Tags
-            <TagSection tagBarName="Other names"/>
-            <TagSection tagBarName="Other tags"/>
+            <div id="moreTagsTitle">More Tags</div>
+            <TagSection tags={tagExample1} tagBarName="Other names" tagDisable={true}/>
+            <TagSection tags={tagExample2} tagBarName="Other tags" tagDisable={true}/>
+            <TagSection tags={tagExample3} tagBarName="Other stuff" tagDisable={true}/>
         </div>
     )
 }

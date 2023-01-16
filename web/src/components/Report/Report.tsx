@@ -12,6 +12,21 @@ const params = new URLSearchParams(window.location.search);
 // @ts-ignore
 const root = ReactDOM.createRoot(document.getElementById("root"));
 
+const tagExample1: any[] = [
+    {
+        name: "BAYC token",
+        color: "red",
+    },
+    {
+        name: "Monkey token",
+        color: "red",
+    },
+    {
+        name: "Bored Ape",
+        color: "red",
+    },
+]
+
 const Report = () =>{
     const [reportFlow, setReportFlow] = useState(0);
     const [isPrompt, setPrompt] = useState(false);
@@ -48,7 +63,7 @@ const Report = () =>{
                     More related tags about the contract
                 </div>
                 <Button variant="text">AddTags</Button>
-                <TagBar />
+                <TagBar tags={tagExample1} tagDisable={false}/>
                 <div>
                     More detail about the contract
                 </div>

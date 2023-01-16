@@ -1,5 +1,5 @@
 import React from "react";
-import DiamondIcon from '@mui/icons-material/Diamond';
+import PaidIcon from '@mui/icons-material/Paid';
 import GroupsIcon from '@mui/icons-material/Groups';
 import RestoreIcon from '@mui/icons-material/Restore';
 import CompareArrowsIcon from '@mui/icons-material/CompareArrows';
@@ -16,7 +16,7 @@ interface Props {
 }
 
 const IconName: any[] = [
-    ['Diamond', <DiamondIcon />], 
+    ['Paid', <PaidIcon />], 
     ['Groups' , <GroupsIcon />],
     ['Restore', <RestoreIcon />],
     ['CompareArrows', <CompareArrowsIcon />],
