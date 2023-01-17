@@ -24,8 +24,8 @@ const Header = (props: Props) => {
         if (reportPopOut) {
             const createReportPopout = async () => {
                 const queryString = new URLSearchParams({})
-                const width = 300;
-                const height = 380;
+                const width = 400;
+                const height = 600;
                 const left = 500;
                 const top = 500;
                 windowObj = await Browser.windows.create({

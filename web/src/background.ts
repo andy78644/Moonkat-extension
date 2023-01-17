@@ -92,7 +92,7 @@ const createResult = (msg: any) => {
         // console.log('URL Param Data: ', queryString)
         
         const width = 400;
-        const height = 480;
+        const height = 600;
         const left = window.left! + Math.round((window.width! - width) * 0.5);
         const top = window.top! + Math.round((window.height! - height) * 0.2);
     

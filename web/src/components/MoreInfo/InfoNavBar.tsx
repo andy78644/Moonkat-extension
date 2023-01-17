@@ -1,7 +1,5 @@
 import React from "react";
-import Box from '@mui/material/Box';
-import BottomNavigation from '@mui/material/BottomNavigation';
-import BottomNavigationAction from '@mui/material/BottomNavigationAction';
+import Button from '@mui/material/Button';
 
 import './InfoNavBar.css'
 
@@ -12,20 +10,33 @@ interface Props {
 
 const InfoNavBar = (props: Props) => {
     return (
-        <div>
-            <Box>
-                <BottomNavigation
-                    id="infoNavBar"
-                    showLabels
-                    value={props.page}
-                    onChange={(event, newValue) => {
-                        props.onChange(newValue);
-                    }}
-                >
-                    <BottomNavigationAction id="transferIcon" label="Token"/>
-                    <BottomNavigationAction id="moreInfoIcon" label="Creator"/>
-                </BottomNavigation>
-            </Box>
+        <div id="infoNavBar">
+            <Button sx={{
+                color: '#434343',
+                borderRadius: 0,
+                '&:hover, &:focus': {
+                    borderBottom: 1.5,
+                    borderColor: '#77736A'
+                },
+                paddingTop: 2,
+                paddingBottom: 2,
+                width: '50%'
+                }} 
+                onClick={()=>props.onChange(0)}> Token 
+            </Button>
+            <Button sx={{
+                color: '#434343',
+                borderRadius: 0,
+                '&:hover, &:focus': {
+                    borderBottom: 1.5,    
+                    borderColor: '#77736A'
+                },
+                paddingTop: 2,
+                paddingBottom: 2,
+                width: '50%'
+                }} 
+                onClick={()=>props.onChange(1)}> Creator 
+            </Button>
         </div>
     );
 }

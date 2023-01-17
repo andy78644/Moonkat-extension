@@ -1,7 +1,5 @@
 import React from "react";
-import Box from '@mui/material/Box';
-import BottomNavigation from '@mui/material/BottomNavigation';
-import BottomNavigationAction from '@mui/material/BottomNavigationAction';
+import Button from '@mui/material/Button'
 import TransferIcon from '@mui/icons-material/SyncAlt';
 import InfoIcon from '@mui/icons-material/Info';
 
@@ -16,20 +14,34 @@ interface Props {
 const Navbar = (props: Props) => {
     return (
         <div>
-            <Box>
-                <BottomNavigation
-                    id="bottomNavigation"
-                    showLabels
-                    value={props.section === 'transfer' ? 0 : 1}
-                    onChange={(event, newValue) => {
-                        newValue = (newValue === 0 ? 'transfer' : 'moreinfo')
-                        props.onSection(newValue);
-                    }}
-                >
-                    <BottomNavigationAction id="transferIcon" label="Transfer" icon={<TransferIcon />} />
-                    <BottomNavigationAction id="moreInfoIcon" label="More Info" icon={<InfoIcon />} />
-                </BottomNavigation>
-            </Box>
+            <Button sx={{
+                color: 'grey',
+                borderRadius: 0,
+                '&:hover, &:focus': {
+                    color: '#000000',
+                },
+                paddingTop: 2,
+                paddingBottom: 2,
+                width: '50%'
+                }} 
+                disableRipple
+                startIcon={<TransferIcon />}
+                onClick={()=>props.onSection('transfer')}> Transfer 
+            </Button>
+            <Button sx={{
+                color: 'grey',
+                borderRadius: 0,
+                '&:hover, &:focus': {
+                    color: '#000000',
+                },
+                paddingTop: 2,
+                paddingBottom: 2,
+                width: '50%'
+                }} 
+                disableRipple
+                startIcon={<InfoIcon />}
+                onClick={()=>props.onSection('moreInfo')}> More Info 
+            </Button>
         </div>
     )
 };
