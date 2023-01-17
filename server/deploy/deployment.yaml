@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: moonkat
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: moonkat
+  template:
+    metadata:
+      labels:
+        app: moonkat
+    spec:
+      containers:
+        - name: moonkat
+          image:  gcr.io/gogolook-compass/moonkat-app:v1
+          ports:
+            - containerPort: 8080
