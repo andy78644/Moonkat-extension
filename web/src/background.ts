@@ -66,7 +66,7 @@ const processBypassRequest = (msg: any, remotePort: Browser.Runtime.Port) => {
 };
 
 const createResult = (msg: any) => {
-    // console.log(msg);
+    console.log(msg);
     const { transaction, chainId } = msg.data;
     const allowance = decodeApproval(transaction.data ?? '', transaction.to ?? '');
     // console.log("allowance asset: " + allowance?.asset);
@@ -91,23 +91,23 @@ const createResult = (msg: any) => {
         }).toString();
         // console.log('URL Param Data: ', queryString)
         
-        const width = 600;
-        const height = 480;
+        const width = 400;
+        const height = 600;
         const left = window.left! + Math.round((window.width! - width) * 0.5);
         const top = window.top! + Math.round((window.height! - height) * 0.2);
     
         const popupWindow = await Browser.windows.create({
           url: `index.html?${queryString}`,
           type: 'popup',
-          width,
-          height,
-          left,
-          top,
+          width: width,
+          height: height,
+          left: left,
+          top: top
         });
     
         // Specifying window position does not work on Firefox, so we have to reposition after creation (6 y/o bug -_-).
         // Has no effect on Chrome, because the window position is already correct.
-        await Browser.windows.update(popupWindow.id!, { width, height, left, top });
+        // await Browser.windows.update(popupWindow.id!, { width, height, left, top });
       });
       return true;
 };

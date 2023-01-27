@@ -7,9 +7,16 @@ const HtmlWebPackPlugin = require('html-webpack-plugin');
 const srcDir = path.join(__dirname, '..', 'src');
 const targetBrowser = process.env.TARGET_BROWSER;
 
-const htmlPlugin = new HtmlWebPackPlugin({
+const mainHtmlPlugin = new HtmlWebPackPlugin({
   template: './index.html',
   filename: './index.html',
+  chunks: ['main']
+});
+
+const reportHtmlPlugin = new HtmlWebPackPlugin({
+  template: './report.html',
+  filename: './report.html',
+  chunks: ['report']
 });
 
 module.exports = {
@@ -17,10 +24,7 @@ module.exports = {
     manifest: path.join(srcDir, 'manifest.json'),
     background: path.join(srcDir, 'background.ts'),
     main: path.join(srcDir, 'index.tsx'),
-    // 'pages/popup': path.join(srcDir, 'pages', 'popup.tsx'),
-    // 'pages/menu': path.join(srcDir, 'pages', 'menu.tsx'),
-    // 'pages/transfer': path.join(srcDir, 'pages', 'transfer.tsx'),
-    // 'pages/moreinfo': path.join(srcDir, 'pages', 'moreInfo.tsx'),
+    report: path.join(srcDir, 'components/Report/Report.tsx'),
     'content-scripts/inject-scripts': path.join(srcDir, 'content-scripts', 'inject-scripts.tsx'),
     'content-scripts/window-ethereum-messages': path.join(srcDir, 'content-scripts', 'window-ethereum-messages.tsx'),
     'injected/proxy-window-ethereum': path.join(srcDir, 'injected', 'proxy-window-ethereum.tsx'),
@@ -59,16 +63,20 @@ module.exports = {
         use: ['style-loader', 'css-loader', 'postcss-loader'],
       },
       {
-          type: 'javascript/auto', // prevent webpack handling json with its own loaders,
-          test: /manifest\.json$/,
-          use: {
-            loader: 'wext-manifest-loader',
-            options: {
-              usePackageJSONVersion: true,
-            },
+        type: 'javascript/auto', // prevent webpack handling json with its own loaders,
+        test: /manifest\.json$/,
+        use: {
+          loader: 'wext-manifest-loader',
+          options: {
+            usePackageJSONVersion: true,
           },
-          exclude: /node_modules/,
+        },
+        exclude: /node_modules/,
       },
+      { 
+        test: /\.(png|jp(e*)g|svg|gif)$/, 
+        use: ['file-loader'], 
+      }
     ],
   },
 
@@ -82,7 +90,8 @@ module.exports = {
   },
 
   plugins: [
-    htmlPlugin,
+    mainHtmlPlugin,
+    reportHtmlPlugin,
     new WextManifestWebpackPlugin(),
     new CopyPlugin({
       patterns: [{ from: '.', to: '.', context: 'public' }],

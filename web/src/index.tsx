@@ -1,7 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 
-import Main from "./components/Main";
+import Main from "./components/Main/Main";
 
 const params = new URLSearchParams(window.location.search);
 
