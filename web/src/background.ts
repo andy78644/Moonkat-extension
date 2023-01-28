@@ -15,13 +15,7 @@ const init = async (remotePort: Browser.Runtime.Port) => {
         msg.data.transaction.value = Number(msg.data.transaction.value)
         // Here is the data waiting to go to BlockNative API
         console.log('Txn Detail: ', msg.data.transaction)
-        const simRes = dataService.postBlockNativeTransactionSimulation(msg.data.transaction)
-        msg.data.transaction.data = msg.data.transaction.input
-        delete msg.data.gas
-        delete msg.data.gasPrice
-        delete msg.data.transaction.input
-        // Here is the data waiting to go to HRE env
-        
+        let simRes = dataService.postBlockNativeTransactionSimulation(msg.data.transaction)
         if (msg.data.type === RequestType.REGULAR) {
             processRegularRequest(msg, remotePort);
             return;

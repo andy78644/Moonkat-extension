@@ -2,11 +2,11 @@
 const net = require("net");
 const BlocknativeSdk = require('bnc-sdk');
 const WebSocket = require('ws');
-
+// For test use
+const fs = require('fs')
 
 // The .env require no compile, but it needs to be at the same folder 
 require('dotenv').config()
-
 
 // create options object
 const options = {
@@ -17,25 +17,16 @@ const options = {
     onerror: (error) => {console.log(error)} //optional, use to catch errors
 }
 
-
-// For test use
-const fs = require('fs')
-
-
 // initialize and connect to the api
 const blocknative = new BlocknativeSdk(options)
 
 exports.sendBlockNativeTransaction = async (req, res) => {
     console.log('BlockNative Data: ', req.body)
-    const userAddress = req.body.from
-    const contractAddress = req.body.to
     const transactionsToSim = [req.body]
 
     await blocknative.multiSim(transactionsToSim)
     .then((result) => {
         console.log('Simulation Success! Result: ', result)
-
-        
         const data = JSON.stringify(result)
         // write JSON string to a file
         fs.writeFile('txnres.json', data, err => {
@@ -44,20 +35,6 @@ exports.sendBlockNativeTransaction = async (req, res) => {
         }
         console.log('JSON data is saved.')
         })
-
-        
-        // Process the netBalanceChanges
-        console.log('netBalanceChanges: ', result.netBalanceChanges)
-        for(let change in result.netBalanceChanges){
-            if (change.address === userAddress){
-                console.log('User Change: ', change)
-            }
-        }
-    })
-    console.log('Frontend Data: ', req.body)
-    await blocknative.multiSim(transactionsToSim)
-    .then((result) => {
-        console.log('Simulation Success! Result: ', result)
         res.send(result)
     })
     .catch(err => {
@@ -67,6 +44,8 @@ exports.sendBlockNativeTransaction = async (req, res) => {
         });
     })
 }
+
+
 exports.sendTransaction = async (req, res) =>{
     console.log('HardHat Data: ', req.body)
 

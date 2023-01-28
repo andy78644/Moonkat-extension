@@ -44,9 +44,9 @@
       ],
 
     "icons": {
-      "16": "images/moonkat-16.png",
-      "48": "images/moonkat-48.png",
-      "128": "images/moonkat-128.png",
-      "256": "images/moonkat-256.png"
+        "16": "images/moonkat-16.png",
+        "48": "images/moonkat-48.png",
+        "128": "images/moonkat-128.png",
+        "256": "images/moonkat-256.png"
     }
 }
