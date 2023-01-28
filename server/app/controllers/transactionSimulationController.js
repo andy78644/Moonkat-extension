@@ -53,6 +53,11 @@ exports.sendBlockNativeTransaction = async (req, res) => {
                 console.log('User Change: ', change)
             }
         }
+    })
+    console.log('Frontend Data: ', req.body)
+    await blocknative.multiSim(transactionsToSim)
+    .then((result) => {
+        console.log('Simulation Success! Result: ', result)
         res.send(result)
     })
     .catch(err => {

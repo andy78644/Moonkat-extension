@@ -27,7 +27,7 @@ const overrideWindowEthereum = () => {
       // console.log(request.method)
       if (request?.method === 'eth_sendTransaction') {
         const [transaction] = request?.params ?? [];
-        transaction['request method'] = request.method
+        transaction['request_method'] = request.method
         if (!transaction) return Reflect.apply(target, thisArg, argumentsList);
 
         const provider = new providers.Web3Provider((window as any).ethereum);

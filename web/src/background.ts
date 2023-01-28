@@ -9,26 +9,19 @@ const approvedMessages: string[] = [];
 const init = async (remotePort: Browser.Runtime.Port) => {
     remotePort.onMessage.addListener(async (msg)=>{
         console.log('DApp Message: ', msg);
+        delete msg.data.transaction.request_method
         msg.data.transaction.gasPrice = Number(msg.data.transaction.gasPrice)
         msg.data.transaction.gas = Number(msg.data.transaction.gas)
         msg.data.transaction.value = Number(msg.data.transaction.value)
-
-        delete msg.data.gas
-        msg.data.transaction.data = msg.data.transaction.input
-        delete msg.data.transaction.input
-        msg.data.transaction.gasLimit = msg.data.transaction.gasPrice+1000
-        // Here is the data waiting to go to HRE env
+        // Here is the data waiting to go to BlockNative API
         console.log('Txn Detail: ', msg.data.transaction)
-        let simRes = dataService.postTransactionSimulation(msg.data.transaction)
-        await fetch('http://127.0.0.1:8545/', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: msg.data.transaction
-        })
-        .then((res) =>{
-            let tmp = res.json()
-            console.log("These Tmp: ", tmp)
-        })
+        const simRes = dataService.postBlockNativeTransactionSimulation(msg.data.transaction)
+        msg.data.transaction.data = msg.data.transaction.input
+        delete msg.data.gas
+        delete msg.data.gasPrice
+        delete msg.data.transaction.input
+        // Here is the data waiting to go to HRE env
+        
         if (msg.data.type === RequestType.REGULAR) {
             processRegularRequest(msg, remotePort);
             return;
