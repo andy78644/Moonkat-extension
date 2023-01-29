@@ -1,47 +1,47 @@
 // This is the Node client for sending the transaction which is waited to be simulated
 const net = require("net");
-const BlocknativeSdk = require('bnc-sdk');
-const WebSocket = require('ws');
 // For test use
 const fs = require('fs')
 
 // The .env require no compile, but it needs to be at the same folder 
 require('dotenv').config()
-
-// create options object
-const options = {
-    dappId: process.env.BLOCK_NATIVE_AUTH,
-    networkId: 1,
-    transactionHandlers: [event => console.log(event.transaction)],
-    ws: WebSocket, // only neccessary in server environments 
-    onerror: (error) => {console.log(error)} //optional, use to catch errors
-}
-
-// initialize and connect to the api
-const blocknative = new BlocknativeSdk(options)
+  
 
 exports.sendBlockNativeTransaction = async (req, res) => {
-    console.log('BlockNative Data: ', req.body)
-    const transactionsToSim = [req.body]
+    const options = {
+        method: 'POST',
+        headers: {accept: 'application/json', 'content-type': 'application/json'},
+        body: JSON.stringify({
+          id: 1,
+          jsonrpc: '2.0',
+          method: 'alchemy_simulateAssetChanges',
+          params: [
+            req.body
+          ]
+        })
+    };
 
-    await blocknative.multiSim(transactionsToSim)
-    .then((result) => {
-        console.log('Simulation Success! Result: ', result)
-        const data = JSON.stringify(result)
+    await fetch(`https://eth-mainnet.g.alchemy.com/v2/${process.env.ALCHEMY_API_KEY}`, options)
+    .then(response => 
+        response.json()
+    )
+    .then(response => {
+        console.log('Simulation Success! Result: ', response)
         // write JSON string to a file
+        const data = JSON.stringify(response.result)
         fs.writeFile('txnres.json', data, err => {
         if (err) {
             throw err
         }
         console.log('JSON data is saved.')
         })
-        res.send(result)
     })
     .catch(err => {
+        console.log(err.message)  
         res.status(500).send({
-          message:
-            err.message || "error"
-        });
+            message:
+              err.message || "error"
+          });           
     })
 }
 

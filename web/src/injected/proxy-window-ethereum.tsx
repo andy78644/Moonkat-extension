@@ -32,17 +32,10 @@ const overrideWindowEthereum = () => {
 
         const provider = new providers.Web3Provider((window as any).ethereum);
         const { chainId } = await provider.getNetwork();
-        const gasPrice = await (await provider.getGasPrice()).toHexString();
         let _val = 'value' in transaction
-        let _gasPrice = 'gasPrice' in transaction
         if (!_val){
             transaction.value = 0
         } 
-        if (!_gasPrice){
-            transaction.gasPrice = gasPrice
-        }
-        transaction.input = transaction.data
-        delete transaction.data
         const isOk = await sendAndAwaitResponseFromStream(stream, { transaction, chainId });
 
         if (!isOk) {
