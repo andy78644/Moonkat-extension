@@ -6,11 +6,15 @@ import GasFeeIcon from '@mui/icons-material/EvStation';
 import './AssetsOut.css';
 
 interface Props {
-    assetOut: any;
-    gasFee: any;
+    // assetOut: any;
+    // gasFee: any;
+    asset:any;
+    symbol:any;
+    gas:any
 }
 
-const AssetsOut = () => {
+const AssetsOut = (props: Props) => {
+    const {asset, symbol, gas} = props
     return (
         <div id="assetsOut">
             <div id="assetsOutTitle">
@@ -21,7 +25,7 @@ const AssetsOut = () => {
                     <ArrowOutwardIcon sx={{fontSize: 25}}/>
                 </IconButton>
                 <div id="assetsOutAssetsFee">
-                    0.2 ETH
+                    {asset}" "{symbol}
                 </div>
             </div>
             <div id="assetsOutGas">
@@ -29,7 +33,7 @@ const AssetsOut = () => {
                     <GasFeeIcon sx={{fontSize: 25}}/>
                 </IconButton>
                 <div id="assetsOutGasFee">
-                    0.0028 ETH
+                    {gas}
                 </div>
             </div>
         </div>

@@ -52,19 +52,17 @@ const postFeedBackByAddress = (addr:string, feedBack: contractFeedBack) => {
         })
     })
 }
-const postBlockNativeTransactionSimulation = (transaction: any) =>{
+const postAlchemyTransactionSimulation = (transaction: any) =>{
     return new Promise((resolve, reject) =>{
         let _transaction = JSON.stringify(transaction)
-        http.post(`api/simulate/bn`, _transaction)
+        http.post(`api/simulate/al`, _transaction)
         .then((res) => {
-            console.log('POST Success')
-            console.log(res.data)
-            // resolve(res.data)
+            console.log('POST Success: ', res.data)
+            resolve(res.data)
         }).catch((err)=>{
             console.log('POST Err: ', err)
             reject(err)
         })})
-    //send the txn detail
 }
 
 const dataService = {
@@ -74,6 +72,6 @@ const dataService = {
     getByAddress,
     getFeedBackByAddress,
     postFeedBackByAddress,
-    postBlockNativeTransactionSimulation
+    postAlchemyTransactionSimulation
 }
 export default dataService

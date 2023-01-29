@@ -5,8 +5,6 @@ import { BigNumber, providers, Contract } from "ethers";
 import { ChainId, chains } from "eth-chains";
 import Browser from "webextension-polyfill";
 import objectHash from "object-hash";
-import axios from "axios";
-import fetchAdapter from "@vespaiach/axios-fetch-adapter";  
 
 const SYMBOL_NAME_ABI = [
   {
@@ -28,7 +26,29 @@ const SYMBOL_NAME_ABI = [
     type: 'function',
   },
 ]
-
+export const decodeTransactionSimulationData = (result: any, from: string) => {
+  let assetChange = {
+    out: "",
+    outSymbol:"",
+    in: "",
+    inSymbol:"",
+    gas: "",
+  };
+  for ( let changeObj of result.changes){
+    console.log(changeObj)
+    if(changeObj.from===from){
+      assetChange.out = changeObj.amount
+      assetChange.outSymbol = changeObj.symbol
+    }
+    if(changeObj.to===from){
+      assetChange.in = changeObj.amount
+      assetChange.inSymbol = changeObj.symbol
+    }
+  }
+  assetChange.gas = result.gasUsed
+  console.log('Decoded: ', assetChange)
+  return assetChange
+}
 const getTokenSymbol = async (address: string, provider: providers.Provider) => {
   try {
     return new Contract(address, SYMBOL_NAME_ABI, provider).functions.symbol();
@@ -77,7 +97,6 @@ export const sendAndAwaitResponseFromStream = (stream: Duplex, data: any): Promi
 }
 
 export const decodeApproval = (data: string, asset: string) => {
-  // Decode Approve
   if (data.startsWith(SignatureIdentifier.approve)) {
     const eth_interface = new Interface([`function ${Signature.approve}`]);
     const decoded = eth_interface.decodeFunctionData(Signature.approve, data);
@@ -118,124 +137,6 @@ export const getTokenData = async (address: string, provider: providers.Provider
     symbol: await getTokenSymbol(address, provider),
   };
 }
-
-export const getApiData = (chainId: number, address: string): Promise<any> => {
-  return new Promise((resolve) => {
-    var results: any[] = [] 
-    switch(chainId) {
-      // Ethereum Chain
-      case 1:
-        console.log('Ethereum');
-      // Polygon Chain
-      case 137:
-        // Get Balance
-        console.log('Polygon');
-        axios.request({
-          url: 'https://api.polygonscan.com/api',
-          method: 'post',
-          params:  {
-            module: 'account',
-            action: 'balance',
-            address: address,
-            apikey: polyApiKey
-          },
-          adapter: fetchAdapter,
-        })
-        .then((res) => {
-          results.push(res.data.result.toString())
-          resolve(results)
-        })
-        .catch((err) => {
-          resolve(err)
-        })
-        // axios.request({
-        //   url: 'https://api.polygonscan.com/api',
-        //   method: 'post',
-        //   params:  {
-        //     module: 'account',
-        //     action: 'txlist',
-        //     address: address,
-        //     startblock: '0',
-        //     endblock: '99999999',
-        //     sort: 'asc',
-        //     apikey: polyApiKey
-        //   },
-        //   adapter: fetchAdapter,
-        // }).then((res) => {
-        // var hash = res.data.result[0]["hash"]
-        // console.log('Create Hash: ', hash)
-        //   axios.request({
-        //     url: 'https://api.polygonscan.com/api',
-        //     method: 'post',
-        //     params:  {
-        //       module: 'proxy',
-        //       action: 'eth_getTransactionReceipt',
-        //       txhash: hash,
-        //       apikey: polyApiKey
-        //     },
-        //     adapter: fetchAdapter
-        //   }).then((res) => {
-        //     var createBlock = res.data.result.blockNumber
-        //     console.log('Create Block: ', createBlock)
-        //     axios.request({
-        //       url: 'https://api.polygonscan.com/api',
-        //       method: 'post',
-        //       params:  {
-        //         module: 'proxy',
-        //         action: 'eth_getBlockByNumber',
-        //         tag: createBlock,
-        //         boolean: true,
-        //         apikey: polyApiKey
-        //       },
-        //       adapter: fetchAdapter
-        //     }).then((res) => {
-        //       console.log('Org Timestamp: ', res.data.result.timestamp)
-        //       var unixTimeStamp = parseInt(res.data.result.timestamp, 16)
-        //       var jsUnixTimeStamp = unixTimeStamp*1000
-        //       console.log('Create Block Unix Timestamp: ', jsUnixTimeStamp)
-        //       var createDate = new Date(jsUnixTimeStamp)
-        //       console.log("Create Block Human Timestamp: " + createDate.getDate()+
-        //         "/"+(createDate.getMonth()+1)+
-        //         "/"+createDate.getFullYear()+
-        //         " "+createDate.getHours()+
-        //         ":"+createDate.getMinutes()+
-        //         ":"+createDate.getSeconds());
-        //       const _date = createDate.getDate().toString()
-        //       const _month = (createDate.getMonth()+1).toString()
-        //       const _year = createDate.getFullYear().toString()
-        //       const _hours = createDate.getHours().toString()
-        //       const _min = createDate.getMinutes().toString()
-        //       results.push(_year.concat('/', _month).concat('/',_date).concat(' ', _hours).concat(':', _min))
-        //       resolve(results)
-        //     }).catch((err) => {
-        //       resolve(err)
-        //     })
-        //   }).catch((err) => {
-        //     resolve(err)
-        //   })}).catch((err)=> {
-        //   resolve(err)
-        // })
-        // axios.request({
-        //   url: 'https://api.polygonscan.com/api',
-        //   method: 'post',
-        //   params:  {
-        //     module: 'proxy',
-        //     action: 'eth_blockNumber',
-        //     apikey: polyApiKey
-        //   },
-        //   adapter: fetchAdapter
-        // }).then((res) => {
-        //   results.push(res.data.result)
-        // }).catch((err) => {
-        //   resolve(err)
-        // })
-      break
-      default:
-        resolve('Error!')
-      }
-  });
-}
-
 
 
 export const DAPP_LIST_BASE_URL = 'https://revoke.cash/dapp-contract-list';

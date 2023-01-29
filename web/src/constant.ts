@@ -14,7 +14,7 @@ export const RequestType = {
 // The command to execute the smart contract
 export const Signature = {
     approve: 'approve(address,uint256)',
-    setApprovalForAll: '	setApprovalForAll(address,bool)',
+    setApprovalForAll: 'setApprovalForAll(address,bool)',
 }
 
 // The command that transfered into opcode to that EVM read

@@ -7,7 +7,7 @@ const fs = require('fs')
 require('dotenv').config()
   
 
-exports.sendBlockNativeTransaction = async (req, res) => {
+exports.sendAlchemyTransaction = async (req, res) => {
     const options = {
         method: 'POST',
         headers: {accept: 'application/json', 'content-type': 'application/json'},
@@ -35,6 +35,7 @@ exports.sendBlockNativeTransaction = async (req, res) => {
         }
         console.log('JSON data is saved.')
         })
+        res.status(200).send(data)
     })
     .catch(err => {
         console.log(err.message)  

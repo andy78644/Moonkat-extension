@@ -49,36 +49,4 @@ exports.getByAddress = async (req, res) => {
       
     });
   }
-  /*
-  .then(contract => {
-    if(contract){
-      res.send(JSON.stringify(contract));
-    } 
-    else {
-      console.log("not found")
-      var query = querystring.stringify({
-        module, action, tag, address, apiKey
-      });
-      var api = getData.getRequest(query);
-      api
-      .then(function(data){
-        const contract = {
-          Address: address,
-          Balance: data["result"],
-        }
-        data = JSON.stringify(data);
-        Contract.create(contract)
-        .then(data => {
-          res.send(data)
-        })
-        .catch(err => {
-          res.status(500).send({
-            message:
-              err.message || "error"
-          });
-        })
-        
-      });
-    }
-  })
-}; 
+}
