@@ -3,51 +3,115 @@ const { Contract }= db;
 const Op = db.Sequelize.Op;
 const querystring = require('querystring');
 const getData = require('./getRequest.js');
+const { create } = require("domain");
+const Web3 = require('web3');
+const web3 = new Web3();
 //const db = require("../models");
 //const Contract = db.Contract;
 
-apiKey = 'NE2VP5S89SW4TGJSZPCKZHZN2NZ9XKWY4P'
+// polygen api key
+// apiKey = 'NE2VP5S89SW4TGJSZPCKZHZN2NZ9XKWY4P'
+
+// etherscan api key
+const apiKey = 'EEV1NJ6VXV6J86UQ4YXQW77F1N7CJ9SMRY'
+
+
 // Get the Contract with Specific Address
 exports.getByAddress = async (req, res) => {
-  const address = req.query.address;
+  // const address = req.query.address;
+  //for test
+  const address = '0x388C818CA8B9251b393131C08a736A67ccB19297'
+                  
   //const chainID = req.query.chainID;
-  const module = 'account';
-  const action = 'balance';
-  const tag = 'latest';
-  //if()
 
-  const contract = await Contract.findByPk(address)
+  
+  const contract = await Contract.findByPk(address);
+  // const allcontract = await Contract.findAll();
+  // console.log(allcontract)
   if(contract){
-    resdata = {
-      "Address" : contract.Address,
-      "Balance" : contract.Balance
-    }
-    res.status(200).send(JSON.stringify(resdata));
+    resdata = JSON.stringify(contract);
+    console.log(resdata)
+    res.status(200).send(resdata);
   } 
   else{
-    var query = querystring.stringify({
-      module, action, tag, address, apiKey
+    var query = null;
+    // querystring.stringify({
+    //   module, action, address, sort, apiKey
+    // });
+
+
+    var set_up_contract = {
+      Address: address,
+      LastTransactionTime: null,
+      CreateTime: null,
+      TokenType: null,
+      Holders: null,
+      Balance: null,
+      NumberOfTransaction: null
+    }
+
+    const api = new Promise(async function(resolve, reject) {
+      const data = await getData.getRequest(query, address, apiKey);
+      resolve(data);
+    }).catch(err => {
+      reject(new Error(err));
     });
-    var api = getData.getRequest(query);
+
     api
-    .then(function(data){
-      const contract = {
-        Address: address,
-        Balance: data["result"],
-      }
-      data = JSON.stringify(data);
-      Contract.create(contract)
-      .then(data => {
-        res.send(data)
-      })
-      .catch(err => {
-        res.status(500).send({
-          message:
-            err.message || "error"
-        });
-      })
-      
-    });
+    .then( api_data=>{
+      api_data.LastTransaction.then(function(data){
+        const transactions = data.result;
+        const latesttransaction = transactions[0];
+        const date = new Date(latesttransaction.timeStamp*1000);
+        set_up_contract.LastTransactionTime = date;
+        // console.log(date)
+      });
+
+
+      api_data.CreateTransaction.then(function(data){
+        const transactions = data.result;
+        const latesttransaction = transactions[0];
+        const date = new Date(latesttransaction.timeStamp*1000);
+        set_up_contract.CreateTime = date;
+        // console.log(date)
+      });
+
+      api_data.TransactionCount.then(function(data){
+        const transcount = parseInt(data.result, 16).toString(10);
+        set_up_contract.NumberOfTransaction = transcount;
+        // console.log(date)
+      });
+
+      var tokentype = "";
+      api_data.TokenInfo.then( data => {
+        const valid = data.message;
+        if (valid == "OK"){
+          tokentype = data.result["TokenType"];
+        } else{
+          tokentype = data.result;
+        }
+        set_up_contract.TokenType = tokentype;
+      });
+
+      api_data.Balance.then( data => {
+        const balance = web3.utils.fromWei( data.result, "ether");;
+        set_up_contract.Balance = balance;
+      });
+    })
+    .then(() => {
+      contract_data = JSON.stringify(set_up_contract);
+      console.log(set_up_contract);
+      Contract.create(set_up_contract)
+        .then(contract_data => {
+          res.send(contract_data)
+        })
+        .catch(err => {
+          res.status(500).send({
+            message:
+              err.message || "error"
+          });
+        })
+    })
   }
   /*
   .then(contract => {
