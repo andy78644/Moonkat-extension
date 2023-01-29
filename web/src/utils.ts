@@ -84,7 +84,7 @@ export const decodeApproval = (data: string, asset: string) => {
     // Generate a array e.g. decode='fo', Array.from(decode) => ['f', 'o']
     const [spender, approval] = Array.from(decoded);
     if (BigNumber.from(approval).isZero()) return undefined;
-    return { asset, spender};
+    return {asset, spender};
   }
   // Decode ApproveForAll
   if (data.startsWith(SignatureIdentifier.setApprovalForAll)) {
@@ -92,7 +92,7 @@ export const decodeApproval = (data: string, asset: string) => {
     const decoded = eth_interface.decodeFunctionData(Signature.setApprovalForAll, data);
     const [spender, approved] = Array.from(decoded);
     if (!approved) return undefined;
-    return { asset, spender};
+    return {asset, spender};
   }
 
   return undefined;
