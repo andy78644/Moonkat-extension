@@ -4,3 +4,5 @@
 cloud_sql_proxy
 .vscode
 node_modules/
+server/app/config/db.config.js
+web/dist/*

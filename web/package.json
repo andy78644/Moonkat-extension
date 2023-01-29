@@ -4,7 +4,7 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "dev:chrome": "cross-env TARGET_BROWSER=chrome webpack --config webpack/webpack.dev.js --watch",
+    "dev:chrome": "TARGET_BROWSER=chrome webpack --config webpack/webpack.dev.js --watch",
     "build": "run-p build:*"
   },
   "devDependencies": {
@@ -37,8 +37,11 @@
     "css-loader": "^6.7.1",
     "eth-chains": "^1.0.0",
     "ethers": "^5.6.9",
+    "html-webpack-plugin": "^5.5.0",
     "postcss-loader": "^7.0.1",
     "postcss-preset-env": "^7.8.0",
+    "react-router-dom": "^6.6.1",
+    "regenerator-runtime": "^0.13.11",
     "style-loader": "^3.3.1",
     "tailwindcss": "^3.1.8",
     "ts-loader": "^9.3.1",

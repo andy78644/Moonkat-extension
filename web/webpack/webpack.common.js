@@ -2,19 +2,34 @@ const webpack = require('webpack');
 const path = require('path');
 const CopyPlugin = require('copy-webpack-plugin');
 const WextManifestWebpackPlugin = require("wext-manifest-webpack-plugin");
+const HtmlWebPackPlugin = require('html-webpack-plugin');
 
 const srcDir = path.join(__dirname, '..', 'src');
 const targetBrowser = process.env.TARGET_BROWSER;
+
+const htmlPlugin = new HtmlWebPackPlugin({
+  template: './index.html',
+  filename: './index.html',
+});
 
 module.exports = {
   entry: {
     manifest: path.join(srcDir, 'manifest.json'),
     background: path.join(srcDir, 'background.ts'),
-    'pages/popup': path.join(srcDir, 'pages', 'popup.tsx'),
-    'pages/confirm': path.join(srcDir, 'pages', 'confirm.tsx'),
+    main: path.join(srcDir, 'index.tsx'),
+    // 'pages/popup': path.join(srcDir, 'pages', 'popup.tsx'),
+    // 'pages/menu': path.join(srcDir, 'pages', 'menu.tsx'),
+    // 'pages/transfer': path.join(srcDir, 'pages', 'transfer.tsx'),
+    // 'pages/moreinfo': path.join(srcDir, 'pages', 'moreInfo.tsx'),
     'content-scripts/inject-scripts': path.join(srcDir, 'content-scripts', 'inject-scripts.tsx'),
     'content-scripts/window-ethereum-messages': path.join(srcDir, 'content-scripts', 'window-ethereum-messages.tsx'),
     'injected/proxy-window-ethereum': path.join(srcDir, 'injected', 'proxy-window-ethereum.tsx'),
+  },
+
+  resolve: {
+    alias: {
+      components: path.resolve(srcDir, 'components'),
+    }
   },
 
   output: {
@@ -67,6 +82,7 @@ module.exports = {
   },
 
   plugins: [
+    htmlPlugin,
     new WextManifestWebpackPlugin(),
     new CopyPlugin({
       patterns: [{ from: '.', to: '.', context: 'public' }],
