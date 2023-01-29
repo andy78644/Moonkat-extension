@@ -18,9 +18,9 @@ const apiKey = 'EEV1NJ6VXV6J86UQ4YXQW77F1N7CJ9SMRY'
 
 // Get the Contract with Specific Address
 exports.getByAddress = async (req, res) => {
-  // const address = req.query.address;
+  const address = req.query.address;
   //for test
-  const address = '0x388C818CA8B9251b393131C08a736A67ccB19297'
+  //const address = '0x388C818CA8B9251b393131C08a736A67ccB19297'
                   
   //const chainID = req.query.chainID;
 
@@ -28,10 +28,30 @@ exports.getByAddress = async (req, res) => {
   const contract = await Contract.findByPk(address);
   // const allcontract = await Contract.findAll();
   // console.log(allcontract)
+  var res_contract = {
+    ContractAddress: address,
+    ContractName: null,
+    ContractLink: null,
+    CreatorLastTransactionTime: null,
+    CreatorCreateTime: null,
+    TokenLastTransactionTime: null,
+    TokenCreateTime: null,
+    TokenType: null,
+    Holders: null,
+    CreatorBalance: null,
+    CreatorAddress: null,
+    CreatorTransactionCount: null,
+    TokenTransactionCount: null
+  }
   if(contract){
     resdata = JSON.stringify(contract);
     console.log(resdata)
-    res.status(200).send(resdata);
+    res_contract.TokenType = contract.TokenType;
+    res_contract.Holders = contract.Holders;
+    res_contract.TokenCreateTime = contract.CreateTime;
+    res_contract.TokenLastTransactionTime = contract.LastTransactionTime;
+    res_contract = JSON.stringify(res_contract);
+    res.status(200).send(res_contract);
   } 
   else{
     var query = null;
