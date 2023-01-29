@@ -84,7 +84,7 @@ export const decodeApproval = (data: string, asset: string) => {
     // Generate a array e.g. decode='fo', Array.from(decode) => ['f', 'o']
     const [spender, approval] = Array.from(decoded);
     if (BigNumber.from(approval).isZero()) return undefined;
-    return { asset, spender};
+    return {asset, spender};
   }
   // Decode ApproveForAll
   if (data.startsWith(SignatureIdentifier.setApprovalForAll)) {
@@ -92,7 +92,7 @@ export const decodeApproval = (data: string, asset: string) => {
     const decoded = eth_interface.decodeFunctionData(Signature.setApprovalForAll, data);
     const [spender, approved] = Array.from(decoded);
     if (!approved) return undefined;
-    return { asset, spender};
+    return {asset, spender};
   }
 
   return undefined;
@@ -119,7 +119,7 @@ export const getTokenData = async (address: string, provider: providers.Provider
   };
 }
 
-export const connectChain = (chainId: number, address: string): Promise<any> => {
+export const getApiData = (chainId: number, address: string): Promise<any> => {
   return new Promise((resolve) => {
     var results: any[] = [] 
     switch(chainId) {
@@ -129,6 +129,7 @@ export const connectChain = (chainId: number, address: string): Promise<any> => 
       // Polygon Chain
       case 137:
         // Get Balance
+        console.log('Polygon');
         axios.request({
           url: 'https://api.polygonscan.com/api',
           method: 'post',

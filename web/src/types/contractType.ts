@@ -1,8 +1,16 @@
 export default interface contractData {
-    address: string,
-    scam: boolean,
-    createTime: string,
-    safe: number,
-    neutral: number,
-    danger: number
+    Address: string,
+    TokenType: string,
+    Holders: string,
+    Balance: number,
+    CreateTime: Date,
+    LastTransactionTime: Date,
+    NumberOfTransaction: number,
+    ReserveSpotOne: string,
+    ReserveSpotTwo: string,
+    ReserveSpotThree: string,
+    ReserveSpotFour: string,
+    ReserveSpotFive: string,
+    createdAt: Date,
+    updatedAt: Date,
   }
