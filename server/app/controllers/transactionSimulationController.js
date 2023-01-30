@@ -6,7 +6,6 @@ require('dotenv').config()
 
 exports.sendAlchemyTransaction = async (req, res) => {
     const from = req.body.from
-    const to = req.body.to
     let assetChange = {
         out: "",
         outSymbol:"",
@@ -59,28 +58,3 @@ exports.sendAlchemyTransaction = async (req, res) => {
     })
 }
 
-
-exports.sendTransaction = async (req, res) =>{
-    console.log('HardHat Data: ', req.body)
-
-    // Create a socket (client) that connects to the server
-    var socket = new net.Socket();
-    socket.connect(31337, "localhost", function () {
-        console.log("Client: Connected to HRE server");
-    });
-    // Send Data
-    socket.write(JSON.stringify(req.body)); 
-    // Let's handle the data we get from the server
-    socket.on("data", function (data) {
-        data = JSON.parse(data);
-        console.log("Response Data from server: %s", data.response);
-        // // Close the connection
-        // socket.end();
-    });
-}
-// HRE Data Spec
-// {
-//     "to":,
-//     "value":
-//     "data"
-// }

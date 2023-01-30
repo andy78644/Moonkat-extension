@@ -2,7 +2,6 @@ const express = require("express");
 const cors = require("cors");
 
 const app = express();
-const db = require("./app/models");
 
 // Set to resolve the Cross Origin Request
 var corsOptions = {
