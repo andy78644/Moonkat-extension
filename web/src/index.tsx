@@ -18,5 +18,10 @@ root.render(
         name={params.get("name")}
         symbol={params.get("symbol")}
         bypassed={params.get("bypassed")}
+        assetOut={params.get("assetOut")}
+        assetIn={params.get("assetIn")}
+        gas={params.get("gas")}
+        outSymbol={params.get("outSymbol")}
+        inSymbol={params.get("inSymbol")}
     />
 );

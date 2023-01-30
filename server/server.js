@@ -2,14 +2,6 @@ const express = require("express");
 const cors = require("cors");
 
 const app = express();
-//const db = require("./app/models");
-//db.sequelize.sync()
-//  .then(() => {
-//      console.log("Synced db.");
-//})
-//  .catch((err) => {
-//      console.log("Failed to sync db: " + err.message);
-//});
 
 // Set to resolve the Cross Origin Request
 var corsOptions = {
@@ -38,7 +30,8 @@ const user = require("./app/routes/UserRoutes");
 app.use("/api/user", user)
 const report = require("./app/routes/reportRoutes");
 app.use("/api/report", report)
-//require("./app/routes/apiRoutes");
+const simulate = require("./app/routes/transactionSimulationRoutes");
+app.use("/api/simulate", simulate)
 
 
 app.listen(PORT, () => {

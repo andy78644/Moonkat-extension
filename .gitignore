@@ -1,8 +1,17 @@
 *.log
 **/node_modules
 .DS_Store
-cloud_sql_proxy
 .vscode
+.env
 node_modules/
-server/app/config/db.config.js
-web/dist
+cloud_sql_proxy
+
+# server
+server/app/config/*
+server/txnres.json
+
+# web
+web/dist/*
+
+# previous version code
+revoke/
