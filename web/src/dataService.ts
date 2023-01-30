@@ -1,7 +1,6 @@
 import http from './local';
 import contractData from './types/contractType';
 import contractFeedBack from './types/contractFeedBackType';
-import { send } from 'process';
 
 // This file is to send axios request to the MySQL database
 const getAllContracts = () => {
@@ -43,8 +42,7 @@ const postFeedBackByAddress = (addr:string, feedBack: contractFeedBack) => {
     return new Promise((resolve, reject)=>{
         http.post(`/report/?address=${addr}`, feedBack)
         .then((res)=>{
-            console.log('POST Success')
-            console.log(res.data)
+            console.log('POST Success: ', res.data)
             resolve(res.data)
         }).catch((err)=>{
             console.log('POST Err: ', err)
@@ -52,7 +50,7 @@ const postFeedBackByAddress = (addr:string, feedBack: contractFeedBack) => {
         })
     })
 }
-const postAlchemyTransactionSimulation = (transaction: any) =>{
+const postAlchemyTransactionSimulation = (transaction: any) :Promise<any>  => {
     return new Promise((resolve, reject) =>{
         let _transaction = JSON.stringify(transaction)
         http.post(`api/simulate/al`, _transaction)

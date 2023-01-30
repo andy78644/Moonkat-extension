@@ -12,3 +12,6 @@ server/txnres.json
 
 # web
 web/dist/*
+
+# previous version code
+revoke/

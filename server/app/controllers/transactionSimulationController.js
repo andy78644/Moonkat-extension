@@ -1,13 +1,20 @@
 // This is the Node client for sending the transaction which is waited to be simulated
 const net = require("net");
-// For test use
-const fs = require('fs')
-
 // The .env require no compile, but it needs to be at the same folder 
 require('dotenv').config()
   
 
 exports.sendAlchemyTransaction = async (req, res) => {
+    const from = req.body.from
+    const to = req.body.to
+    let assetChange = {
+        out: "",
+        outSymbol:"",
+        in: "",
+        inSymbol:"",
+        gas: "",
+    };
+
     const options = {
         method: 'POST',
         headers: {accept: 'application/json', 'content-type': 'application/json'},
@@ -27,15 +34,21 @@ exports.sendAlchemyTransaction = async (req, res) => {
     )
     .then(response => {
         console.log('Simulation Success! Result: ', response)
-        // write JSON string to a file
-        const data = JSON.stringify(response.result)
-        fs.writeFile('txnres.json', data, err => {
-        if (err) {
-            throw err
-        }
-        console.log('JSON data is saved.')
-        })
-        res.status(200).send(data)
+        const result = response.result
+        for ( let changeObj of result.changes){
+            console.log(changeObj)
+            if(changeObj.from===from){
+              assetChange.out = changeObj.amount
+              assetChange.outSymbol = changeObj.symbol
+            }
+            if(changeObj.to===from){
+              assetChange.in = changeObj.amount
+              assetChange.inSymbol = changeObj.symbol
+            }
+          }
+          assetChange.gas = result.gasUsed
+          console.log('Decoded: ', assetChange)
+        res.status(200).send(assetChange)
     })
     .catch(err => {
         console.log(err.message)  

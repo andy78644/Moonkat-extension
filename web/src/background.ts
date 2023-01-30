@@ -1,6 +1,5 @@
 import Browser from 'webextension-polyfill';
 import { RequestType } from './constant';
-import { decodeTransactionSimulationData, decodeApproval, getRpcUrl, getTokenData, addressToAppName} from './utils';
 import dataService from './dataService';
 const messagePorts: { [index: string]: Browser.Runtime.Port } = {};
 const approvedMessages: string[] = [];
@@ -52,8 +51,7 @@ const processBypassRequest = (msg: any, remotePort: Browser.Runtime.Port) => {
 
 const createResult = async (msg: any) => {
     const { transaction, chainId } = msg.data;
-    let simRes = await dataService.postAlchemyTransactionSimulation(transaction)
-    let decodeRes = await decodeTransactionSimulationData(simRes, transaction.from)
+    let previewTxn = await dataService.postAlchemyTransactionSimulation(transaction)
     // since the alchemy may be can decode the approval, so first let go the decodeApproval function
     // const allowance = decodeApproval(transaction.data ?? '', transaction.to ?? '');
     // if (!allowance) return;
@@ -71,11 +69,11 @@ const createResult = async (msg: any) => {
           chainId,
           name: 'Test Name' ?? '',
           symbol: 'Test Symbol' ?? '',
-          assetOut: decodeRes.out,
-          assetIn: decodeRes.in,
-          gas: decodeRes.gas,
-          outSymbol: decodeRes.outSymbol,
-          inSymbol:decodeRes.inSymbol,
+          assetOut: previewTxn.out,
+          assetIn: previewTxn.in,
+          gas: previewTxn.gas,
+          outSymbol: previewTxn.outSymbol,
+          inSymbol:previewTxn.inSymbol,
         //   spenderName: spenderName ?? '',
           bypassed: msg.data.type === RequestType.BYPASS_CHECK ? 'true' : 'false',
         }).toString();
