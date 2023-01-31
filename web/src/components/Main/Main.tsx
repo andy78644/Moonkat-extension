@@ -100,7 +100,7 @@ const Main = (props: Props) => {
                 hasLoaded
                     ?
                     <div>
-                        <ContractInfo />
+                        <ContractInfo close={reject}/>
                         {
                             section === 'transfer'
                                 ?
