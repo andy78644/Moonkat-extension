@@ -34,7 +34,7 @@ app.get("/", (req, res) => {
 const PORT = process.env.PORT || 8080;
 const contract = require("./app/routes/contractRoutes");
 app.use("/api/contract", contract)
-const user = require("./app/routes/UserRoutes");
+const user = require("./app/routes/userRoutes");
 app.use("/api/user", user)
 const report = require("./app/routes/reportRoutes");
 app.use("/api/report", report)
