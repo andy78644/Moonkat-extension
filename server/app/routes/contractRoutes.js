@@ -14,6 +14,11 @@ router.get("/", (req, res) => {
 });
 */
 router.get("/", contracts.getByAddress);
+router.get("/basic", contracts.getByAddress);
+router.get("/tags", contracts.getByAddress);
+router.get("/transfer", contracts.getByAddress);
+router.get("/token", contracts.getTokenInformation);
+router.get("/creater", contracts.getByAddress);
 //app.use('/api/contracts', router);
 module.exports = router;
 

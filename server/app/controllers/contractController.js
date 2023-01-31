@@ -5,6 +5,7 @@ const querystring = require('querystring');
 const getData = require('./getRequest.js');
 const { create } = require("domain");
 const Web3 = require('web3');
+const { hasUncaughtExceptionCaptureCallback } = require("process");
 const web3 = new Web3();
 //const db = require("../models");
 //const Contract = db.Contract;
@@ -28,8 +29,9 @@ exports.getByAddress = async (req, res) => {
   const contract = await Contract.findByPk(address);
   // const allcontract = await Contract.findAll();
   // console.log(allcontract)
-  var res_contract = {
+  var resContract = {
     ContractAddress: address,
+    balance: null,
     ContractName: null,
     ContractLink: null,
     CreatorLastTransactionTime: null,
@@ -46,12 +48,13 @@ exports.getByAddress = async (req, res) => {
   if(contract){
     resdata = JSON.stringify(contract);
     console.log(resdata)
-    res_contract.TokenType = contract.TokenType;
-    res_contract.Holders = contract.Holders;
-    res_contract.TokenCreateTime = contract.CreateTime;
-    res_contract.TokenLastTransactionTime = contract.LastTransactionTime;
-    res_contract = JSON.stringify(res_contract);
-    res.status(200).send(res_contract);
+    resContract.TokenType = contract.TokenType;
+    resContract.Holders = contract.Holders;
+    resContract.TokenCreateTime = contract.CreateTime;
+    resContract.TokenLastTransactionTime = contract.LastTransactionTime;
+    resContract.balance = web3.utils.fromWei( contract.Balance.toString(), "ether");
+    resContract = JSON.stringify(resContract);
+    res.status(200).send(resContract);
   } 
   else{
     var query = null;
@@ -114,8 +117,8 @@ exports.getByAddress = async (req, res) => {
       });
 
       api_data.Balance.then( data => {
-        const balance = web3.utils.fromWei( data.result, "ether");;
-        set_up_contract.Balance = balance;
+        //const balance = web3.utils.fromWei( data.result, "ether");;
+        set_up_contract.Balance = data.result;
       });
     })
     .then(() => {
@@ -133,27 +136,52 @@ exports.getByAddress = async (req, res) => {
         })
     })
   }
-  /*
-  .then(contract => {
-    if(contract){
-      res.send(JSON.stringify(contract));
-    } 
-    else {
-      console.log("not found")
-      var query = querystring.stringify({
-        module, action, tag, address, apiKey
-      });
-      var api = getData.getRequest(query);
-      api
-      .then(function(data){
-        const contract = {
-          Address: address,
-          Balance: data["result"],
-        }
-        data = JSON.stringify(data);
-        Contract.create(contract)
-        .then(data => {
-          res.send(data)
+  
+  
+}; 
+
+exports.getTokenInformation = async (req, res) => {
+  const address = req.query.address;
+  //for test
+  //const address = '0x388C818CA8B9251b393131C08a736A67ccB19297'
+                  
+  //const chainID = req.query.chainID;
+
+  
+  const contract = await Contract.findByPk(address);
+  // const allcontract = await Contract.findAll();
+  // console.log(allcontract)
+  var resContract = {
+    Balance: null,
+    TokenLastTransactionTime: null,
+    TokenCreateTime: null,
+    TokenType: null,
+    Holders: null,
+    TokenTransactionCount: null
+  }
+  var contractData = await query(address);
+  console.log(contractData);
+  if(contractData.TokenType.length > 10 ) resContract.TokenType = null;
+    else resContract.TokenType = contractData.TokenType;
+  resContract.Holders = contractData.Holders;
+  resContract.TokenCreateTime = contractData.CreateTime;
+  resContract.TokenLastTransactionTime = contractData.LastTransactionTime;
+  resContract.Balance = web3.utils.fromWei( contractData.Balance.toString(), "ether");
+  resContract = JSON.stringify(resContract);
+  res.status(200).send(resContract);
+  if(contract){
+    //resdata = JSON.stringify(contract);
+    //console.log(resdata)
+    //res.status(200).send(resContract);
+  } 
+  else{
+    /*
+    .then(() => {
+      contract_data = JSON.stringify(set_up_contract);
+      console.log(set_up_contract);
+      Contract.create(set_up_contract)
+        .then(contract_data => {
+          res.send(contract_data)
         })
         .catch(err => {
           res.status(500).send({
@@ -161,58 +189,71 @@ exports.getByAddress = async (req, res) => {
               err.message || "error"
           });
         })
-        
-      });
-    }
-  })
-  */
+    })
+    */
+  }
+  
   
 }; 
 
-
-/*
-  console.log('Start Getting Contract Address: ' + address)
-  Contract.findByPk(address)
-  .then(data => {
-    if (data) {
-      res.send(data);
-    } else {
-      res.status(404).send({
-        message: "Cannot find Contract with address: " + address
-      });
-    }
-  })
-  .catch(err => {
-    res.status(500).send({
-      message: "Error: " + err + " Error Retrieving Contract with address: " + address
-    });
+async function query(address){
+  var query = null;
+  var set_up_contract = {
+    Address: address,
+    LastTransactionTime: null,
+    CreateTime: null,
+    TokenType: null,
+    Holders: null,
+    Balance: null,
+    NumberOfTransaction: null
+  }
+  const api = new Promise(async function(resolve, reject) {
+    const data = await getData.getRequest(query, address, apiKey);
+    resolve(data);
+  }).catch(err => {
+    reject(new Error(err));
   });
-  */
+
+  await api
+  .then( api_data=>{
+    api_data.LastTransaction.then(function(data){
+      const transactions = data.result;
+      const latesttransaction = transactions[0];
+      const date = new Date(latesttransaction.timeStamp*1000);
+      set_up_contract.LastTransactionTime = date;
+      // console.log(date)
+    });
 
 
-/*
-module.exports = function(getRequest, apiKey) {
-  return {
-    /**
-     * Returns the ABI/Interface of a given contract
-     * @param {string} address - Contract address
-     * @example
-     * api.contract
-     *  .getabi('0x2791bca1f2de4661ed88a30c99a7a9449aa84174')
-     *  .at('0x2791bca1f2de4661ed88a30c99a7a9449aa84174')
-     *  .memberId('0x2791bca1f2de4661ed88a30c99a7a9449aa84174')
-     *  .then(console.log)
-     * @returns {Promise.<object>}
-     
-    getabi(address) {
-      const module = 'contract';
-      const action = 'getsourcecode';
+    api_data.CreateTransaction.then(function(data){
+      const transactions = data.result;
+      const latesttransaction = transactions[0];
+      const date = new Date(latesttransaction.timeStamp*1000);
+      set_up_contract.CreateTime = date;
+      // console.log(date)
+    });
 
-      var query = querystring.stringify({
-        module, action, address, apiKey
-      });
+    api_data.TransactionCount.then(function(data){
+      const transcount = parseInt(data.result, 16).toString(10);
+      set_up_contract.NumberOfTransaction = transcount;
+      // console.log(date)
+    });
 
-      return getRequest(query);
-    }
-  };
-};*/
+    var tokentype = "";
+    api_data.TokenInfo.then( data => {
+      const valid = data.message;
+      if (valid == "OK"){
+        tokentype = data.result["TokenType"];
+      } else{
+        tokentype = data.result;
+      }
+      set_up_contract.TokenType = tokentype;
+    });
+
+    api_data.Balance.then( data => {
+      //const balance = web3.utils.fromWei( data.result, "ether");;
+      set_up_contract.Balance = data.result;
+    });
+  })
+  return set_up_contract;
+}
