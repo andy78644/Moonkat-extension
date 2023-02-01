@@ -50,10 +50,10 @@ const postFeedBackByAddress = (addr:string, feedBack: contractFeedBack) => {
         })
     })
 }
-const postAlchemyTransactionSimulation = (transaction: any) :Promise<any>  => {
+const postTransactionSimulation = (transaction: any) :Promise<any>  => {
     return new Promise((resolve, reject) =>{
         let _transaction = JSON.stringify(transaction)
-        http.post(`api/simulate/al`, _transaction)
+        http.post(`api/simulate/`, _transaction)
         .then((res) => {
             console.log('POST Success: ', res.data)
             resolve(res.data)
@@ -70,6 +70,6 @@ const dataService = {
     getByAddress,
     getFeedBackByAddress,
     postFeedBackByAddress,
-    postAlchemyTransactionSimulation
+    postTransactionSimulation
 }
 export default dataService

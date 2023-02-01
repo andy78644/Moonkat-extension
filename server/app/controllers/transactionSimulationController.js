@@ -4,7 +4,7 @@ const net = require("net");
 require('dotenv').config()
   
 
-exports.sendAlchemyTransaction = async (req, res) => {
+exports.sendTransaction = async (req, res) => {
     const from = req.body.from
     let assetChange = {
         out: "",
