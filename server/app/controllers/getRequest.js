@@ -22,7 +22,7 @@ const TESTNET_API_URL_MAP = {
 */
 
 
-module.exports.getRequest = function(query, address, apiKey){
+module.exports.getRequest = async function(query, address, apiKey){
     api = EtherscanAPI.init(apiKey);
 
     var client = axios.create({
