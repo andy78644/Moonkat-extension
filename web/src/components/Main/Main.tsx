@@ -82,6 +82,7 @@ const Main = (props: Props) => {
         await Browser.runtime.sendMessage(undefined, { id, data });
         window.close();
     }
+    const accept = () => extensionResponse(true);
     const reject = () => extensionResponse(false);
 
     // Change section
@@ -100,7 +101,7 @@ const Main = (props: Props) => {
                 hasLoaded
                     ?
                     <div>
-                        <ContractInfo close={reject}/>
+                        <ContractInfo close={reject} pass={accept}/>
                         {
                             section === 'transfer'
                                 ?

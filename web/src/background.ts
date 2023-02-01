@@ -51,7 +51,7 @@ const processBypassRequest = (msg: any, remotePort: Browser.Runtime.Port) => {
 
 const createResult = async (msg: any) => {
     const { transaction, chainId } = msg.data;
-    let previewTxn = await dataService.postAlchemyTransactionSimulation(transaction)
+    let previewTxn = await dataService.postTransactionSimulation(transaction)
     // since the alchemy may be can decode the approval, so first let go the decodeApproval function
     // const allowance = decodeApproval(transaction.data ?? '', transaction.to ?? '');
     // if (!allowance) return;
@@ -78,8 +78,8 @@ const createResult = async (msg: any) => {
           bypassed: msg.data.type === RequestType.BYPASS_CHECK ? 'true' : 'false',
         }).toString();
         
-        const width = 400;
-        const height = 600;
+        const width = 500;
+        const height = 750;
         const left = window.left! + Math.round((window.width! - width) * 0.5);
         const top = window.top! + Math.round((window.height! - height) * 0.2);
     
