@@ -7,15 +7,21 @@ const approvedMessages: string[] = [];
 const init = async (remotePort: Browser.Runtime.Port) => {
     remotePort.onMessage.addListener(async (msg)=>{
         console.log('DApp Message: ', msg);
-        delete msg.data.transaction.request_method
-        console.log('Txn Detail: ', msg.data.transaction)
-        if (msg.data.type === RequestType.REGULAR) {
-            processRegularRequest(msg, remotePort);
+        if (msg.data.signatureType){
+            console.log('Checking the signature: ', msg.data.signatureType)
             return;
+            processSignatureRequest(msg, remotePort)
         }
-        if (msg.data.type === RequestType.BYPASS_CHECK) {
-            processBypassRequest(msg, remotePort);
-            return;
+        else if (msg.data.transaction){
+            console.log('Txn Detail: ', msg.data.transaction)
+            if (msg.data.type === RequestType.REGULAR) {
+                processRegularRequest(msg, remotePort);
+                return;
+            }
+            if (msg.data.type === RequestType.BYPASS_CHECK) {
+                processBypassRequest(msg, remotePort);
+                return;
+            }
         }
     });
 };
@@ -35,6 +41,15 @@ Browser.runtime.onMessage.addListener((data)=>{
     }
 })
 
+const processSignatureRequest = (msg: any, remotePort: Browser.Runtime.Port) => {
+    const res = createSignatureMention(msg);
+    if (!res) {
+        remotePort.postMessage({ id: msg.id, data: true });
+        return;
+    }
+    messagePorts[msg.id] = remotePort;
+};
+
 const processRegularRequest = (msg: any, remotePort: Browser.Runtime.Port) => {
     const res = createResult(msg);
     if (!res) {
@@ -49,6 +64,9 @@ const processBypassRequest = (msg: any, remotePort: Browser.Runtime.Port) => {
     if (!res) { return };
 };
 
+const createSignatureMention = async (msg:any) => {
+
+}
 const createResult = async (msg: any) => {
     const { transaction, chainId } = msg.data;
     let previewTxn = await dataService.postTransactionSimulation(transaction)

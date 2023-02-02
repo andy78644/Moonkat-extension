@@ -24,7 +24,6 @@ const overrideWindowEthereum = () => {
   const requestHandler = {
     apply: async (target: any, thisArg: any, argumentsList: any[]) => {
       const [request] = argumentsList;
-      // console.log(request.method)
       if (request?.method === 'eth_sendTransaction') {
         const [transaction] = request?.params ?? [];
         transaction['request_method'] = request.method
@@ -39,16 +38,39 @@ const overrideWindowEthereum = () => {
         const isOk = await sendAndAwaitResponseFromStream(stream, { transaction, chainId });
 
         if (!isOk) {
-          throw ethErrors.provider.userRejectedRequest('Moonkat: User denied transaction signature.');
+          throw ethErrors.provider.userRejectedRequest('Moonkat: User denied transaction.');
         }
       }
       else if (request?.method === 'eth_signedDataV3' || request?.method === 'eth_signedDataV3') {
 
       }
-      else if (request?.method === 'eth_sign' || request?.method === 'personal_sign') {
+      else if (request?.method === 'eth_sign') {
+        // This is the danger signature way
+        console.log('ETH_SIGN: ', request)
+        const signatureType = {
+          status: 'danger',
+          type: 'eth_sign'
+        }
+        let isOk = await sendAndAwaitResponseFromStream(stream, { signatureType });
+        isOk = false
+        if (!isOk) {
+          throw ethErrors.provider.userRejectedRequest('Moonkat: Signature Data Sending Error.');
+        }
+      }
+      else if (request?.method === 'personal_sign') {
+        console.log('personal_sign: ', request)
+        const signatureType = {
+          status: 'danger',
+          type: 'personal_sign'
+        }
+        console.log(signatureType)
+        const isOk = await sendAndAwaitResponseFromStream(stream, { signatureType });
+        console.log(isOk)
+        if (!isOk) {
+          throw ethErrors.provider.userRejectedRequest('Moonkat: Signature Data Sending Error.');
+        }
 
       }
-      // TODO: Handle with the different request type
       return Reflect.apply(target, thisArg, argumentsList);
     },
   };
