@@ -31,7 +31,7 @@ exports.sendTransaction = async (req, res) => {
     .then(response => 
         response.json()
     )
-    .then(response => {
+    .then(async response => {
         console.log('Simulation Success! Result: ', response)
         const result = response.result
         for ( let changeObj of result.changes){
@@ -41,6 +41,23 @@ exports.sendTransaction = async (req, res) => {
               assetChange.outSymbol = changeObj.symbol
             }
             if(changeObj.to===from){
+              if(changeObj.assetType === 'ERC1155' || changeObj.assetType === 'ERC721'){
+                await fetch(`https://eth-mainnet.g.alchemy.com/v2/${process.env.ALCHEMY_API_KEY}\n
+                /getNFTMetadata?contractAddress=${changeObj.contractAddress}&tokenId=${changeObj.tokenId}`)
+                .then(response => 
+                  response.json()
+                )
+                .then(response => {
+                  console.log(response)
+                })
+                .catch(err => {
+                  console.log(err.message)  
+                  res.status(500).send({
+                      message:
+                        err.message || "error"
+                    });           
+              })
+              }
               assetChange.in = changeObj.amount
               assetChange.inSymbol = changeObj.symbol
             }
@@ -57,4 +74,3 @@ exports.sendTransaction = async (req, res) => {
           });           
     })
 }
-
