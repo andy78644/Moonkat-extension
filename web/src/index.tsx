@@ -10,6 +10,7 @@ const params = new URLSearchParams(window.location.search);
 const root = ReactDOM.createRoot(document.getElementById("root"));
 
 root.render(
+    // if signature create signature page
     <Main
         id={params.get("id")}
         asset={params.get("asset")}
