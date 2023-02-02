@@ -69,7 +69,8 @@ module.exports.getRequest = async function(query, address, apiKey){
           data = response.data;
           resolve(data);
         }).catch(function(error){
-          return reject(new Error(error));
+          //console.log("test");
+          reject(new Error(error));
         });
     });
     
@@ -87,6 +88,9 @@ module.exports.getRequest = async function(query, address, apiKey){
 
     return Promise.all([ret.Balance, ret.TokenInfo, ret.LastTransaction, ret.CreateTransaction, ret.TransactionCount]).then( () => {
       return ret;
-    });
+    })
+    .catch(err => {
+      return ret;
+    });;
 }
 

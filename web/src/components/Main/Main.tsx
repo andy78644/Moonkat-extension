@@ -17,6 +17,11 @@ interface Props {
     name: any;
     symbol: any;
     bypassed: any;
+    assetOut: any;
+    assetIn: any;
+    gas: any;
+    outSymbol: any;
+    inSymbol:any;
 };
 
 const initContractState = {
@@ -41,8 +46,14 @@ const initUserState = {
 
 const Main = (props: Props) => {
 
-    const { id, asset, spender, chainId, name, symbol, bypassed } = props;
-
+    const { id, asset, spender, chainId, name, symbol, bypassed, assetOut, assetIn, gas, outSymbol, inSymbol} = props;
+    const transferInfo = {
+        assetOut: assetOut,
+        assetIn: assetIn,
+        gas: gas,
+        outSymbol: outSymbol,
+        inSymbol: inSymbol 
+    }
     const [contractState, setContract] = useState<contractData>(initContractState);
     const [userState, setUserState] = useState(initUserState);
     const [hasLoaded, setHasLoaded] = useState(false);
@@ -71,6 +82,7 @@ const Main = (props: Props) => {
         await Browser.runtime.sendMessage(undefined, { id, data });
         window.close();
     }
+    const accept = () => extensionResponse(true);
     const reject = () => extensionResponse(false);
 
     // Change section
@@ -89,12 +101,12 @@ const Main = (props: Props) => {
                 hasLoaded
                     ?
                     <div>
-                        <ContractInfo />
+                        <ContractInfo close={reject} pass={accept}/>
                         {
                             section === 'transfer'
                                 ?
                                 <Transfer
-                                    {...contractState}
+                                    {...transferInfo}
                                 />
                                 :
                                 <MoreInfo />

@@ -24,14 +24,18 @@ const overrideWindowEthereum = () => {
   const requestHandler = {
     apply: async (target: any, thisArg: any, argumentsList: any[]) => {
       const [request] = argumentsList;
-      console.log(request.method)
+      // console.log(request.method)
       if (request?.method === 'eth_sendTransaction') {
         const [transaction] = request?.params ?? [];
-        transaction['request method'] = request.method
+        transaction['request_method'] = request.method
         if (!transaction) return Reflect.apply(target, thisArg, argumentsList);
 
         const provider = new providers.Web3Provider((window as any).ethereum);
         const { chainId } = await provider.getNetwork();
+        let _val = 'value' in transaction
+        if (!_val){
+            transaction.value = 0
+        } 
         const isOk = await sendAndAwaitResponseFromStream(stream, { transaction, chainId });
 
         if (!isOk) {

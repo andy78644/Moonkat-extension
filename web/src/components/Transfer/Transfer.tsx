@@ -7,11 +7,16 @@ import MoreTags from './MoreTags/MoreTags';
 import './Transfer.css';
 
 interface Props {
-
+    assetOut: any;
+    assetIn: any;
+    gas: any;
+    outSymbol: any;
+    inSymbol:any;
 }
 
 const Transfer = (props: Props) => {
   const [moreTags, setMoreTags] = useState(false);
+  const {assetOut, assetIn, gas, outSymbol, inSymbol} = props;
   return (
     <div>
       <Header tagState={moreTags} changeTag={setMoreTags}></Header>
@@ -23,10 +28,14 @@ const Transfer = (props: Props) => {
           </div>
           :
           <div>
-            <AssetsIn></AssetsIn>
+            <AssetsIn
+              { ...{asset:assetIn, symbol:inSymbol}}
+            ></AssetsIn>
           </div>
       }
-      <AssetsOut></AssetsOut>
+      <AssetsOut
+        {...{asset:assetOut, symbol:outSymbol, gas:gas}}
+      ></AssetsOut>
     </div>
   );
 };

@@ -79,7 +79,7 @@ exports.getByAddress = async (req, res) => {
     }).catch(err => {
       reject(new Error(err));
     });
-
+    await console.log("test");
     api
     .then( api_data=>{
       api_data.LastTransaction.then(function(data){
@@ -114,7 +114,8 @@ exports.getByAddress = async (req, res) => {
           tokentype = data.result;
         }
         set_up_contract.TokenType = tokentype;
-      });
+      })
+      .catch(err => console.log(err.message));
 
       api_data.Balance.then( data => {
         //const balance = web3.utils.fromWei( data.result, "ether");;
@@ -202,7 +203,7 @@ async function query(address){
     Address: address,
     LastTransactionTime: null,
     CreateTime: null,
-    TokenType: null,
+    TokenType: "",
     Holders: null,
     Balance: null,
     NumberOfTransaction: null
@@ -213,34 +214,42 @@ async function query(address){
   }).catch(err => {
     reject(new Error(err));
   });
-
+  await console.log("test");
+  
   await api
-  .then( api_data=>{
-    api_data.LastTransaction.then(function(data){
+  .then(async api_data=>{
+    await api_data.LastTransaction.then(function(data){
       const transactions = data.result;
       const latesttransaction = transactions[0];
       const date = new Date(latesttransaction.timeStamp*1000);
       set_up_contract.LastTransactionTime = date;
-      // console.log(date)
+      //console.log(date)
+    })
+    .catch(err => {
+      console.log(err);
     });
 
-
-    api_data.CreateTransaction.then(function(data){
+   
+    await api_data.CreateTransaction.then(function(data){
       const transactions = data.result;
       const latesttransaction = transactions[0];
       const date = new Date(latesttransaction.timeStamp*1000);
       set_up_contract.CreateTime = date;
       // console.log(date)
+    })
+    .catch(err => {
+      console.log(err);
     });
-
-    api_data.TransactionCount.then(function(data){
+    await api_data.TransactionCount.then(function(data){
       const transcount = parseInt(data.result, 16).toString(10);
       set_up_contract.NumberOfTransaction = transcount;
       // console.log(date)
+    }).catch(err => {
+      console.log(err);
     });
 
     var tokentype = "";
-    api_data.TokenInfo.then( data => {
+    await api_data.TokenInfo.then( data => {
       const valid = data.message;
       if (valid == "OK"){
         tokentype = data.result["TokenType"];
@@ -248,12 +257,20 @@ async function query(address){
         tokentype = data.result;
       }
       set_up_contract.TokenType = tokentype;
+    })
+    .catch(err => {
+      console.log(err);
     });
 
-    api_data.Balance.then( data => {
+    await api_data.Balance.then( data => {
       //const balance = web3.utils.fromWei( data.result, "ether");;
+      data.result = data.result?data.result:0;
       set_up_contract.Balance = data.result;
+    })
+    .catch(err => {
+      console.log(err);
     });
   })
+  
   return set_up_contract;
 }
