@@ -22,6 +22,7 @@ interface Props {
     gas: any;
     outSymbol: any;
     inSymbol:any;
+    tokenURL: any;
 };
 
 const initContractState = {
@@ -46,13 +47,16 @@ const initUserState = {
 
 const Main = (props: Props) => {
 
-    const { id, asset, spender, chainId, name, symbol, bypassed, assetOut, assetIn, gas, outSymbol, inSymbol} = props;
+    const { id, asset, spender, chainId, name, symbol, bypassed, 
+        assetOut, assetIn, gas, outSymbol, inSymbol,tokenURL
+    } = props;
     const transferInfo = {
         assetOut: assetOut,
         assetIn: assetIn,
         gas: gas,
         outSymbol: outSymbol,
-        inSymbol: inSymbol 
+        inSymbol: inSymbol ,
+        tokenURL: tokenURL
     }
     const [contractState, setContract] = useState<contractData>(initContractState);
     const [userState, setUserState] = useState(initUserState);

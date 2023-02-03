@@ -23,5 +23,6 @@ root.render(
         gas={params.get("gas")}
         outSymbol={params.get("outSymbol")}
         inSymbol={params.get("inSymbol")}
+        tokenURL={params.get("tokenURL")}
     />
 );

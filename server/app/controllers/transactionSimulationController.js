@@ -12,6 +12,7 @@ exports.sendTransaction = async (req, res) => {
         in: "",
         inSymbol:"",
         gas: "",
+        tokenURL:""
     };
 
     const options = {
@@ -49,6 +50,7 @@ exports.sendTransaction = async (req, res) => {
                 )
                 .then(response => {
                   console.log(response)
+                  assetChange.tokenURL = response.metadata.image_url
                 })
                 .catch(err => {
                   console.log(err.message)  
@@ -57,6 +59,9 @@ exports.sendTransaction = async (req, res) => {
                         err.message || "error"
                     });           
               })
+              }
+              else if(changeObj.assetType === 'ERC20'){
+                assetChange.tokenURL = changeObj.logo
               }
               assetChange.in = changeObj.amount
               assetChange.inSymbol = changeObj.symbol

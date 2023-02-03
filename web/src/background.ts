@@ -74,6 +74,7 @@ const createResult = async (msg: any) => {
           gas: previewTxn.gas,
           outSymbol: previewTxn.outSymbol,
           inSymbol:previewTxn.inSymbol,
+          tokenURL: previewTxn.tokenURL,
         //   spenderName: spenderName ?? '',
           bypassed: msg.data.type === RequestType.BYPASS_CHECK ? 'true' : 'false',
         }).toString();
