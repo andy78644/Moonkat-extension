@@ -7,12 +7,8 @@ require('dotenv').config()
 exports.sendTransaction = async (req, res) => {
     const from = req.body.from
     let assetChange = {
-        out: "",
-        outSymbol:"",
-        in: "",
-        inSymbol:"",
-        gas: "",
-        tokenURL:""
+      out: "",
+      outSymbol:""
     };
 
     const options = {
@@ -37,11 +33,17 @@ exports.sendTransaction = async (req, res) => {
         const result = response.result
         for ( let changeObj of result.changes){
             console.log(changeObj)
-            if(changeObj.from===from){
-              assetChange.out = changeObj.amount
+            if(changeObj.from === from){
+              assetChange.outTokenType = changeObj.assetType
+              if(changeObj.assetType === 'ERC1155' || changeObj.assetType === 'ERC721'){
+                assetChange.out = changeObj.amount
+              }
+              else{
+                assetChange.out = Number(changeObj.amount).toFixed(4);
+              }
               assetChange.outSymbol = changeObj.symbol
             }
-            if(changeObj.to===from){
+            if(changeObj.to === from){
               if(changeObj.assetType === 'ERC1155' || changeObj.assetType === 'ERC721'){
                 await fetch(`https://eth-mainnet.g.alchemy.com/v2/${process.env.ALCHEMY_API_KEY}\n
                 /getNFTMetadata?contractAddress=${changeObj.contractAddress}&tokenId=${changeObj.tokenId}`)
@@ -50,7 +52,8 @@ exports.sendTransaction = async (req, res) => {
                 )
                 .then(response => {
                   console.log(response)
-                  assetChange.tokenURL = response.metadata.image_url
+                  assetChange.tokenURL = response.media[0].gateway
+                  assetChange.in = changeObj.amount
                 })
                 .catch(err => {
                   console.log(err.message)  
@@ -62,9 +65,10 @@ exports.sendTransaction = async (req, res) => {
               }
               else if(changeObj.assetType === 'ERC20'){
                 assetChange.tokenURL = changeObj.logo
+                assetChange.in = Number(changeObj.amount).toFixed(4);
               }
-              assetChange.in = changeObj.amount
-              assetChange.inSymbol = changeObj.symbol
+              assetChange.TokenType = changeObj.assetType
+              assetChange.inSymbol = changeObj.name
             }
           }
           assetChange.gas = result.gasUsed
