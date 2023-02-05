@@ -12,6 +12,15 @@ const stream = new WindowPostMessageStream({
 
 let overrideInterval: NodeJS.Timer;
 
+const hex_to_ascii = (str1:string) =>{
+ var hex  = str1.toString();
+ var str = '';
+ for (var n = 0; n < hex.length; n += 2) {
+   str += String.fromCharCode(parseInt(hex.substr(n, 2), 16));
+ }
+ return str;
+}
+
 const overrideWindowEthereum = () => {
   if (!(window as any).ethereum) return;
 
@@ -41,16 +50,18 @@ const overrideWindowEthereum = () => {
           throw ethErrors.provider.userRejectedRequest('Moonkat: User denied transaction.');
         }
       }
-      else if (request?.method === 'eth_signedDataV3' || request?.method === 'eth_signedDataV3') {
-
+      else if (request?.method === 'signTypedDataV3' || request?.method === 'eth_signedDataV3') {
+        console.log('eth_signV3: ', request)
       }
       else if (request?.method === 'eth_sign') {
         // This is the danger signature way
-        console.log('ETH_SIGN: ', request)
-        const signatureType = {
+        console.log('eth_sign: ', request)
+        let signatureType = {
           status: 'danger',
-          type: 'eth_sign'
+          signMethod: 'eth_sign',
+          text: ""
         }
+        signatureType.text = hex_to_ascii(request.params[0])
         let isOk = await sendAndAwaitResponseFromStream(stream, { signatureType });
         isOk = false
         if (!isOk) {
@@ -59,13 +70,14 @@ const overrideWindowEthereum = () => {
       }
       else if (request?.method === 'personal_sign') {
         console.log('personal_sign: ', request)
-        const signatureType = {
-          status: 'danger',
-          type: 'personal_sign'
+        let signatureType = {
+          status: 'need notice',
+          signMethod: 'personal_sign',
+          text: ""
         }
+        signatureType.text = hex_to_ascii(request.params[0])
         console.log(signatureType)
         const isOk = await sendAndAwaitResponseFromStream(stream, { signatureType });
-        console.log(isOk)
         if (!isOk) {
           throw ethErrors.provider.userRejectedRequest('Moonkat: Signature Data Sending Error.');
         }
