@@ -72,7 +72,8 @@ const createSignatureMention = async (msg:any) => {
     const top = window.top! + Math.round((window.height! - height) * 0.2);
     console.log(msg)
     const queryString = new URLSearchParams({
-        context: msg.data.signatureType.text
+        context: msg.data.signatureType.text,
+        id: msg.id
     })
     const popupWindow = await Browser.windows.create({
         url: `tmp.html?${queryString}`,
