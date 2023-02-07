@@ -7,8 +7,8 @@ const approvedMessages: string[] = [];
 const init = async (remotePort: Browser.Runtime.Port) => {
     remotePort.onMessage.addListener(async (msg)=>{
         console.log('DApp Message: ', msg);
-        if (msg.data.signatureType){
-            console.log('Checking the signature: ', msg.data.signatureType)
+        if (msg.data.signatureData){
+            console.log('Checking the signature: ', msg.data.signatureData)
             // return;
             processSignatureRequest(msg, remotePort)
         }
@@ -72,7 +72,7 @@ const createSignatureMention = async (msg:any) => {
     const top = window.top! + Math.round((window.height! - height) * 0.2);
     console.log(msg)
     const queryString = new URLSearchParams({
-        context: msg.data.signatureType.text,
+        context: msg.data.signatureData.text,
         id: msg.id
     })
     const popupWindow = await Browser.windows.create({
