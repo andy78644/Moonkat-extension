@@ -60,7 +60,8 @@ const overrideWindowEthereum = () => {
           signMethod: request?.method,
           text: ""
         }
-        signatureData.text = "This is a dangerous signing method !"
+        // signatureData.text = "This is a dangerous signing method !"
+        signatureData.text = request?.method + " " + 'This is a dangerous signing method !'
         let isOk = await sendAndAwaitResponseFromStream(stream, { signatureData });
         if (!isOk) {
           throw ethErrors.provider.userRejectedRequest('Moonkat: User denied Signature.');
@@ -72,7 +73,7 @@ const overrideWindowEthereum = () => {
           signMethod: request?.method,
           text: ""
         }
-        signatureData.text = hex_to_ascii(request.params[0])
+        signatureData.text = request?.method + " " + hex_to_ascii(request.params[0])
         console.log(signatureData)
         const isOk = await sendAndAwaitResponseFromStream(stream, { signatureData });
         if (!isOk) {
@@ -93,7 +94,7 @@ const overrideWindowEthereum = () => {
           signName: request.params[0][1].name,
           signValue: request.params[0][1].value,
         }
-        signatureData.text = JSON.stringify(signMsg)
+        signatureData.text = request?.method + " " + JSON.stringify(signMsg)
         console.log(signatureData)
         const isOk = await sendAndAwaitResponseFromStream(stream, { signatureData });
         if (!isOk) {
@@ -114,7 +115,7 @@ const overrideWindowEthereum = () => {
         console.log(payLoad)
         signatureData.contractDetail.chainId = payLoad.domain.chainId
         signatureData.contractDetail.address = payLoad.domain.verifyingContract
-        signatureData.text = JSON.stringify(payLoad.message)
+        signatureData.text =  request?.method + " " + JSON.stringify(payLoad.message)
         console.log(signatureData)
         const isOk = await sendAndAwaitResponseFromStream(stream, { signatureData });
         if (!isOk) {
@@ -135,7 +136,7 @@ const overrideWindowEthereum = () => {
         console.log(payLoad)
         signatureData.contractDetail.chainId = payLoad.domain.chainId
         signatureData.contractDetail.address = payLoad.domain.verifyingContract
-        signatureData.text = JSON.stringify(payLoad.message)
+        signatureData.text =  request?.method + " " + JSON.stringify(payLoad.message)
         console.log(signatureData)
         const isOk = await sendAndAwaitResponseFromStream(stream, { signatureData });
         if (!isOk) {
