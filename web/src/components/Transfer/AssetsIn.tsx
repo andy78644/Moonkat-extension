@@ -12,6 +12,7 @@ interface Props {
     // productSource: any;
     asset: any;
     symbol: any;
+    tokenURL: string;
 }
 
 const AssetsIn = (props: Props) => {
@@ -25,9 +26,9 @@ const AssetsIn = (props: Props) => {
                 <IconButton>
                     <SaveAltIcon />
                 </IconButton>
-                <img id="assetsImage" src={SampleImage} alt="sampleImage" />
+                <img id="assetsImage" src={props.tokenURL} alt="sampleImage" />
                 <div id="assetsInAssetsAndSource">
-                    <div id="assetsInAssets">{Number(asset).toFixed(4)}{symbol}</div>
+                    <div id="assetsInAssets">{Number(asset)}&nbsp;{symbol}</div>
                     <br />
                     <div id="assetsInSource">View On OpenSea</div>
                 </div>

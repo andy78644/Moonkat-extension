@@ -25,7 +25,7 @@ const AssetsOut = (props: Props) => {
                     <ArrowOutwardIcon sx={{fontSize: 25}}/>
                 </IconButton>
                 <div id="assetsOutAssetsFee">
-                    {Number(asset).toFixed(4)}{symbol}
+                    {Number(asset)}&nbsp;{symbol}
                 </div>
             </div>
             <div id="assetsOutGas">
@@ -33,7 +33,7 @@ const AssetsOut = (props: Props) => {
                     <GasFeeIcon sx={{fontSize: 25}}/>
                 </IconButton>
                 <div id="assetsOutGasFee">
-                    {Number(gas).toFixed(4)} GWei
+                    {Number(gas)}&nbsp;Wei
                 </div>
             </div>
         </div>

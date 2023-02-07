@@ -12,11 +12,12 @@ interface Props {
     gas: any;
     outSymbol: any;
     inSymbol:any;
+    tokenURL:string;
 }
 
 const Transfer = (props: Props) => {
   const [moreTags, setMoreTags] = useState(false);
-  const {assetOut, assetIn, gas, outSymbol, inSymbol} = props;
+  const {assetOut, assetIn, gas, outSymbol, inSymbol, tokenURL} = props;
   return (
     <div>
       <Header tagState={moreTags} changeTag={setMoreTags}></Header>
@@ -29,7 +30,7 @@ const Transfer = (props: Props) => {
           :
           <div>
             <AssetsIn
-              { ...{asset:assetIn, symbol:inSymbol}}
+              { ...{asset:assetIn, symbol:inSymbol, tokenURL:tokenURL}}
             ></AssetsIn>
           </div>
       }
