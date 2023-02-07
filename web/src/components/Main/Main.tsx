@@ -12,6 +12,7 @@ import './Main.css'
 interface Props {
     id: any;
     asset: any;
+    contract:any;
     spender: any;
     chainId: any;
     name: any;
@@ -48,7 +49,7 @@ const initUserState = {
 const Main = (props: Props) => {
 
     const { id, asset, spender, chainId, name, symbol, bypassed, 
-        assetOut, assetIn, gas, outSymbol, inSymbol,tokenURL
+        assetOut, assetIn, gas, outSymbol, inSymbol,tokenURL, contract
     } = props;
     const transferInfo = {
         assetOut: assetOut,
@@ -105,7 +106,7 @@ const Main = (props: Props) => {
                 hasLoaded
                     ?
                     <div>
-                        <ContractInfo close={reject} pass={accept}/>
+                        <ContractInfo close={reject} pass={accept} contract={props.contract}/>
                         {
                             section === 'transfer'
                                 ?

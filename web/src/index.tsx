@@ -13,6 +13,7 @@ root.render(
     <Main
         id={params.get("id")}
         asset={params.get("asset")}
+        contract={params.get("contract")}
         spender={params.get("spender")}
         chainId={params.get("chainId")}
         name={params.get("name")}

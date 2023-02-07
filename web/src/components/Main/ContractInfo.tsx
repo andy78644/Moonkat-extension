@@ -10,6 +10,7 @@ import { ForkRight } from "@mui/icons-material";
 interface Props {
     close: any,
     pass: any,
+    contract: any,
     // productName: any,
     // productAddress: any,
     // linkToProduct: any,
@@ -17,6 +18,10 @@ interface Props {
 };
 
 const ContractInfo = (props: Props) => {
+    const url = `https://etherscan.io/address/${props.contract}`
+    const _style = {
+        // text-overflow: 'ellipsis'
+    }
     return (
         <div id="contractInfo">
             <div id="infoTitle">
@@ -25,16 +30,18 @@ const ContractInfo = (props: Props) => {
             <div id="address">
                 <div id="Buttons">
                 </div>
-                Contract &nbsp; (0xBC4C...f13D) 
-                <IconButton>
+                <div style={_style}>
+                Contract &nbsp;{props.contract}
+                </div>
+                <IconButton href={url} target="_blank">
                     <LinkIcon sx={{fontSize: 18}}/>
                 </IconButton>
                 <IconButton onClick={props.close}>
                         <DisabledByDefaultIcon sx={{display: "inline-block"}}/>
-                    </IconButton>
-                    <IconButton onClick={props.pass}>
-                        <CheckCircleOutlineIcon sx={{display: "inline-block"}}/>
-                    </IconButton>
+                </IconButton>
+                <IconButton onClick={props.pass}>
+                    <CheckCircleOutlineIcon sx={{display: "inline-block"}}/>
+                </IconButton>
             </div>
         </div>
     )
