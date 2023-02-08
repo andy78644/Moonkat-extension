@@ -18,10 +18,10 @@ spec:
           ports:
             - containerPort: 8080
           volumeMounts:
-          - name: secret-volume
-            mountPath: /usr/scr/app
-            readOnly: true
-        volumes:
+            - name: secret-volume
+              mountPath: /usr/scr/app
+              readOnly: true
+      volumes:
         - name: secret-volume
           secret:
             secretName: env-secret
