@@ -26,11 +26,7 @@ jobs:
         run: |
           echo ALCHEMY_API_KEY = ${{ secrets.ALCHEMY_API_KEY }} >> .env
           echo ETHERSCAN_API_KEY = ${{ secrets.ETHERSCAN_API_KEY }} >> .env
-          echo DB_USER=${{ secrets.SECRET_USER_DB }} >> .env
-          echo PASSWORD_DB=${{ secrets.SECRET_PASSWORD_DB }} >> .env
-          echo HOST_DB=${{ secrets.SECRET_HOST_DB }} >> .env
-          echo PORT_DB=${{ secrets.SECRET_PORT_DB }} >> .env
-          echo NAME_DB=${{ secrets.SECRET_NAME_DB }} >> .env
+          echo DB_CONFIG =${{ secrets.SECRET_DB_CONFIG }} >> .env
       - name: Authenticate to Google Cloud
         id: auth
         uses: google-github-actions/auth@v0
