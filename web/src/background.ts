@@ -58,8 +58,8 @@ const processRegularRequest = (msg: any, remotePort: Browser.Runtime.Port) => {
     messagePorts[msg.id] = remotePort;
 };
 
-const processBypassRequest = (msg: any, remotePort: Browser.Runtime.Port) => {
-    const res = createResult(msg);
+const processBypassRequest = async (msg: any, remotePort: Browser.Runtime.Port) => {
+    const res = await createResult(msg);
     if (!res) { return };
 };
 
@@ -87,15 +87,14 @@ const createSignatureMention = async (msg:any) => {
 }
 const createResult = async (msg: any) => {
     const { transaction, chainId } = msg.data;
+    const id = msg.id
     let previewTxn = await dataService.postTransactionSimulation(transaction)
+    .catch((err)=>{
+        console.log('Server is down: ', err)
+        return false
+    })
     // since the alchemy may be can decode the approval, so first let go the decodeApproval function
-    // const allowance = decodeApproval(transaction.data ?? '', transaction.to ?? '');
-    // if (!allowance) return;
-    // if (approvedMessages.includes(msg.id)) return false;
-    // const rpcUrl = getRpcUrl(chainId, EthRPC); 
     Promise.all([
-        // getTokenData(allowance.asset, new providers.JsonRpcProvider(rpcUrl)),
-        // addressToAppName(allowance.spender, chainId),
         Browser.windows.getCurrent(),
     ]).then(async ([window]) => {
         const queryString = new URLSearchParams({
@@ -111,7 +110,6 @@ const createResult = async (msg: any) => {
           outSymbol: previewTxn.outSymbol,
           inSymbol:previewTxn.inSymbol,
           tokenURL: previewTxn.tokenURL,
-        //   spenderName: spenderName ?? '',
           bypassed: msg.data.type === RequestType.BYPASS_CHECK ? 'true' : 'false',
         }).toString();
         
@@ -128,11 +126,7 @@ const createResult = async (msg: any) => {
           left: left,
           top: top
         });
-    
-        // Specifying window position does not work on Firefox, so we have to reposition after creation (6 y/o bug -_-).
-        // Has no effect on Chrome, because the window position is already correct.
-        // await Browser.windows.update(popupWindow.id!, { width, height, left, top });
-      });
+      })
       return true;
 };
     
