@@ -18,5 +18,5 @@ spec:
           ports:
             - containerPort: 8080
           envFrom:
-            - secrretRef:
+            - secretRef:
               name: env-secret
