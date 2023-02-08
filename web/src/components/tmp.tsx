@@ -3,6 +3,7 @@ import Browser from "webextension-polyfill";
 import ReactDOM from "react-dom/client";
 import IconButton from '@mui/material/IconButton'
 import DisabledByDefaultIcon from '@mui/icons-material/DisabledByDefault';
+import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 
 const params = new URLSearchParams(window.location.search);
 
@@ -31,6 +32,9 @@ const Tmp = (props: Props) => {
             Sign Content is:&nbsp;{context}
             <IconButton onClick={reject}>
                 <DisabledByDefaultIcon sx={{display: "inline-block"}}/>
+            </IconButton>
+            <IconButton onClick={accept}>
+                <CheckCircleOutlineIcon sx={{display: "inline-block"}}/>
             </IconButton>
         </div>
         
