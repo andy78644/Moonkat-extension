@@ -22,11 +22,6 @@ jobs:
       id-token: 'write'
     steps:
       - uses: actions/checkout@v3
-      - name: Add env file
-        run: |
-          echo ALCHEMY_API_KEY = ${{ secrets.ALCHEMY_API_KEY }} >> .env
-          echo ETHERSCAN_API_KEY = ${{ secrets.ETHERSCAN_API_KEY }} >> .env
-          echo DB_CONFIG =${{ secrets.SECRET_DB_CONFIG }} >> .env
       - name: Authenticate to Google Cloud
         id: auth
         uses: google-github-actions/auth@v0
