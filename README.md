@@ -27,7 +27,7 @@ To Build the frontend file, cd to `web/` and type the beneath command
 The `WORK_ENV` has two value
 ```
 dev: 127.0.0.1:8080
-work: 
+prod: 
 ```
 Help developer to switch the runtime without editing
 
