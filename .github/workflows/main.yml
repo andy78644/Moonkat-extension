@@ -4,10 +4,14 @@ on:
     branches:
       - web-develop
       - master
+      - mvp
+      - feat/githubAction
   pull_request:
     branches:
       - web-develop
       - master
+      - mvp
+      - feat/githubAction
 jobs:
   # example with Workload Identity Federation
   build-and-push-to-gcr-workload-identity:

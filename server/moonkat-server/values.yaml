@@ -2,12 +2,13 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
-replicaCount: 1
+replicaCount: 3
 # gcr.io/gogolook-compass/moonkat-app:v1
 image:
   repository: gcr.io/gogolook-compass/moonkat-app
   # pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
+  tag: 1877d4e546780e10f5ce7cdd1a3c490e36d7d0cf
   tag: e208b6ecd7bb6ddf4468ac3c3d319acdb2fa56c0
 
 
