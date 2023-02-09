@@ -23,11 +23,19 @@ server/app/config/config.json
 web/dist/*
 ```
 ### Scripts
-To Build the frontend file, cd to `web/` and type the beneath command 
+To Build the frontend file, cd to `web/` and type the beneath command
+The `WORK_ENV` has two value
+```
+dev: 127.0.0.1:8080
+prod: 
+```
+Help developer to switch the runtime without editing
+
 Right now just use yarn dev:chrome
 ```shell=
 cd /web/
-yarn dev:{browserType}
+yarn {WORK_ENV}:{browserType}
+yarn {WORK_ENV}:{browserType}
 ```
 ---
 To Start the server, cd to `server/` and type the beneath command
@@ -77,12 +85,4 @@ config.json
 6.  Choose ~/Moonkat/web/dist/chrome
 7.  ![](https://i.imgur.com/V3lqA5S.png)
 ### Test the Extension
-* Use General Test Case, Quickswap or the dApp request `eth_sendTransaction`
-
-![](https://i.imgur.com/KGRFbca.png)
-
-After click Approve USDT
-
-![](https://i.imgur.com/xo0lqAN.png)
-
-You are expected to trigger the Extension
+[Demo Video](https://youtu.be/-MiHJxp7aV8)

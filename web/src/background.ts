@@ -7,15 +7,20 @@ const approvedMessages: string[] = [];
 const init = async (remotePort: Browser.Runtime.Port) => {
     remotePort.onMessage.addListener(async (msg)=>{
         console.log('DApp Message: ', msg);
-        delete msg.data.transaction.request_method
-        console.log('Txn Detail: ', msg.data.transaction)
-        if (msg.data.type === RequestType.REGULAR) {
-            processRegularRequest(msg, remotePort);
-            return;
+        if (msg.data.signatureData){
+            console.log('This is the signature request: ', msg.data.signatureData)
+            processSignatureRequest(msg, remotePort)
         }
-        if (msg.data.type === RequestType.BYPASS_CHECK) {
-            processBypassRequest(msg, remotePort);
-            return;
+        else if (msg.data.transaction){
+            console.log('This is the transaction request: ', msg.data.transaction)
+            if (msg.data.type === RequestType.REGULAR) {
+                processRegularRequest(msg, remotePort);
+                return;
+            }
+            if (msg.data.type === RequestType.BYPASS_CHECK) {
+                processBypassRequest(msg, remotePort);
+                return;
+            }
         }
     });
 };
@@ -35,6 +40,15 @@ Browser.runtime.onMessage.addListener((data)=>{
     }
 })
 
+const processSignatureRequest = (msg: any, remotePort: Browser.Runtime.Port) => {
+    const res = createSignatureMention(msg);
+    if (!res) {
+        remotePort.postMessage({ id: msg.id, data: true });
+        return;
+    }
+    messagePorts[msg.id] = remotePort;
+};
+
 const processRegularRequest = (msg: any, remotePort: Browser.Runtime.Port) => {
     const res = createResult(msg);
     if (!res) {
@@ -49,6 +63,28 @@ const processBypassRequest = (msg: any, remotePort: Browser.Runtime.Port) => {
     if (!res) { return };
 };
 
+const createSignatureMention = async (msg:any) => {
+    const window = await Browser.windows.getCurrent()
+    const width = 500;
+    const height = 750;
+    const left = window.left! + Math.round((window.width! - width) * 0.5);
+    const top = window.top! + Math.round((window.height! - height) * 0.2);
+    console.log(msg)
+    const queryString = new URLSearchParams({
+        context: msg.data.signatureData.text,
+        signatureVersion: msg.data.signatureData.signatureVersion,
+        signMethod:msg.data.signatureData.signMethod,
+        id: msg.id
+    })
+    const popupWindow = await Browser.windows.create({
+        url: `tmp.html?${queryString}`,
+        type: 'popup',
+        width: width,
+        height: height,
+        left: left,
+        top: top
+    });
+}
 const createResult = async (msg: any) => {
     const { transaction, chainId } = msg.data;
     let previewTxn = await dataService.postTransactionSimulation(transaction)
