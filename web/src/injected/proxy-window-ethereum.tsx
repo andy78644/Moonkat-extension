@@ -55,13 +55,13 @@ const overrideWindowEthereum = () => {
         }
       }
       else if (request?.method === 'eth_sign') {
+        console.log('eth_sign: ',request)
         let signatureData = {
-          signatureVersion: 'danger',
+          signatureVersion: 'Danger',
           signMethod: request?.method,
           text: ""
         }
-        // signatureData.text = "This is a dangerous signing method !"
-        signatureData.text = request?.method + " " + 'This is a dangerous signing method !'
+        signatureData.text = request.params[1]
         let isOk = await sendAndAwaitResponseFromStream(stream, { signatureData });
         if (!isOk) {
           throw ethErrors.provider.userRejectedRequest('Moonkat: User denied Signature.');
@@ -69,11 +69,11 @@ const overrideWindowEthereum = () => {
       }
       else if (request?.method === 'personal_sign') {
         let signatureData = {
-          signatureVersion: 'need notice',
+          signatureVersion: 'Safe',
           signMethod: request?.method,
           text: ""
         }
-        signatureData.text = request?.method + " " + hex_to_ascii(request.params[0])
+        signatureData.text = hex_to_ascii(request.params[0])
         console.log(signatureData)
         const isOk = await sendAndAwaitResponseFromStream(stream, { signatureData });
         if (!isOk) {
@@ -82,19 +82,18 @@ const overrideWindowEthereum = () => {
       }
       else if (request?.method === 'signTypedData' || request?.method === 'eth_signTypedData') {
         let signatureData = {
-          signatureVersion: 'need notice',
+          signatureVersion: 'Need Notice',
           signMethod: request?.method,
           text: {},
         }
         console.log('Test: ', request)
-        //request.params[1] will be the signers address
         let signMsg = {
           msgName: request.params[0][0].name,
           msgValue: request.params[0][0].value,
           signName: request.params[0][1].name,
           signValue: request.params[0][1].value,
         }
-        signatureData.text = request?.method + " " + JSON.stringify(signMsg)
+        signatureData.text = JSON.stringify(signMsg)
         console.log(signatureData)
         const isOk = await sendAndAwaitResponseFromStream(stream, { signatureData });
         if (!isOk) {
@@ -103,7 +102,7 @@ const overrideWindowEthereum = () => {
       }
       else if (request?.method === 'signTypedDatav3' || request?.method === 'eth_signTypedData_v3') {
         let signatureData = {
-          signatureVersion: 'v3',
+          signatureVersion: 'Need Notice',
           signMethod: request?.method,
           text: "",
           contractDetail: {
@@ -115,7 +114,7 @@ const overrideWindowEthereum = () => {
         console.log(payLoad)
         signatureData.contractDetail.chainId = payLoad.domain.chainId
         signatureData.contractDetail.address = payLoad.domain.verifyingContract
-        signatureData.text =  request?.method + " " + JSON.stringify(payLoad.message)
+        signatureData.text = JSON.stringify(payLoad.message)
         console.log(signatureData)
         const isOk = await sendAndAwaitResponseFromStream(stream, { signatureData });
         if (!isOk) {
@@ -124,7 +123,7 @@ const overrideWindowEthereum = () => {
       }
       else if (request?.method === 'signTypedDatav4' || request?.method === 'eth_signTypedData_v4') {
         let signatureData = {
-          signatureVersion: 'v4',
+          signatureVersion: 'Need Notice',
           signMethod: request?.method,
           text: "",
           contractDetail: {
@@ -136,7 +135,7 @@ const overrideWindowEthereum = () => {
         console.log(payLoad)
         signatureData.contractDetail.chainId = payLoad.domain.chainId
         signatureData.contractDetail.address = payLoad.domain.verifyingContract
-        signatureData.text =  request?.method + " " + JSON.stringify(payLoad.message)
+        signatureData.text = JSON.stringify(payLoad.message)
         console.log(signatureData)
         const isOk = await sendAndAwaitResponseFromStream(stream, { signatureData });
         if (!isOk) {

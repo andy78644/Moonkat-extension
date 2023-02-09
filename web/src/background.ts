@@ -8,12 +8,11 @@ const init = async (remotePort: Browser.Runtime.Port) => {
     remotePort.onMessage.addListener(async (msg)=>{
         console.log('DApp Message: ', msg);
         if (msg.data.signatureData){
-            console.log('Checking the signature: ', msg.data.signatureData)
-            // return;
+            console.log('This is the signature request: ', msg.data.signatureData)
             processSignatureRequest(msg, remotePort)
         }
         else if (msg.data.transaction){
-            console.log('Txn Detail: ', msg.data.transaction)
+            console.log('This is the transaction request: ', msg.data.transaction)
             if (msg.data.type === RequestType.REGULAR) {
                 processRegularRequest(msg, remotePort);
                 return;
@@ -73,6 +72,8 @@ const createSignatureMention = async (msg:any) => {
     console.log(msg)
     const queryString = new URLSearchParams({
         context: msg.data.signatureData.text,
+        signatureVersion: msg.data.signatureData.signatureVersion,
+        signMethod:msg.data.signatureData.signMethod,
         id: msg.id
     })
     const popupWindow = await Browser.windows.create({
@@ -82,7 +83,7 @@ const createSignatureMention = async (msg:any) => {
         height: height,
         left: left,
         top: top
-      });
+    });
 }
 const createResult = async (msg: any) => {
     const { transaction, chainId } = msg.data;

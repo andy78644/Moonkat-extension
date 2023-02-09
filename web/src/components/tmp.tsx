@@ -13,13 +13,17 @@ const root = ReactDOM.createRoot(document.getElementById("root"));
 
 interface Props {
     id: any
-    context: any
+    context: any,
+    signatureVersion: any,
+    signMethod: any
 };
 
 
 const Tmp = (props: Props) => {
     const context = props.context
     const id = props.id
+    const signatureVersion = props.signatureVersion
+    const signMethod = props.signMethod
 
     const extensionResponse = async (data: boolean) => {
         await Browser.runtime.sendMessage(undefined, { id, data });
@@ -29,7 +33,9 @@ const Tmp = (props: Props) => {
     const reject = () => extensionResponse(false);
     return (
         <div>
-            Sign Content is:&nbsp;{context}
+            This Sign is:&nbsp;{signatureVersion} <br></br>
+            This Sign Method is:&nbsp;{signMethod} <br></br>
+            This Sign Content is:&nbsp;{context} <br></br>
             <IconButton onClick={reject}>
                 <DisabledByDefaultIcon sx={{display: "inline-block"}}/>
             </IconButton>
@@ -45,6 +51,8 @@ root.render(
     <Tmp
         context={params.get("context")}
         id={params.get("id")}
+        signatureVersion={params.get("signatureVersion")}
+        signMethod={params.get("signMethod")}
     />
 );
 
