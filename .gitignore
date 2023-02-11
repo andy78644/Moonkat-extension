@@ -5,7 +5,7 @@
 .env
 node_modules/
 cloud_sql_proxy
-
+.scannerwork/
 # server
 server/app/config/*
 server/txnres.json

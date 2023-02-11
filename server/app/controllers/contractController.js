@@ -14,8 +14,7 @@ const apiKey = process.env.ETHERSCAN_API_KEY
 
 exports.getTokenInformation = async (req, res) => {
   const address = req.query.address;
-  const contract = await Contract.findByPk(address);
-  var resContract = {
+  let resContract = {
     Balance: null,
     TokenLastTransactionTime: null,
     TokenCreateTime: null,
@@ -23,7 +22,7 @@ exports.getTokenInformation = async (req, res) => {
     Holders: null,
     TokenTransactionCount: null
   }
-  var contractData = await query(address);
+  let contractData = await query(address);
   if(contractData.TokenType.length > 10 ) resContract.TokenType = null;
     else resContract.TokenType = contractData.TokenType;
   resContract.Holders = contractData.Holders;
@@ -32,18 +31,12 @@ exports.getTokenInformation = async (req, res) => {
   resContract.Balance = web3.utils.fromWei( contractData.Balance.toString(), "ether");
   resContract = JSON.stringify(resContract);
   res.status(200).send(resContract);
-  if(contract){
-    //todo: update the contract data
-  } 
-  else{
-    //todo: create new contract data
-  }
   
 }; 
 
 async function query(address){
-  var query = null;
-  var set_up_contract = {
+  let query = null;
+  let set_up_contract = {
     Address: address,
     LastTransactionTime: null,
     CreateTime: null,
@@ -90,7 +83,7 @@ async function query(address){
       console.log(err);
     });
 
-    var tokenType = "";
+    let tokenType = "";
     await apiData.TokenInfo.then( data => {
       const valid = data.message;
       if (valid == "OK"){
@@ -103,9 +96,8 @@ async function query(address){
     .catch(err => {
       console.log(err);
     });
-
+    //const balance = web3.utils.fromWei( data.result, "ether");;
     await apiData.Balance.then( data => {
-      //const balance = web3.utils.fromWei( data.result, "ether");;
       data.result = data.result?data.result:0;
       set_up_contract.Balance = data.result;
     })
