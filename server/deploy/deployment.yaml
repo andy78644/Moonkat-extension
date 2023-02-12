@@ -12,6 +12,7 @@ spec:
       labels:
         app: moonkat
     spec:
+      serviceAccountName: moonkat
       containers:
         - name: moonkat
           image:  gcr.io/gogolook-compass/moonkat-app:v1
