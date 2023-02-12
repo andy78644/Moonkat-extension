@@ -18,6 +18,9 @@ spec:
           image:  gcr.io/gogolook-compass/moonkat-app:v1
           ports:
             - containerPort: 8080
+          envFrom:
+            - secretRef:
+                name: env-secret
         - name: cloud-sql-proxy
           # It is recommended to use the latest version of the Cloud SQL proxy
           # Make sure to update on a regular schedule!
