@@ -5,6 +5,8 @@ metadata:
   name: {{ $fullName }}
   annotations:
     kubernetes.io/ingress.global-static-ip-name: {{ .Values.ingress.ip }}
+    networking.gke.io/managed-certificates: {{ .Release.Name }}
+    networking.gke.io/v1beta1.FrontendConfig: {{ .Release.Name }}
 spec:
   rules:
     - host: "{{ .Values.ingress.domain }}"
