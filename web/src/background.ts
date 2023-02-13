@@ -100,6 +100,7 @@ const createResult = async (msg: any) => {
         const queryString = new URLSearchParams({
           id: msg.id,
           asset: 'Test Asset',
+          contract: transaction.to,
           spender: 'Test Spender',
           chainId,
           name: 'Test Name' ?? '',
