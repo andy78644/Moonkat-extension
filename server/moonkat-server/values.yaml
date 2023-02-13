@@ -41,6 +41,8 @@ service:
 
 ingress:
   enabled: true
+  ip: 34.149.35.126
+  domain: dev.moonkat.app
   #className: ""
   #annotations: {}
     # kubernetes.io/ingress.class: nginx

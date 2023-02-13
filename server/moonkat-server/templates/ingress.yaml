@@ -3,9 +3,17 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: {{ $fullName }}
+  annotations:
+    kubernetes.io/ingress.global-static-ip-name: {{ .Values.ingress.ip }}
 spec:
-  defaultBackend:
-    service:
-      name: {{ $fullName }}
-      port:
-        number: 8080
+  rules:
+    - host: "{{ .Values.ingress.domain }}"
+      http:
+        paths:
+          - path: /
+            defaultBackend:
+                service:
+                  name: {{ $fullName }}
+                  port:
+                    number: 8080
+  
