@@ -11,9 +11,6 @@ spec:
       http:
         paths:
           - path: /
-            defaultBackend:
-                service:
-                  name: {{ $fullName }}
-                  port:
-                    number: 8080
-  
+            backend:
+                serviceName: {{ $fullName }}
+                servicePort: 8080
