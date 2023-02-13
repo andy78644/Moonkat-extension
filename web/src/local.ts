@@ -3,7 +3,7 @@ import fetchAdapter from "@vespaiach/axios-fetch-adapter";
 
 const Url = {
   "dev": "http://127.0.0.1:8080",
-  "prod": "http://34.149.134.224/"
+  "prod": "http://34.160.192.225/"
 }
 const type = process.env.WORK_ENV
 let baseUrl = Url.dev
