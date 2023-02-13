@@ -8,6 +8,7 @@ spec:
     matchLabels:
       app: {{ include "moonkat-server.fullname" . }}
   template:
+    serviceAccountName: {{ .Values.service.serviceaccount }}
     metadata:
       labels:
         app: {{ include "moonkat-server.fullname" . }}

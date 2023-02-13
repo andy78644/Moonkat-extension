@@ -6,24 +6,14 @@ metadata:
   annotations:
     kubernetes.io/ingress.global-static-ip-name: {{ .Values.ingress.ip }}
 spec:
-  defaultBackend:
-    service:
-      name: {{ $fullName }}
-      port:
-        number: 8080
-
-
-
-#  rules:
-#    - host: "{{ .Values.ingress.domain }}"
-#      http:
-#        paths:
-#          - path: /
-#            pathType: Prefix
-#            backend:
-#                service:
-#                  name: {{ $fullName }}
-#                  port:
-#                    number: 8080
-
-  
+  rules:
+    - host: "{{ .Values.ingress.domain }}"
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+                service:
+                  name: {{ $fullName }}
+                  port:
+                    number: 8080  

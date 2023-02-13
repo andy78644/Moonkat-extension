@@ -38,6 +38,7 @@ fullnameOverride: "moonkat"
 service:
   type: NodePort
   port: 8080
+  serviceaccount: moonkat
 
 ingress:
   enabled: true
