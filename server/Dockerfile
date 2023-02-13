@@ -11,4 +11,5 @@ COPY ./server .
 # The Application Port
 ENV PORT=8080
 # Run the Application
+#CMD [""]
 CMD ["node", "server.js"]
