@@ -42,7 +42,7 @@ service:
 
 ingress:
   enabled: true
-  ip: 34.149.35.126
+  ip: moonkat-test-ip
   domain: dev.moonkat.app
   #className: ""
   #annotations: {}
