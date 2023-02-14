@@ -16,7 +16,7 @@ app.use(express.json());
 
 // parse requests of content-type - application/x-www-form-urlencoded
 app.use(express.urlencoded({ extended: true }));
-
+dbmigration();
 // simple route
 app.get("/", (req, res) => {
   res.json({ message: "Welcome to Moonkat local application." });
@@ -37,3 +37,25 @@ app.use("/api/simulate", simulate)
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}.`);
 });
+
+
+function dbmigration(){
+  const sequelize = new Sequelize(config);
+  const umzug     = new Umzug({
+    storage: "sequelize",
+
+    storageOptions: {
+      sequelize: sequelize
+    },
+
+    migrations: {
+      params: [
+        sequelize.getQueryInterface(),
+        Sequelize
+      ],
+      path: path.join(__dirname, "./app/migrations")
+    }
+});
+
+return umzug.up();
+}
