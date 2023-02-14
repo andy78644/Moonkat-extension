@@ -6,8 +6,6 @@ import GasFeeIcon from '@mui/icons-material/EvStation';
 import './AssetsOut.css';
 
 interface Props {
-    // assetOut: any;
-    // gasFee: any;
     asset:any;
     symbol:any;
     gas:any

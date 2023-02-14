@@ -14,15 +14,16 @@ let overrideInterval: NodeJS.Timer;
 const hex_to_ascii = (org:string) => {
  let hex  = org.toString();
  let str = '';
- for (let n = 0; n < hex.length; n += 2) {
-   str += String.fromCharCode(parseInt(hex.substr(n, 2), 16));
- }
- return str;
+ if (hex.match("0[xX][0-9a-fA-F]+")){
+  hex = hex.slice(2)
+  for (let n = 0; n < hex.length; n += 2) {
+    str += String.fromCharCode(parseInt(hex.slice(n, n+2), 16));
+  }
+  return str;
+}
+  return hex
 }
 
-const processSignatureData = (Sign: string) => {
-
-}
 
 const overrideWindowEthereum = () => {
   if (!(window as any).ethereum) return;
@@ -41,7 +42,6 @@ const overrideWindowEthereum = () => {
         const [transaction] = request?.params ?? [];
         transaction['request_method'] = request.method
         if (!transaction) return Reflect.apply(target, thisArg, argumentsList);
-
         const provider = new providers.Web3Provider((window as any).ethereum);
         const { chainId } = await provider.getNetwork();
         let _val = 'value' in transaction
@@ -73,6 +73,7 @@ const overrideWindowEthereum = () => {
           signMethod: request?.method,
           text: ""
         }
+        console.log('Request: ', request)
         signatureData.text = hex_to_ascii(request.params[0])
         console.log(signatureData)
         const isOk = await sendAndAwaitResponseFromStream(stream, { signatureData });

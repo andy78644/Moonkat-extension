@@ -2,35 +2,11 @@ const axios = require('axios');
 const { resolve } = require('path');
 const util = require('util');
 const EtherscanAPI = require("etherscan-api");
-/**
- * @param {string} chain
- * @returns {string}
- */
-/*function pickChainUrl(chain) {
-  if (!chain || !TESTNET_API_URL_MAP[chain]) {
-    return MAIN_API_URL;
-  }
-
-  return TESTNET_API_URL_MAP[chain];
-}
-
-
-const MAIN_API_URL = 'https://api.polygonscan.com';
-const TESTNET_API_URL_MAP = {
-  mumbai: 'https://api-testnet.polygonscan.com',
-};
-*/
-
 
 module.exports.getRequest = async function(query, address, apiKey){
-    api = EtherscanAPI.init(apiKey);
-
-    var client = axios.create({
-        baseURL: 'https://api.etherscan.io',
-        //timeout: timeout
-      });
+    let api = EtherscanAPI.init(apiKey);
       
-    var ret = {
+    let ret = {
       LastTransaction: null,
       CreateTransaction: null,
       TokenInfo: null,
@@ -66,8 +42,7 @@ module.exports.getRequest = async function(query, address, apiKey){
 
     ret.TokenInfo = new Promise(function(resolve, reject) {
       axios.get(`https://api.etherscan.io/api?module=token&action=tokeninfo&contractaddress=${address}&apikey=${apiKey}`).then(function(response) {
-          data = response.data;
-          resolve(data);
+          resolve(response.data);
         }).catch(function(error){
           //console.log("test");
           reject(new Error(error));

@@ -5,7 +5,6 @@ const querystring = require('querystring');
 const getData = require('./getRequest.js');
 const contract = require("../models/contract");
 
-const apiKey = 'NE2VP5S89SW4TGJSZPCKZHZN2NZ9XKWY4P'
 // Get the Contract with Specific Address
 exports.reportFeedback = async (req, res) => {
     const report = {
@@ -77,7 +76,6 @@ exports.reportFeedback = async (req, res) => {
             
         }
     )
-    //console.log(featureTag);
     const updateTag = {
         FeatureTagOne: featureTag[0],
         FeatureTagTwo: featureTag[1],

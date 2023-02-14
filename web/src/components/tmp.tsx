@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React from "react";
 import Browser from "webextension-polyfill";
 import ReactDOM from "react-dom/client";
 import IconButton from '@mui/material/IconButton'

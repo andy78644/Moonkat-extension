@@ -5,16 +5,11 @@ import DisabledByDefaultIcon from '@mui/icons-material/DisabledByDefault';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 
 import './ContractInfo.css'
-import { ForkRight } from "@mui/icons-material";
 
 interface Props {
     close: any,
     pass: any,
     contract: any,
-    // productName: any,
-    // productAddress: any,
-    // linkToProduct: any,
-    // verificationState: any
 };
 
 const ContractInfo = (props: Props) => {

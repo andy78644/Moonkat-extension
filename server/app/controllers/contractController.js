@@ -46,12 +46,12 @@ async function query(address){
     NumberOfTransaction: null
   }
   const api = new Promise(async function(resolve, reject) {
-    const data = await getData.getRequest(query, address, apiKey);
+    const data = getData.getRequest(query, address, apiKey);
     resolve(data);
   }).catch(err => {
     reject(new Error(err));
   });
-  await console.log("test");
+  console.log("test");
   
   await api
   .then(async apiData=>{

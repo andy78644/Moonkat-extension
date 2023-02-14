@@ -36,7 +36,6 @@ Browser.runtime.onMessage.addListener((data)=>{
     if(responsePort) {
         responsePort.postMessage(data);
         delete messagePorts[data.id];
-        return;
     }
 })
 
@@ -76,7 +75,7 @@ const createSignatureMention = async (msg:any) => {
         signMethod:msg.data.signatureData.signMethod,
         id: msg.id
     })
-    const popupWindow = await Browser.windows.create({
+    await Browser.windows.create({
         url: `tmp.html?${queryString}`,
         type: 'popup',
         width: width,
@@ -87,7 +86,6 @@ const createSignatureMention = async (msg:any) => {
 }
 const createResult = async (msg: any) => {
     const { transaction, chainId } = msg.data;
-    const id = msg.id
     let previewTxn = await dataService.postTransactionSimulation(transaction)
     .catch((err)=>{
         console.log('Server is down: ', err)
@@ -119,7 +117,7 @@ const createResult = async (msg: any) => {
         const left = window.left! + Math.round((window.width! - width) * 0.5);
         const top = window.top! + Math.round((window.height! - height) * 0.2);
     
-        const popupWindow = await Browser.windows.create({
+        await Browser.windows.create({
           url: `index.html?${queryString}`,
           type: 'popup',
           width: width,
