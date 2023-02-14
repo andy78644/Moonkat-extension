@@ -8,8 +8,7 @@ image:
   repository: gcr.io/gogolook-compass/moonkat-app
   # pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
-  tag: 3beebdba27296f5acfca8d3f3f65fa71b4f5da0f
-  tag: e208b6ecd7bb6ddf4468ac3c3d319acdb2fa56c0
+  tag: a3e1d028b5fb41781bbf60ba5685457671b63d9a
 
 
 fullnameOverride: "moonkat"
@@ -39,9 +38,12 @@ fullnameOverride: "moonkat"
 service:
   type: NodePort
   port: 8080
+  serviceaccount: moonkat
 
 ingress:
   enabled: true
+  ip: moonkat-test-ip
+  domain: test.moonkat.app
   #className: ""
   #annotations: {}
     # kubernetes.io/ingress.class: nginx
