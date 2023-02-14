@@ -29,11 +29,7 @@ const overrideWindowEthereum = () => {
   if (!(window as any).ethereum) return;
 
   clearInterval(overrideInterval);
-
-  // TODO: Proxy send and sendAsync
-  // https://docs.metamask.io/guide/ethereum-provider.html#legacy-methods
-  // TODO: eth.send (Deprecrated API)
-
+  
   const requestHandler = {
     apply: async (target: any, thisArg: any, argumentsList: any[]) => {
       const [request] = argumentsList;
@@ -87,7 +83,7 @@ const overrideWindowEthereum = () => {
           signMethod: request?.method,
           text: {},
         }
-        console.log('Test: ', request)
+        console.log('Request: ', request)
         let signMsg = {
           msgName: request.params[0][0].name,
           msgValue: request.params[0][0].value,
@@ -106,17 +102,19 @@ const overrideWindowEthereum = () => {
           signatureVersion: 'Need Notice',
           signMethod: request?.method,
           text: "",
-          contractDetail: {
-            chainId:'',
-            address:'',
-          }
+          domain:"",
+          message:"",
+          primaryType:"",
+          types:"",
         }
         let payLoad = JSON.parse(request.params[1])
         console.log(payLoad)
-        signatureData.contractDetail.chainId = payLoad.domain.chainId
-        signatureData.contractDetail.address = payLoad.domain.verifyingContract
+        signatureData.domain = payLoad.domain
+        signatureData.message = payLoad.message
+        signatureData.primaryType = payLoad.primaryType
+        signatureData.types = payLoad.types
         signatureData.text = JSON.stringify(payLoad.message)
-        console.log(signatureData)
+        console.log('SignatureData: ', signatureData)
         const isOk = await sendAndAwaitResponseFromStream(stream, { signatureData });
         if (!isOk) {
           throw ethErrors.provider.userRejectedRequest('Moonkat: User denied Signature.');
@@ -132,6 +130,7 @@ const overrideWindowEthereum = () => {
             address:''
           }
         }
+        console.log('Request: ', request)
         let payLoad = JSON.parse(request.params[1])
         console.log(payLoad)
         signatureData.contractDetail.chainId = payLoad.domain.chainId
