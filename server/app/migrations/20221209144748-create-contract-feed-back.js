@@ -23,6 +23,9 @@ module.exports = {
       NameTag: {
           type: Sequelize.STRING
       },
+      Description: {
+        type: Sequelize.STRING
+      },
       FeatureTagOne: {
           type: Sequelize.STRING
       },
