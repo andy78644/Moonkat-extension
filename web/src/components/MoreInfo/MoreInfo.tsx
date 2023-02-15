@@ -1,9 +1,7 @@
-import React, {useState, useEffect} from 'react';
-import ReactDom from 'react-dom';
+import React, {useState} from 'react';
 import InfoNavBar from './InfoNavBar';
 import Token from './Token';
 import Creator from './Creator';
-import dataService from '../../dataService';
 
 import './MoreInfo.css'
 

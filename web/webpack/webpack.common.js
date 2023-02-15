@@ -31,12 +31,6 @@ module.exports = {
     'injected/proxy-window-ethereum': path.join(srcDir, 'injected', 'proxy-window-ethereum.tsx'),
   },
 
-  resolve: {
-    alias: {
-      components: path.resolve(srcDir, 'components'),
-    }
-  },
-
   output: {
     path: path.join(__dirname, '..', 'dist', targetBrowser),
     filename: 'js/[name].js',
@@ -82,6 +76,9 @@ module.exports = {
   },
 
   resolve: {
+    alias: {
+      components: path.resolve(srcDir, 'components'),
+    },
     extensions: ['.ts', '.tsx', '.js'],
     fallback: {
       buffer: require.resolve('buffer/'),

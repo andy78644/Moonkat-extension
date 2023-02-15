@@ -14,25 +14,22 @@ let overrideInterval: NodeJS.Timer;
 const hex_to_ascii = (org:string) => {
  let hex  = org.toString();
  let str = '';
- for (let n = 0; n < hex.length; n += 2) {
-   str += String.fromCharCode(parseInt(hex.substr(n, 2), 16));
- }
- return str;
+ if (hex.match("0[xX][0-9a-fA-F]+")){
+  hex = hex.slice(2)
+  for (let n = 0; n < hex.length; n += 2) {
+    str += String.fromCharCode(parseInt(hex.slice(n, n+2), 16));
+  }
+  return str;
+}
+  return hex
 }
 
-const processSignatureData = (Sign: string) => {
-
-}
 
 const overrideWindowEthereum = () => {
   if (!(window as any).ethereum) return;
 
   clearInterval(overrideInterval);
-
-  // TODO: Proxy send and sendAsync
-  // https://docs.metamask.io/guide/ethereum-provider.html#legacy-methods
-  // TODO: eth.send (Deprecrated API)
-
+  
   const requestHandler = {
     apply: async (target: any, thisArg: any, argumentsList: any[]) => {
       const [request] = argumentsList;
@@ -41,7 +38,6 @@ const overrideWindowEthereum = () => {
         const [transaction] = request?.params ?? [];
         transaction['request_method'] = request.method
         if (!transaction) return Reflect.apply(target, thisArg, argumentsList);
-
         const provider = new providers.Web3Provider((window as any).ethereum);
         const { chainId } = await provider.getNetwork();
         let _val = 'value' in transaction
@@ -73,6 +69,7 @@ const overrideWindowEthereum = () => {
           signMethod: request?.method,
           text: ""
         }
+        console.log('Request: ', request)
         signatureData.text = hex_to_ascii(request.params[0])
         console.log(signatureData)
         const isOk = await sendAndAwaitResponseFromStream(stream, { signatureData });
@@ -86,7 +83,7 @@ const overrideWindowEthereum = () => {
           signMethod: request?.method,
           text: {},
         }
-        console.log('Test: ', request)
+        console.log('Request: ', request)
         let signMsg = {
           msgName: request.params[0][0].name,
           msgValue: request.params[0][0].value,
@@ -105,17 +102,19 @@ const overrideWindowEthereum = () => {
           signatureVersion: 'Need Notice',
           signMethod: request?.method,
           text: "",
-          contractDetail: {
-            chainId:'',
-            address:'',
-          }
+          domain:"",
+          message:"",
+          primaryType:"",
+          types:"",
         }
         let payLoad = JSON.parse(request.params[1])
         console.log(payLoad)
-        signatureData.contractDetail.chainId = payLoad.domain.chainId
-        signatureData.contractDetail.address = payLoad.domain.verifyingContract
+        signatureData.domain = payLoad.domain
+        signatureData.message = payLoad.message
+        signatureData.primaryType = payLoad.primaryType
+        signatureData.types = payLoad.types
         signatureData.text = JSON.stringify(payLoad.message)
-        console.log(signatureData)
+        console.log('SignatureData: ', signatureData)
         const isOk = await sendAndAwaitResponseFromStream(stream, { signatureData });
         if (!isOk) {
           throw ethErrors.provider.userRejectedRequest('Moonkat: User denied Signature.');
@@ -131,6 +130,7 @@ const overrideWindowEthereum = () => {
             address:''
           }
         }
+        console.log('Request: ', request)
         let payLoad = JSON.parse(request.params[1])
         console.log(payLoad)
         signatureData.contractDetail.chainId = payLoad.domain.chainId

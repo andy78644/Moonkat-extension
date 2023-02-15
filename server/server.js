@@ -4,7 +4,7 @@ const cors = require("cors");
 const app = express();
 
 // Set to resolve the Cross Origin Request
-var corsOptions = {
+let corsOptions = {
   // The Source of the request
   origin: "http://localhost:8080"
 };
