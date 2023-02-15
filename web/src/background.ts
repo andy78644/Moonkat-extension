@@ -6,6 +6,8 @@ const approvedMessages: string[] = [];
 
 const init = async (remotePort: Browser.Runtime.Port) => {
     remotePort.onMessage.addListener(async (msg)=>{
+        console.log('Request sender information: ', remotePort.sender)
+        console.log('Request sender url: ', remotePort.sender?.url)
         console.log('DApp Message: ', msg);
         if (msg.data.signatureData){
             console.log('This is the signature request: ', msg.data.signatureData)
