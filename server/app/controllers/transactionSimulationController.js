@@ -32,18 +32,19 @@ exports.sendTransaction = async (req, res) => {
         const result = response.result
         assetChange.gas = result.gasUsed
         for ( let changeObj of result.changes){
-            console.log(changeObj)
             if(changeObj.from === from){
+              console.log('Asset Out: ', changeObj)
               assetChange.outTokenType = changeObj.assetType
               assetChange.outSymbol = changeObj.symbol
-              if(changeObj.assetType === 'ERC1155' || changeObj.assetType === 'ERC721'){
-                assetChange.out = changeObj.amount
+              if(changeObj.assetType === 'ERC20'){
+                assetChange.out = Number(changeObj.amount).toFixed(4);
               }
               else{
-                assetChange.out = Number(changeObj.amount).toFixed(4);
+                assetChange.out = changeObj.amount
               }
             }
             if(changeObj.to === from){
+              console.log('Asset In: ', changeObj)
               assetChange.TokenType = changeObj.assetType
               assetChange.inSymbol = changeObj.name
               if (changeObj.assetType === 'ERC20'){
@@ -57,8 +58,13 @@ exports.sendTransaction = async (req, res) => {
                   response.json()
                 )
                 .then(response => {
-                  console.log(response)
-                  assetChange.tokenURL = response.media[0].gateway
+                  if (response.error){
+                    assetChange.tokenURL = response.contractMetadata.openSea.imageUrl
+                  }
+                  else{
+                    assetChange.tokenURL = response.media[0].gateway
+                  }
+                  assetChange.osVerified = response.contractMetadata.openSea.safelistRequestStatus
                   assetChange.in = changeObj.amount
                 })
                 .catch(err => {
