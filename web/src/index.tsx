@@ -8,12 +8,14 @@ const params = new URLSearchParams(window.location.search);
 // createRoot is an experiment feature so it doesn't have type
 // @ts-ignore
 const root = ReactDOM.createRoot(document.getElementById("root"));
-
+document.documentElement.setAttribute("lang", 'zh-Hant');
 root.render(
     // if signature create signature page
+    
     <Main
         id={params.get("id")}
         asset={params.get("asset")}
+        contract={params.get("contract")}
         spender={params.get("spender")}
         chainId={params.get("chainId")}
         name={params.get("name")}

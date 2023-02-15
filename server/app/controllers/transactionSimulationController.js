@@ -30,20 +30,27 @@ exports.sendTransaction = async (req, res) => {
     .then(async response => {
         console.log('Simulation Success! Result: ', response)
         const result = response.result
+        assetChange.gas = result.gasUsed
         for ( let changeObj of result.changes){
             console.log(changeObj)
             if(changeObj.from === from){
               assetChange.outTokenType = changeObj.assetType
+              assetChange.outSymbol = changeObj.symbol
               if(changeObj.assetType === 'ERC1155' || changeObj.assetType === 'ERC721'){
                 assetChange.out = changeObj.amount
               }
               else{
                 assetChange.out = Number(changeObj.amount).toFixed(4);
               }
-              assetChange.outSymbol = changeObj.symbol
             }
             if(changeObj.to === from){
-              if(changeObj.assetType === 'ERC1155' || changeObj.assetType === 'ERC721'){
+              assetChange.TokenType = changeObj.assetType
+              assetChange.inSymbol = changeObj.name
+              if (changeObj.assetType === 'ERC20'){
+                assetChange.tokenURL = changeObj.logo
+                assetChange.in = Number(changeObj.amount).toFixed(4);
+              }
+              else {
                 await fetch(`https://eth-mainnet.g.alchemy.com/v2/${process.env.ALCHEMY_API_KEY}\n
                 /getNFTMetadata?contractAddress=${changeObj.contractAddress}&tokenId=${changeObj.tokenId}`)
                 .then(response => 
@@ -62,15 +69,8 @@ exports.sendTransaction = async (req, res) => {
                     });           
               })
               }
-              else if(changeObj.assetType === 'ERC20'){
-                assetChange.tokenURL = changeObj.logo
-                assetChange.in = Number(changeObj.amount).toFixed(4);
-              }
-              assetChange.TokenType = changeObj.assetType
-              assetChange.inSymbol = changeObj.name
             }
           }
-          assetChange.gas = result.gasUsed
           console.log('Decoded: ', assetChange)
         res.status(200).send(assetChange)
     })

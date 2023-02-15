@@ -1,22 +1,17 @@
-import React, {useState, useEffect} from "react";
+import React, { useEffect } from "react";
 import Browser from "webextension-polyfill";
-import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 
 interface Props {
     submit: any,
     onSubmit: any
 }
-
+// const handleReturn = async () => {
+//     setOpen(false)
+//     props.onSubmit(false)
+// }
 const Prompt = (props: Props) => {
-    // const handleReturn = async () => {
-    //     setOpen(false)
-    //     props.onSubmit(false)
-    // }
     const getWindowId = async () => {
         return await Browser.windows.getCurrent()
     }

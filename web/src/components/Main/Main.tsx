@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect } from "react";
 import dataService from "../../dataService";
 import Transfer from "../Transfer/Transfer";
 import MoreInfo from "../MoreInfo/MoreInfo";
@@ -12,6 +12,7 @@ import './Main.css'
 interface Props {
     id: any;
     asset: any;
+    contract:any;
     spender: any;
     chainId: any;
     name: any;
@@ -47,8 +48,7 @@ const initUserState = {
 
 const Main = (props: Props) => {
 
-    const { id, asset, spender, chainId, name, symbol, bypassed, 
-        assetOut, assetIn, gas, outSymbol, inSymbol,tokenURL
+    const { id, spender,assetOut, assetIn, gas, outSymbol, inSymbol, tokenURL
     } = props;
     const transferInfo = {
         assetOut: assetOut,
@@ -63,7 +63,6 @@ const Main = (props: Props) => {
     const [hasLoaded, setHasLoaded] = useState(false);
     const [verificationState, setVerificationState] = useState(false);
 
-    // if (spender === null) return (<div>ERROR: Spender Address === NULL</div>);
 
     // Fetch contract data
     useEffect(() => {
@@ -105,7 +104,7 @@ const Main = (props: Props) => {
                 hasLoaded
                     ?
                     <div>
-                        <ContractInfo close={reject} pass={accept}/>
+                        <ContractInfo close={reject} pass={accept} contract={props.contract}/>
                         {
                             section === 'transfer'
                                 ?

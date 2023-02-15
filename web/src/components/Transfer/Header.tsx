@@ -10,11 +10,9 @@ import './Header.css'
 interface Props {
     tagState: boolean,
     changeTag: any,
-    // productType: any;
-    // productAction: any;
 }
 
-var windowObj: Browser.Windows.Window;
+let windowObj: Browser.Windows.Window;
 
 const Header = (props: Props) => {
 

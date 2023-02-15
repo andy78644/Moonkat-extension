@@ -1,15 +1,10 @@
 const db = require("../models");
 const { ContractFeedBack, Contract }= db;
-//const Contracts = db.contracts;
 const Op = db.Sequelize.Op;
 const querystring = require('querystring');
 const getData = require('./getRequest.js');
 const contract = require("../models/contract");
-//const { mapFinderOptions } = require("sequelize/types/utils");
-//const db = require("../models");
-//const Contract = db.Contract;
 
-apiKey = 'NE2VP5S89SW4TGJSZPCKZHZN2NZ9XKWY4P'
 // Get the Contract with Specific Address
 exports.reportFeedback = async (req, res) => {
     const report = {
@@ -45,8 +40,8 @@ exports.reportFeedback = async (req, res) => {
         });
     })
 
-    var ReportedContract = req.body.Address;
-    var tagMap = new Map();
+    let ReportedContract = req.body.Address;
+    let tagMap = new Map();
     const reportQuery = [
         "Provider",
         "ReportedContract",
@@ -56,11 +51,10 @@ exports.reportFeedback = async (req, res) => {
         "FeatureTagTwo",
         "FeatureTagThree",
     ];
-    var condition = ReportedContract ? { ReportedContract: { [Op.like]: `%${ReportedContract}%` } } : null;
+    let condition = ReportedContract ? { ReportedContract: { [Op.like]: `%${ReportedContract}%` } } : null;
     const contractFeedBacks = await ContractFeedBack.findAll( {where: condition, attributes: reportQuery})
     contractFeedBacks.forEach(
         (contractFeedBack) => {
-            //console.log(contractFeedBack);
             if(tagMap.has(contractFeedBack.FeatureTagOne)) tagMap.set(contractFeedBack.FeatureTagOne, tagMap.get(contractFeedBack.FeatureTagOne)+1);
             else  tagMap.set(contractFeedBack.FeatureTagOne, 1);
             if(tagMap.has(contractFeedBack.FeatureTagTwo)) tagMap.set(contractFeedBack.FeatureTagTwo, tagMap.get(contractFeedBack.FeatureTagTwo)+1);
@@ -69,13 +63,11 @@ exports.reportFeedback = async (req, res) => {
             else  tagMap.set(contractFeedBack.FeatureTagThree, 1);
         }
     );
-    //console.log(tagMap);
     tagMap[Symbol.iterator] = function* () {
         yield* [...this.entries()].sort((a, b) => b[1] - a[1]);
     }
-    //console.log(tagMap);
     let featureTag = [null, null, null];
-    var count = 0;
+    let count = 0;
     tagMap.forEach(
         (value, tag) => {
             if(count == 3) return;
@@ -84,7 +76,6 @@ exports.reportFeedback = async (req, res) => {
             
         }
     )
-    //console.log(featureTag);
     const updateTag = {
         FeatureTagOne: featureTag[0],
         FeatureTagTwo: featureTag[1],
@@ -98,7 +89,7 @@ exports.reportFeedback = async (req, res) => {
 }; 
 
 exports.getFeedback = async (req, res) => {
-    var reportedContract = req.query.address;
+    let reportedContract = req.query.address;
     const contract = await Contract.findByPk(reportedContract);
     if(contract){
         const report = {

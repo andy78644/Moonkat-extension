@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React from "react";
 import Browser from "webextension-polyfill";
 import ReactDOM from "react-dom/client";
 import IconButton from '@mui/material/IconButton'
@@ -10,6 +10,7 @@ const params = new URLSearchParams(window.location.search);
 // createRoot is an experiment feature so it doesn't have type
 // @ts-ignore
 const root = ReactDOM.createRoot(document.getElementById("root"));
+document.documentElement.setAttribute("lang", 'zh-Hant');
 
 interface Props {
     id: any

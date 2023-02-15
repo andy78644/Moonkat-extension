@@ -1,7 +1,7 @@
 const net = require("net");
 
 // Create a simple server
-var server = net.createServer(function (conn) {
+let server = net.createServer(function (conn) {
     console.log("Server: HRE Client connected");
 
     // If connection is closed
