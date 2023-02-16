@@ -1,16 +1,75 @@
-// This is the Node client for sending the transaction which is waited to be simulated
-const net = require("net");
-// The .env require no compile, but it needs to be at the same folder 
 require('dotenv').config()
-  
+
+const getAssetData = async (change, txn) => {
+  if (txn.assetType === 'ERC20' || txn.assetType === 'NATIVE'){
+    change.amount = Number(txn.amount).toFixed(4);
+    change.tokenURL = txn.logo
+    return
+  }
+  else{
+    await fetch(`https://eth-mainnet.g.alchemy.com/v2/${process.env.ALCHEMY_API_KEY}\n
+    /getNFTMetadata?contractAddress=${txn.contractAddress}&tokenId=${txn.tokenId}`)
+    .then(response => 
+      response.json()
+    )
+    .then(response => {
+      if (response.error){
+        change.tokenURL = response.contractMetadata.openSea.imageUrl
+      }
+      else{
+        change.tokenURL = response.media[0].gateway
+      }
+      change.osVerified = response.contractMetadata.openSea.safelistRequestStatus
+      change.amount = txn.amount
+      return
+    })
+    .catch(err => {
+      console.log(err.message) 
+      return 'Alchemy Error'    
+    })
+  }
+}
+
+const approvalHandler = (txn) => {
+  let assetApprove = {
+    token:"",
+    contractAddress:"",
+    amount:"",
+    tokenURL:"",
+    name:"",
+  }
+  assetApprove.token = txn.symbol
+  assetApprove.contractAddress = txn.contractAddress
+  assetApprove.amount = txn.amount
+  assetApprove.tokenURL = txn.logo
+  assetApprove.name = txn.name
+  return assetApprove
+}
+
+const transferHandler = async (txn, direction) => {
+  let assetMove = {
+    direction:direction,
+    amount:"",
+    type:"",
+    symbol:"",
+    tokenURL:"",
+    osVerified:"",
+  }
+  assetMove.type = txn.assetType
+  assetMove.symbol = txn.symbol
+  err = await getAssetData(assetMove, txn)
+  if (err) return err
+  return assetMove
+}
 
 exports.sendTransaction = async (req, res) => {
+    //todo: define the user address
     const from = req.body.from
     let assetChange = {
       out: "",
       outSymbol:""
     };
-
+    
     const options = {
         method: 'POST',
         headers: {accept: 'application/json', 'content-type': 'application/json'},
@@ -33,51 +92,22 @@ exports.sendTransaction = async (req, res) => {
         assetChange.gas = result.gasUsed
         for ( let changeObj of result.changes){
             if(changeObj.from === from){
-              console.log('Asset Out: ', changeObj)
-              assetChange.outTokenType = changeObj.assetType
-              assetChange.outSymbol = changeObj.symbol
-              if(changeObj.assetType === 'ERC20'){
-                assetChange.out = Number(changeObj.amount).toFixed(4);
+              if (changeObj.changeType === 'APPROVE'){
+                assetApprove = approvalHandler(changeObj)
               }
-              else{
-                assetChange.out = changeObj.amount
+              else if (changeObj.changeType === 'TRANSFER'){
+                assetOut = await transferHandler(changeObj, "out")
               }
             }
-            if(changeObj.to === from){
-              console.log('Asset In: ', changeObj)
-              assetChange.TokenType = changeObj.assetType
-              assetChange.inSymbol = changeObj.name
-              if (changeObj.assetType === 'ERC20'){
-                assetChange.tokenURL = changeObj.logo
-                assetChange.in = Number(changeObj.amount).toFixed(4);
-              }
-              else {
-                await fetch(`https://eth-mainnet.g.alchemy.com/v2/${process.env.ALCHEMY_API_KEY}\n
-                /getNFTMetadata?contractAddress=${changeObj.contractAddress}&tokenId=${changeObj.tokenId}`)
-                .then(response => 
-                  response.json()
-                )
-                .then(response => {
-                  if (response.error){
-                    assetChange.tokenURL = response.contractMetadata.openSea.imageUrl
-                  }
-                  else{
-                    assetChange.tokenURL = response.media[0].gateway
-                  }
-                  assetChange.osVerified = response.contractMetadata.openSea.safelistRequestStatus
-                  assetChange.in = changeObj.amount
-                })
-                .catch(err => {
-                  console.log(err.message)  
-                  res.status(500).send({
-                      message:
-                        err.message || "error"
-                    });           
-              })
+            else if(changeObj.to === from){
+              if (changeObj.changeType === 'TRANSFER'){
+                assetIn = await transferHandler(changeObj, "in")
               }
             }
-          }
-          console.log('Decoded: ', assetChange)
+        }
+        console.log('Approve: ', assetApprove)
+        console.log('In: ', assetIn)
+        console.log('Out: ', assetOut)
         res.status(200).send(assetChange)
     })
     .catch(err => {
