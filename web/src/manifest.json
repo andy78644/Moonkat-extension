@@ -1,11 +1,9 @@
 {
     "manifest_version": 3,
 
-    "name":"MoonKat",
-    "description":"MoonKat",
+    "name":"Moonkat",
+    "description":"Moonkat",
 
-    "permissions":["storage"],
-    "host_permissions":["https://polygonscan.com/"],
     "__chrome__host_permissions": ["<all_urls>"],
 
     "__chrome__action": {

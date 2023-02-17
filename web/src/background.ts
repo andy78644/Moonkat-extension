@@ -4,18 +4,30 @@ import dataService from './dataService';
 const messagePorts: { [index: string]: Browser.Runtime.Port } = {};
 const approvedMessages: string[] = [];
 
+/*
+1. transaction
+    1. transaction-assets-exchange
+    2. transaction-assets-approval
+2. signature
+    1. signature-no-risk-safe
+    2. signature-no-risk-malicious
+    3. signature-token-approval
+    4. signature-move-assets
+    5. signature-not-detected
+*/
+
+const mode: string = "signature-move-assets"
+
 const init = async (remotePort: Browser.Runtime.Port) => {
     remotePort.onMessage.addListener(async (msg)=>{
-        console.log('DApp Message: ', msg);
-        delete msg.data.transaction.request_method
-        console.log('Txn Detail: ', msg.data.transaction)
-        if (msg.data.type === RequestType.REGULAR) {
-            processRegularRequest(msg, remotePort);
-            return;
+        console.log(msg);
+        if (mode.split('-')[0] === 'transaction'){
+            console.log('This is the transaction request');
+            processRegularRequest(msg, remotePort)
         }
-        if (msg.data.type === RequestType.BYPASS_CHECK) {
-            processBypassRequest(msg, remotePort);
-            return;
+        else if (mode.split('-')[0] === 'signature'){
+            console.log('This is the signature request');
+            processSignatureRequest(msg, remotePort);
         }
     });
 };
@@ -31,9 +43,17 @@ Browser.runtime.onMessage.addListener((data)=>{
     if(responsePort) {
         responsePort.postMessage(data);
         delete messagePorts[data.id];
-        return;
     }
 })
+
+const processSignatureRequest = (msg: any, remotePort: Browser.Runtime.Port) => {
+    const res = createSignatureMention(msg);
+    if (!res) {
+        remotePort.postMessage({ id: msg.id, data: true });
+        return;
+    }
+    messagePorts[msg.id] = remotePort;
+};
 
 const processRegularRequest = (msg: any, remotePort: Browser.Runtime.Port) => {
     const res = createResult(msg);
@@ -44,47 +64,55 @@ const processRegularRequest = (msg: any, remotePort: Browser.Runtime.Port) => {
     messagePorts[msg.id] = remotePort;
 };
 
-const processBypassRequest = (msg: any, remotePort: Browser.Runtime.Port) => {
-    const res = createResult(msg);
+const processBypassRequest = async (msg: any, remotePort: Browser.Runtime.Port) => {
+    const res = await createResult(msg);
     if (!res) { return };
 };
 
+const createSignatureMention = async (msg: any) => {
+    const { id, data } = msg;
+    const window = await Browser.windows.getCurrent()
+    const width = 360;
+    let height = 600;
+    console.log(mode)
+    console.log(mode in ["signature-token-approval", "signature-move-assets"]);
+    if (mode === "signature-token-approval" || mode === "signature-move-assets") {
+        height = 550
+        console.log('hi')
+    }
+    const left = window.left! + Math.round((window.width! - width) * 0.5);
+    const top = window.top! + Math.round((window.height! - height) * 0.2);
+    const queryString = new URLSearchParams({
+        id: id,
+        mode: mode,
+        browserMsg: data,
+      }).toString();
+    await Browser.windows.create({
+        url: `index.html?${queryString}`,
+        type: 'popup',
+        width: width,
+        height: height,
+        left: left,
+        top: top
+    });
+}
 const createResult = async (msg: any) => {
-    const { transaction, chainId } = msg.data;
-    let previewTxn = await dataService.postTransactionSimulation(transaction)
-    // since the alchemy may be can decode the approval, so first let go the decodeApproval function
-    // const allowance = decodeApproval(transaction.data ?? '', transaction.to ?? '');
-    // if (!allowance) return;
-    // if (approvedMessages.includes(msg.id)) return false;
-    // const rpcUrl = getRpcUrl(chainId, EthRPC); 
+    const { id, data } = msg;
     Promise.all([
-        // getTokenData(allowance.asset, new providers.JsonRpcProvider(rpcUrl)),
-        // addressToAppName(allowance.spender, chainId),
         Browser.windows.getCurrent(),
     ]).then(async ([window]) => {
         const queryString = new URLSearchParams({
-          id: msg.id,
-          asset: 'Test Asset',
-          spender: 'Test Spender',
-          chainId,
-          name: 'Test Name' ?? '',
-          symbol: 'Test Symbol' ?? '',
-          assetOut: previewTxn.out,
-          assetIn: previewTxn.in,
-          gas: previewTxn.gas,
-          outSymbol: previewTxn.outSymbol,
-          inSymbol:previewTxn.inSymbol,
-          tokenURL: previewTxn.tokenURL,
-        //   spenderName: spenderName ?? '',
-          bypassed: msg.data.type === RequestType.BYPASS_CHECK ? 'true' : 'false',
-        }).toString();
+            id: id,
+            mode: mode,
+            browserMsg: data,
+          }).toString();
         
-        const width = 500;
-        const height = 750;
+        const width = 360;
+        const height = 600;
         const left = window.left! + Math.round((window.width! - width) * 0.5);
         const top = window.top! + Math.round((window.height! - height) * 0.2);
     
-        const popupWindow = await Browser.windows.create({
+        await Browser.windows.create({
           url: `index.html?${queryString}`,
           type: 'popup',
           width: width,
@@ -92,11 +120,7 @@ const createResult = async (msg: any) => {
           left: left,
           top: top
         });
-    
-        // Specifying window position does not work on Firefox, so we have to reposition after creation (6 y/o bug -_-).
-        // Has no effect on Chrome, because the window position is already correct.
-        // await Browser.windows.update(popupWindow.id!, { width, height, left, top });
-      });
+      })
       return true;
 };
     

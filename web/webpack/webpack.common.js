@@ -25,15 +25,10 @@ module.exports = {
     background: path.join(srcDir, 'background.ts'),
     main: path.join(srcDir, 'index.tsx'),
     report: path.join(srcDir, 'components/Report/Report.tsx'),
+    tmp: path.join(srcDir, 'components/tmp.tsx'),
     'content-scripts/inject-scripts': path.join(srcDir, 'content-scripts', 'inject-scripts.tsx'),
     'content-scripts/window-ethereum-messages': path.join(srcDir, 'content-scripts', 'window-ethereum-messages.tsx'),
     'injected/proxy-window-ethereum': path.join(srcDir, 'injected', 'proxy-window-ethereum.tsx'),
-  },
-
-  resolve: {
-    alias: {
-      components: path.resolve(srcDir, 'components'),
-    }
   },
 
   output: {
@@ -81,6 +76,9 @@ module.exports = {
   },
 
   resolve: {
+    alias: {
+      components: path.resolve(srcDir, 'components'),
+    },
     extensions: ['.ts', '.tsx', '.js'],
     fallback: {
       buffer: require.resolve('buffer/'),
@@ -99,6 +97,9 @@ module.exports = {
     }),
     new webpack.ProvidePlugin({
       process: 'process/browser',
+    }),
+    new webpack.DefinePlugin({
+      'process.env.WORK_ENV': JSON.stringify(process.env.WORK_ENV || 'dev')
     }),
   ],
 };

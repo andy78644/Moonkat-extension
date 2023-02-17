@@ -7,7 +7,6 @@ import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 
 import './Info.css'
-import { Groups } from "@mui/icons-material";
 
 interface Props {
     infoName: any,

@@ -1,41 +1,95 @@
-import React from "react";
-import IconButton from "@mui/material/IconButton";
-import ArrowOutwardIcon from '@mui/icons-material/ArrowOutward';
-import GasFeeIcon from '@mui/icons-material/EvStation';
+import React, { useState } from "react";
+import List from '@mui/material/List';
+import ListItem from "@mui/material/ListItem";
+import ListItemText from '@mui/material/ListItemText';
+import ListItemButton from '@mui/material/ListItemButton';
+import ETHIcon from '../../assets/ETH.png'
+import gasFee from '../../assets/gasfee.png'
+import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 
 import './AssetsOut.css';
 
 interface Props {
-    // assetOut: any;
-    // gasFee: any;
-    asset:any;
-    symbol:any;
-    gas:any
+    contractType: string;
+    sendTokens: any;
+    NFTCategoryName: string | null;
+    gas: any;
 }
 
 const AssetsOut = (props: Props) => {
-    const {asset, symbol, gas} = props
+    const {contractType, sendTokens, NFTCategoryName, gas} = props
+    const [open, setOpen] = React.useState(false);
+    const handleClick = () => {
+        setOpen(!open);
+    };
     return (
         <div id="assetsOut">
-            <div id="assetsOutTitle">
-                Assets Out & Gas
-            </div>
-            <div id="assetsOutAssets">
-                <IconButton id="assetsOutIcon">
-                    <ArrowOutwardIcon sx={{fontSize: 25}}/>
-                </IconButton>
-                <div id="assetsOutAssetsFee">
-                    {Number(asset)}&nbsp;{symbol}
-                </div>
-            </div>
-            <div id="assetsOutGas">
-                <IconButton id="assetsOutGasFeeIcon">
-                    <GasFeeIcon sx={{fontSize: 25}}/>
-                </IconButton>
-                <div id="assetsOutGasFee">
-                    {Number(gas)}&nbsp;Wei
-                </div>
-            </div>
+            <List sx={{ 
+                width: '100%', 
+                bgcolor: '#FFF8EA',
+                borderRadius: 8
+            }}
+                component="nav"
+                aria-labelledby="nested-list-subheader"
+            >
+                <ListItemButton 
+                    sx={{
+                        width: '100%', 
+                        bgcolor: '#FFF8EA',
+                        "&:hover": {
+                            backgroundColor: '#FFF8EA'
+                        }
+                    }}
+                    component="div"
+                    id="assetsOutTitle"
+                    onClick={handleClick}
+                    disableRipple
+                >
+                    Assets Send &nbsp;
+                    <HelpOutlineIcon sx={{fontSize: 20}}/> 
+                    <ListItemText />
+                </ListItemButton>
+                <hr></hr>
+                <ListItem sx={{
+                    display: 'flex',
+                    justifyContent: 'flex-end'
+                }}>
+                    <img src={ETHIcon} alt="ETHIcon" />
+                    <ListItemText 
+                        sx={{
+                            fontSize: '20px',
+                            paddingLeft: '8px',
+                        }}
+                        primary="ETH" 
+                    />
+                    <ListItemText 
+                        sx={{
+                            fontSize: '20px',
+                            textAlign: 'right',
+                            color: '#B8463D'
+                        }}
+                        primary="-68.068 ETH" 
+                    />
+                </ListItem>
+                <ListItem>
+                    <img src={gasFee} alt="gasFee" />
+                    <ListItemText
+                        sx={{
+                            fontSize: '20px',
+                            paddingLeft: '8px',
+                        }}
+                        primary="GasFee" 
+                    />
+                    <ListItemText 
+                        sx={{
+                            fontSize: '20px',
+                            textAlign: 'right',
+                            color: '#B8463D'
+                        }}
+                        primary="-0.0048 ETH" 
+                    />
+                </ListItem>
+            </List>
         </div>
     );
 }
