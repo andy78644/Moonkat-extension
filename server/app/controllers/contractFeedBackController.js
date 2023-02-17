@@ -7,6 +7,12 @@ const contract = require("../models/contract");
 
 // Get the Contract with Specific Address
 exports.reportFeedback = async (req, res) => {
+    const check = detectFunc(req.body);
+    if(!check)
+        res.status(500).send({
+            message:
+                err.message || "type error"
+        });
     const report = {
         Provider: req.body.Provider,
         ReportedContract: req.body.Address,
@@ -69,6 +75,11 @@ exports.getFeedback = async (req, res) => {
         
         
 };
+
+function detectFunc(reqBody){
+
+    return true;
+}
 
 
 
