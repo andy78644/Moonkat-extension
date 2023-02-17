@@ -4,7 +4,6 @@ const getAssetData = async (change, txn) => {
   if (txn.assetType === 'ERC20' || txn.assetType === 'NATIVE'){
     change.amount = Number(txn.amount).toFixed(4);
     change.tokenURL = txn.logo
-    return
   }
   else{
     await fetch(`https://eth-mainnet.g.alchemy.com/v2/${process.env.ALCHEMY_API_KEY}\n
@@ -21,7 +20,6 @@ const getAssetData = async (change, txn) => {
       }
       change.osVerified = response.contractMetadata.openSea.safelistRequestStatus
       change.amount = txn.amount
-      return
     })
     .catch(err => {
       console.log(err.message) 
@@ -57,7 +55,7 @@ const transferHandler = async (txn, direction) => {
   }
   assetMove.type = txn.assetType
   assetMove.symbol = txn.symbol
-  err = await getAssetData(assetMove, txn)
+  let err = await getAssetData(assetMove, txn)
   if (err) return err
   return assetMove
 }
@@ -69,6 +67,7 @@ exports.sendTransaction = async (req, res) => {
       out: "",
       outSymbol:""
     };
+    let assetApprove, assetOut, assetIn
     
     const options = {
         method: 'POST',
