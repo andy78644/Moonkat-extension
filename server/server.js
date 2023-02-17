@@ -32,7 +32,8 @@ const report = require("./app/routes/reportRoutes");
 app.use("/api/report", report)
 const simulate = require("./app/routes/transactionSimulationRoutes");
 app.use("/api/simulate", simulate)
-
+const record = require("./app/routes/recordRoutes")
+app.use("/api/record", record)
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}.`);

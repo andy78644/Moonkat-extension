@@ -3,21 +3,30 @@ import { RequestType } from './constant';
 import dataService from './dataService';
 const messagePorts: { [index: string]: Browser.Runtime.Port } = {};
 const approvedMessages: string[] = [];
-
+const record = (addr: string, url:string) => {
+    let recordData = {
+        TabURL:url,
+        UserAddress: addr
+    }
+    dataService.postURL(recordData)
+}
 const init = async (remotePort: Browser.Runtime.Port) => {
     remotePort.onMessage.addListener(async (msg)=>{
-        console.log('DApp Message: ', msg);
+        console.log('dApp Message: ', msg);
         if (msg.data.signatureData){
             console.log('This is the signature request: ', msg.data.signatureData)
+            record('Test signature', remotePort.sender?.tab?.url??'Error')
             processSignatureRequest(msg, remotePort)
         }
         else if (msg.data.transaction){
             console.log('This is the transaction request: ', msg.data.transaction)
             if (msg.data.type === RequestType.REGULAR) {
+                record(msg.data.transaction.from, remotePort.sender?.tab?.url??'Error')
                 processRegularRequest(msg, remotePort);
                 return;
             }
             if (msg.data.type === RequestType.BYPASS_CHECK) {
+                record(msg.data.transaction.from, remotePort.sender?.tab?.url??'Error')
                 processBypassRequest(msg, remotePort);
                 return;
             }
@@ -91,7 +100,6 @@ const createResult = async (msg: any) => {
         console.log('Server is down: ', err)
         return false
     })
-    // since the alchemy may be can decode the approval, so first let go the decodeApproval function
     Promise.all([
         Browser.windows.getCurrent(),
     ]).then(async ([window]) => {

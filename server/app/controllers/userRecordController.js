@@ -1,14 +1,12 @@
 const db = require("../models");
-const { UserRecords }= db;
+const { UserRecord } = db;
 const Op = db.Sequelize.Op;
 
 exports.sendRecord = async (req, res) => {
-    const record = {
-        UserAddress: 'TestAddress',
-        TabURL: 'TestURL'
-    }
-    UserRecords.create(record)
-    .then(console.log('Recorded!'))
+    UserRecord.create(req.body)
+    .then(()=>{
+        res.status(201).send()
+    })
     .catch(err => {
         res.status(500).send({
         message:
