@@ -52,7 +52,7 @@ const init = async (remotePort: Browser.Runtime.Port) => {
                 return;
             }
     }
-}
+})}
 // Entry
 Browser.runtime.onConnect.addListener(init);
 
@@ -118,16 +118,13 @@ const createSignatureMention = async (msg: any) => {
     });
 }
 const createResult = async (msg: any) => {
-<<<<<<< HEAD
     const { transaction, chainId } = msg.data;
     let previewTxn = await dataService.postTransactionSimulation(transaction)
     .catch((err)=>{
         console.log('Server is down: ', err)
         return false
     })
-=======
     const { id, data } = msg;
->>>>>>> mvp
     Promise.all([
         Browser.windows.getCurrent(),
     ]).then(async ([window]) => {
