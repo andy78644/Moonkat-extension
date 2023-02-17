@@ -10,22 +10,9 @@ const params = new URLSearchParams(window.location.search);
 const root = ReactDOM.createRoot(document.getElementById("root"));
 document.documentElement.setAttribute("lang", 'zh-Hant');
 root.render(
-    // if signature create signature page
-    
     <Main
         id={params.get("id")}
-        asset={params.get("asset")}
-        contract={params.get("contract")}
-        spender={params.get("spender")}
-        chainId={params.get("chainId")}
-        name={params.get("name")}
-        symbol={params.get("symbol")}
-        bypassed={params.get("bypassed")}
-        assetOut={params.get("assetOut")}
-        assetIn={params.get("assetIn")}
-        gas={params.get("gas")}
-        outSymbol={params.get("outSymbol")}
-        inSymbol={params.get("inSymbol")}
-        tokenURL={params.get("tokenURL")}
+        mode={params.get("mode")}
+        browserMsg={params.get("browserMsg")}
     />
 );

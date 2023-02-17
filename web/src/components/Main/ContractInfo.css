@@ -1,23 +1,23 @@
 #contractInfo {
-    border-radius: 0.2rem;
-    background-color: #DFD8C9;
+    margin: 16px;
+    border-width: 2px;
+    border-style: solid;
+    border-color: #DFD8CA;
+    border-radius: 8px;
+    background-color: #FFF8EA;
     text-align: center;
 }
 
-#infoTitle {
-    font-size: 1.2rem;
-    padding: 0.5rem 0rem 0rem 0rem;
-    font-weight: 600;
-    margin-left: 1.8rem; 
+#infoText {
+    padding-top: 16px;
+    font-family: 'Lato';
+    font-weight: 900;
+    font-size: 18px;
 }
 
-#address {
-    font-size: 0.9rem;
-    margin: -0.3rem 0rem 0.1rem 0rem;
-    margin-left: 1.8rem;
-}
-
-#closeButton {
-    display: inline;
-    float: right;
+#contractText {
+    padding-bottom: 16px;
+    font-family: 'Lato-thin';
+    font-weight: 900;
+    font-size: 13px;
 }
