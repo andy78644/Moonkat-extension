@@ -1,29 +1,27 @@
-import React, { useState } from "react";
+import React, {useState} from 'react';
 import List from '@mui/material/List';
 import ListItem from "@mui/material/ListItem";
 import ListItemText from '@mui/material/ListItemText';
 import ListItemButton from '@mui/material/ListItemButton';
-import ETHIcon from '../../assets/ETH.png'
-import gasFee from '../../assets/gasfee.png'
+import skeleton from '../../assets/skeleton.png'
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 
-import './AssetsOut.css';
+import './AssetsApprove.css';
 
 interface Props {
     contractType: string;
     sendTokens: any;
     NFTCategoryName: string | null;
-    gas: any;
 }
 
-const AssetsOut = (props: Props) => {
-    const {contractType, sendTokens, NFTCategoryName, gas} = props
+const AssetsApprove = (props: Props) => {
+    const {contractType, sendTokens, NFTCategoryName} = props
     const [open, setOpen] = React.useState(false);
     const handleClick = () => {
         setOpen(!open);
     };
     return (
-        <div id="assetsOut">
+        <div id="assetsApprove">
             <List sx={{ 
                 width: '100%', 
                 bgcolor: '#FFF8EA',
@@ -45,53 +43,32 @@ const AssetsOut = (props: Props) => {
                     onClick={handleClick}
                     disableRipple
                 >
-                    Assets Send &nbsp;
+                    Assets Receive &nbsp;
                     <HelpOutlineIcon sx={{fontSize: 20}}/> 
                     <ListItemText />
                 </ListItemButton>
                 <hr></hr>
-                <ListItem sx={{
-                    display: 'flex',
-                    justifyContent: 'flex-end'
-                }}>
-                    <img src={ETHIcon} alt="ETHIcon" />
+                <ListItem>
                     <ListItemText 
                         sx={{
                             fontSize: '20px',
-                            paddingLeft: '8px',
                         }}
-                        primary="ETH" 
-                    />
-                    <ListItemText 
-                        sx={{
-                            fontSize: '20px',
-                            textAlign: 'right',
-                            color: '#B8463D'
-                        }}
-                        primary="-68.068 ETH" 
+                        primary="Bored Ape Yacht Club" 
                     />
                 </ListItem>
                 <ListItem>
-                    <img src={gasFee} alt="gasFee" />
-                    <ListItemText
-                        sx={{
-                            fontSize: '20px',
-                            paddingLeft: '8px',
-                        }}
-                        primary="GasFee" 
-                    />
+                    <img src={skeleton} alt="skeleton" />
                     <ListItemText 
                         sx={{
                             fontSize: '20px',
                             textAlign: 'right',
-                            color: '#B8463D'
                         }}
-                        primary="-0.0048 ETH" 
+                        primary="Can withdraw all BAYCs" 
                     />
                 </ListItem>
             </List>
         </div>
-    );
-}
+    )
+};
 
-export default AssetsOut;
+export default AssetsApprove;

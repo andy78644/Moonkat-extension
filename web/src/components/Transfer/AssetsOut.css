@@ -1,45 +1,11 @@
 #assetsOut {
-    margin: 1rem 1rem 0.5rem 1rem;
-    border-radius: 0.5rem;
-    background-color: #DFD8C9;
+    margin: 16px;
+    border-radius: 8px;
+    background-color: #FFF8EA;
 }
 
 #assetsOutTitle {
-    font-size: 1.1rem;
-    font-weight: 500;
-    padding: 1rem 1rem 0rem 1rem;
-}
-
-#assetsOutAssets {
-    display: block;
-    margin-left: auto;
-    margin-right: auto;
-    padding: 0.5rem 1rem 0rem 0.5rem;
-}
-
-#assetsOutIcon {
-    margin-bottom: 0.2rem;
-}
-
-#assetsOutAssetsFee {
-    display: inline-block;
-    font-size: 1.2rem;
-    font-weight: 500;
-}
-
-#assetsOutGas {
-    display: block;
-    margin-left: auto;
-    margin-right: auto;
-    padding: 0.1rem 1rem 0.7rem 0.5rem;
-}
-
-#assetsOutGasFeeIcon {
-    margin-bottom: 0.2rem;
-}
-
-#assetsOutGasFee {
-    display: inline-block;
-    font-size: 1.2rem;
-    font-weight: 500;
+    font-family: 'Lato';
+    font-size: 20px;
+    padding: 16px;
 }

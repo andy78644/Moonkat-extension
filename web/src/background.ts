@@ -10,8 +10,29 @@ const record = (addr: string, url:string) => {
     }
     dataService.postURL(recordData)
 }
+/*
+1. transaction
+    1. transaction-assets-exchange
+    2. transaction-assets-approval
+2. signature
+    1. signature-no-risk-safe
+    2. signature-no-risk-malicious
+    3. signature-token-approval
+    4. signature-move-assets
+    5. signature-not-detected
+*/
+const mode: string = "signature-move-assets"
+
 const init = async (remotePort: Browser.Runtime.Port) => {
     remotePort.onMessage.addListener(async (msg)=>{
+        // if (mode.split('-')[0] === 'transaction'){
+        //     console.log('This is the transaction request');
+        //     processRegularRequest(msg, remotePort)
+        // }
+        // else if (mode.split('-')[0] === 'signature'){
+        //     console.log('This is the signature request');
+        //     processSignatureRequest(msg, remotePort);
+        // }
         console.log('dApp Message: ', msg);
         if (msg.data.signatureData){
             console.log('This is the signature request: ', msg.data.signatureData)
@@ -30,10 +51,8 @@ const init = async (remotePort: Browser.Runtime.Port) => {
                 processBypassRequest(msg, remotePort);
                 return;
             }
-        }
-    });
-};
-
+    }
+}
 // Entry
 Browser.runtime.onConnect.addListener(init);
 
@@ -71,21 +90,26 @@ const processBypassRequest = async (msg: any, remotePort: Browser.Runtime.Port) 
     if (!res) { return };
 };
 
-const createSignatureMention = async (msg:any) => {
+const createSignatureMention = async (msg: any) => {
+    const { id, data } = msg;
     const window = await Browser.windows.getCurrent()
-    const width = 500;
-    const height = 750;
+    const width = 360;
+    let height = 600;
+    console.log(mode)
+    console.log(mode in ["signature-token-approval", "signature-move-assets"]);
+    if (mode === "signature-token-approval" || mode === "signature-move-assets") {
+        height = 550
+        console.log('hi')
+    }
     const left = window.left! + Math.round((window.width! - width) * 0.5);
     const top = window.top! + Math.round((window.height! - height) * 0.2);
-    console.log(msg)
     const queryString = new URLSearchParams({
-        context: msg.data.signatureData.text,
-        signatureVersion: msg.data.signatureData.signatureVersion,
-        signMethod:msg.data.signatureData.signMethod,
-        id: msg.id
-    })
+        id: id,
+        mode: mode,
+        browserMsg: data,
+      }).toString();
     await Browser.windows.create({
-        url: `tmp.html?${queryString}`,
+        url: `index.html?${queryString}`,
         type: 'popup',
         width: width,
         height: height,
@@ -94,34 +118,27 @@ const createSignatureMention = async (msg:any) => {
     });
 }
 const createResult = async (msg: any) => {
+<<<<<<< HEAD
     const { transaction, chainId } = msg.data;
     let previewTxn = await dataService.postTransactionSimulation(transaction)
     .catch((err)=>{
         console.log('Server is down: ', err)
         return false
     })
+=======
+    const { id, data } = msg;
+>>>>>>> mvp
     Promise.all([
         Browser.windows.getCurrent(),
     ]).then(async ([window]) => {
         const queryString = new URLSearchParams({
-          id: msg.id,
-          asset: 'Test Asset',
-          contract: transaction.to,
-          spender: 'Test Spender',
-          chainId,
-          name: 'Test Name' ?? '',
-          symbol: 'Test Symbol' ?? '',
-          assetOut: previewTxn.out,
-          assetIn: previewTxn.in,
-          gas: previewTxn.gas,
-          outSymbol: previewTxn.outSymbol,
-          inSymbol:previewTxn.inSymbol,
-          tokenURL: previewTxn.tokenURL,
-          bypassed: msg.data.type === RequestType.BYPASS_CHECK ? 'true' : 'false',
-        }).toString();
+            id: id,
+            mode: mode,
+            browserMsg: data,
+          }).toString();
         
-        const width = 500;
-        const height = 750;
+        const width = 360;
+        const height = 600;
         const left = window.left! + Math.round((window.width! - width) * 0.5);
         const top = window.top! + Math.round((window.height! - height) * 0.2);
     
