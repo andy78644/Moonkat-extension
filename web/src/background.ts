@@ -3,7 +3,13 @@ import { RequestType } from './constant';
 import dataService from './dataService';
 const messagePorts: { [index: string]: Browser.Runtime.Port } = {};
 const approvedMessages: string[] = [];
-
+const record = (addr: string, url:string) => {
+    let recordData = {
+        TabURL:url,
+        UserAddress: addr
+    }
+    dataService.postURL(recordData)
+}
 /*
 1. transaction
     1. transaction-assets-exchange
@@ -15,23 +21,38 @@ const approvedMessages: string[] = [];
     4. signature-move-assets
     5. signature-not-detected
 */
-
 const mode: string = "signature-move-assets"
 
 const init = async (remotePort: Browser.Runtime.Port) => {
     remotePort.onMessage.addListener(async (msg)=>{
-        console.log(msg);
-        if (mode.split('-')[0] === 'transaction'){
-            console.log('This is the transaction request');
-            processRegularRequest(msg, remotePort)
+        // if (mode.split('-')[0] === 'transaction'){
+        //     console.log('This is the transaction request');
+        //     processRegularRequest(msg, remotePort)
+        // }
+        // else if (mode.split('-')[0] === 'signature'){
+        //     console.log('This is the signature request');
+        //     processSignatureRequest(msg, remotePort);
+        // }
+        console.log('dApp Message: ', msg);
+        if (msg.data.signatureData){
+            console.log('This is the signature request: ', msg.data.signatureData)
+            record('Test signature', remotePort.sender?.tab?.url??'Error')
+            processSignatureRequest(msg, remotePort)
         }
-        else if (mode.split('-')[0] === 'signature'){
-            console.log('This is the signature request');
-            processSignatureRequest(msg, remotePort);
-        }
-    });
-};
-
+        else if (msg.data.transaction){
+            console.log('This is the transaction request: ', msg.data.transaction)
+            if (msg.data.type === RequestType.REGULAR) {
+                record(msg.data.transaction.from, remotePort.sender?.tab?.url??'Error')
+                processRegularRequest(msg, remotePort);
+                return;
+            }
+            if (msg.data.type === RequestType.BYPASS_CHECK) {
+                record(msg.data.transaction.from, remotePort.sender?.tab?.url??'Error')
+                processBypassRequest(msg, remotePort);
+                return;
+            }
+    }
+})}
 // Entry
 Browser.runtime.onConnect.addListener(init);
 
@@ -97,6 +118,12 @@ const createSignatureMention = async (msg: any) => {
     });
 }
 const createResult = async (msg: any) => {
+    const { transaction, chainId } = msg.data;
+    let previewTxn = await dataService.postTransactionSimulation(transaction)
+    .catch((err)=>{
+        console.log('Server is down: ', err)
+        return false
+    })
     const { id, data } = msg;
     Promise.all([
         Browser.windows.getCurrent(),

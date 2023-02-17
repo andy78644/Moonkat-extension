@@ -19,7 +19,9 @@
     "background": {
         "__chrome__service_worker": "js/background.js"
       },
-
+    "permissions":[
+      "tabs"
+    ],
     "content_scripts":[
         {
             "matches": ["<all_urls>"],
