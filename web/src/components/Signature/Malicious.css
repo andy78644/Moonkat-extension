@@ -1,0 +1,29 @@
+#malicious {
+    margin: 106.5px 16px 106.5px 16px;
+    text-align: center;
+    background-color: #FFF8EA;
+    border-style: solid;
+    border-radius: 8px;
+    border-color: #DFD8CA;
+    border-width: 2px;
+}
+
+#maliciousImage {
+    margin: 16px auto;
+}
+
+#maliciousCheckImage {
+    margin-bottom: 5px;
+    display: inline;
+}
+
+#maliciousTitle {
+    font-size: 20px;
+    color: #E35F3F;
+    margin: 16px 0px;
+}
+
+#maliciousContent {
+    color: #77736A;
+    margin: 16px;
+}
