@@ -21,7 +21,7 @@ const record = (addr: string, url:string) => {
     4. signature-move-assets
     5. signature-not-detected
 */
-const mode: string = "signature-move-assets"
+const mode: string = "transaction-assets-exchange"
 
 const init = async (remotePort: Browser.Runtime.Port) => {
     remotePort.onMessage.addListener(async (msg)=>{
@@ -118,12 +118,8 @@ const createSignatureMention = async (msg: any) => {
     });
 }
 const createResult = async (msg: any) => {
-    const { transaction, chainId } = msg.data;
-    let previewTxn = await dataService.postTransactionSimulation(transaction)
-    .catch((err)=>{
-        console.log('Server is down: ', err)
-        return false
-    })
+    const { transaction, chainId } = msg.data;  
+    // In this place to decide what data and mode to create
     const { id, data } = msg;
     Promise.all([
         Browser.windows.getCurrent(),
@@ -131,9 +127,9 @@ const createResult = async (msg: any) => {
         const queryString = new URLSearchParams({
             id: id,
             mode: mode,
-            browserMsg: data,
+            // browserMsg is the transaction data
+            browserMsg: JSON.stringify(transaction) ?? 'error',
           }).toString();
-        
         const width = 360;
         const height = 600;
         const left = window.left! + Math.round((window.width! - width) * 0.5);

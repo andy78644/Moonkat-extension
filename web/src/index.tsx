@@ -10,6 +10,7 @@ const params = new URLSearchParams(window.location.search);
 const root = ReactDOM.createRoot(document.getElementById("root"));
 document.documentElement.setAttribute("lang", 'zh-Hant');
 root.render(
+    
     <Main
         id={params.get("id")}
         mode={params.get("mode")}
