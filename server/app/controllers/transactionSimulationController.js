@@ -63,9 +63,11 @@ const transferHandler = async (txn, direction) => {
 exports.sendTransaction = async (req, res) => {
     //todo: define the user address
     const from = req.body.from
-    let assetChange = {
-      out: "",
-      outSymbol:""
+    let transactionInfo = {
+      gas: "",
+      approve:"",
+      in:"",
+      out:""
     };
     let assetApprove, assetOut, assetIn
     
@@ -88,11 +90,14 @@ exports.sendTransaction = async (req, res) => {
     .then(async response => {
         console.log('Simulation Success! Result: ', response)
         const result = response.result
-        assetChange.gas = result.gasUsed
+        transactionInfo.gas = result.gasUsed
         for ( let changeObj of result.changes){
             if(changeObj.from === from){
               if (changeObj.changeType === 'APPROVE'){
                 assetApprove = approvalHandler(changeObj)
+                transactionInfo.approve = assetApprove
+                console.log('Approve: ', transactionInfo)
+                res.status(200).send(transactionInfo)
               }
               else if (changeObj.changeType === 'TRANSFER'){
                 assetOut = await transferHandler(changeObj, "out")
@@ -104,10 +109,11 @@ exports.sendTransaction = async (req, res) => {
               }
             }
         }
-        console.log('Approve: ', assetApprove)
         console.log('In: ', assetIn)
         console.log('Out: ', assetOut)
-        res.status(200).send(assetChange)
+        transactionInfo.in = assetIn
+        transactionInfo.out = assetOut 
+        res.status(200).send(transactionInfo)
     })
     .catch(err => {
         console.log(err.message)  

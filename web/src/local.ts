@@ -3,7 +3,7 @@ import fetchAdapter from "@vespaiach/axios-fetch-adapter";
 
 const Url = {
   "dev": "http://127.0.0.1:8080",
-  "prod": "https://test.moonkat.app/"
+  "prod": "https://dev.moonkat.app/"
 }
 const type = process.env.WORK_ENV
 let baseUrl = Url.dev
