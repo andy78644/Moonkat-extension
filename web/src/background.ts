@@ -21,7 +21,7 @@ const record = (addr: string, url:string) => {
     4. signature-move-assets
     5. signature-not-detected
 */
-const mode: string = "transaction-assets-exchange"
+let mode: string = "transaction-assets-exchange"
 
 const init = async (remotePort: Browser.Runtime.Port) => {
     remotePort.onMessage.addListener(async (msg)=>{
@@ -95,18 +95,18 @@ const createSignatureMention = async (msg: any) => {
     const window = await Browser.windows.getCurrent()
     const width = 360;
     let height = 600;
+    mode = "signature-no-risk-safe"
     console.log(mode)
     console.log(mode in ["signature-token-approval", "signature-move-assets"]);
     if (mode === "signature-token-approval" || mode === "signature-move-assets") {
         height = 550
-        console.log('hi')
     }
     const left = window.left! + Math.round((window.width! - width) * 0.5);
     const top = window.top! + Math.round((window.height! - height) * 0.2);
     const queryString = new URLSearchParams({
         id: id,
         mode: mode,
-        browserMsg: data,
+        browserMsg: msg.data.signatureData.signatureVersion,
       }).toString();
     await Browser.windows.create({
         url: `index.html?${queryString}`,
@@ -121,6 +121,7 @@ const createResult = async (msg: any) => {
     const { transaction, chainId } = msg.data;  
     // In this place to decide what data and mode to create
     const { id, data } = msg;
+    mode = "transaction-assets-exchange"
     Promise.all([
         Browser.windows.getCurrent(),
     ]).then(async ([window]) => {

@@ -44,20 +44,12 @@ const approvalHandler = (txn) => {
   return assetApprove
 }
 
-const transferHandler = async (txn, direction) => {
-  let assetMove = {
-    direction:direction,
-    amount:"",
-    type:"",
-    symbol:"",
-    tokenURL:"",
-    osVerified:"",
-  }
-  assetMove.type = txn.assetType
-  assetMove.symbol = txn.symbol
-  let err = await getAssetData(assetMove, txn)
+const transferHandler = async (move, txn) => {
+  move.type = txn.assetType
+  move.symbol = txn.symbol
+  let err = await getAssetData(move, txn)
   if (err) return err
-  return assetMove
+  return move
 }
 
 exports.sendTransaction = async (req, res) => {
@@ -69,7 +61,20 @@ exports.sendTransaction = async (req, res) => {
       in:"",
       out:""
     };
-    let assetApprove, assetOut, assetIn
+    let assetOut = {
+      amount:"",
+      type:"",
+      symbol:"",
+      tokenURL:"",
+      osVerified:"",
+    }
+    let assetIn = {
+      amount:"",
+      type:"",
+      symbol:"",
+      tokenURL:"",
+      osVerified:"",
+    }
     
     const options = {
         method: 'POST',
@@ -100,12 +105,12 @@ exports.sendTransaction = async (req, res) => {
                 res.status(200).send(transactionInfo)
               }
               else if (changeObj.changeType === 'TRANSFER'){
-                assetOut = await transferHandler(changeObj, "out")
+                assetOut = await transferHandler(assetOut, changeObj)
               }
             }
             else if(changeObj.to === from){
               if (changeObj.changeType === 'TRANSFER'){
-                assetIn = await transferHandler(changeObj, "in")
+                assetIn = await transferHandler(assetIn, changeObj)
               }
             }
         }

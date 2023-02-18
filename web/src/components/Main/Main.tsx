@@ -21,29 +21,38 @@ interface Props {
 const Main = (props: Props) => {
     // props
     const { id, mode, browserMsg } = props;
-    const [previewTxn, setTxnState] = useState({})
+    const [previewTxn, setPreviewTxnState] = useState({})
     const [hasLoaded, setHasLoaded] = useState(false);
-    const transaction = JSON.parse(browserMsg ?? 'error')
-    console.log('b')
-    useEffect(() => {
-        const getPreview = async (transaction:any) => {
-            await dataService.postTransactionSimulation(transaction)
-                .then(res => {
-                    setTxnState(res)
+    let transaction = {
+        to:''
+    }
+    console.log(mode)
+    if (mode === "transaction-assets-exchange"){
+        transaction = JSON.parse(browserMsg ?? 'error')
+        useEffect(() => {
+            const getPreview = async (transaction:any) => {
+                await dataService.postTransactionSimulation(transaction)
+                    .then(res => {
+                        setPreviewTxnState(res)
+                        setHasLoaded(true)
+                        return res
+                    })
+                    .catch((err)=>{
+                        console.log('Server is down: ', err)
+                    })
+            }
+            getPreview(transaction)
+                .catch(e => {
                     setHasLoaded(true)
-                    return res
-                })
-                .catch((err)=>{
-                    console.log('Server is down: ', err)
-                })
-        }
-        getPreview(transaction)
-            .catch(e => {
-                setHasLoaded(true)
-            });
-    }, [])
-
-    console.log('a: ', JSON.stringify(previewTxn))
+                });
+        }, [])
+        console.log('previewTxn: ', JSON.stringify(previewTxn))
+    }
+    else{
+        useEffect(() => {
+        setHasLoaded(true)})
+    }
+    
     // Close extension
     const extensionResponse = async (data: boolean) => {
         await Browser.runtime.sendMessage(undefined, { id, data });
@@ -51,13 +60,6 @@ const Main = (props: Props) => {
     }
     const accept = () => extensionResponse(true);
     const reject = () => extensionResponse(false);
-    const Test = () => {
-        return (
-            <>
-            {mode}, TTTT
-            </>
-        )
-    }
     const renderCurrentSelection = (mode: string | null) => {
         switch (mode) {
             case 'transaction-assets-exchange': {
@@ -128,7 +130,9 @@ const Main = (props: Props) => {
     <div>
         {
         hasLoaded?
-        <div>{renderCurrentSelection(mode)}</div>
+        <div>
+            {renderCurrentSelection(mode)}
+        </div>
         :
         <Loading />
         }

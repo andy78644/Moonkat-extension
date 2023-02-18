@@ -14,13 +14,10 @@ interface Props {
     sendTokens: any;
     NFTCategoryName: string | null;
     gas: any;
-    tokenImageURL: string | null;
-    amount: string | null;
-    symbol: string | null;
 }
 
 const AssetsOut = (props: Props) => {
-    const {contractType, sendTokens, NFTCategoryName, gas, tokenImageURL, amount, symbol} = props
+    const {contractType, sendTokens, NFTCategoryName, gas} = props
     const [open, setOpen] = React.useState(false);
     const handleClick = () => {
         setOpen(!open);
@@ -57,13 +54,13 @@ const AssetsOut = (props: Props) => {
                     display: 'flex',
                     justifyContent: 'flex-end'
                 }}>
-                    <img src={tokenImageURL ?? ETHIcon} alt="ETHIcon" />
+                    <img src={sendTokens[0].tokenURL ?? ETHIcon} alt="Free Mint" />
                     <ListItemText 
                         sx={{
                             fontSize: '20px',
                             paddingLeft: '8px',
                         }}
-                        primary={symbol ?? 'Error'} 
+                        primary={sendTokens[0].symbol ?? 'Error'} 
                     />
                     <ListItemText 
                         sx={{
@@ -71,7 +68,7 @@ const AssetsOut = (props: Props) => {
                             textAlign: 'right',
                             color: '#B8463D'
                         }}
-                        primary={amount ?? 'Error' + {symbol} ?? 'Error'}
+                        primary={sendTokens[0].amount ?? 'Error' + sendTokens[0].symbol ?? 'Error'}
                     />
                 </ListItem>
                 <ListItem>

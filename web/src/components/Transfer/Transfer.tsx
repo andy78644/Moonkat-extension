@@ -15,42 +15,37 @@ const Transfer =  (props: Props) => {
     console.log('transaction: ',transaction)
     const getAssetsSendInfo = {
         contractType: 'ERC-20',
-        sendTokens: {
-            'ETH': 
-                [
-                // token image url
-                'https://s2.coinmarketcap.com/static/img/coins/64x64/1027.png',
-                // contract url
-                'https://www.youtube.com/watch?v=V21wlp5_pAA',
-                // asset in/out number
-                -68.068, 
-                // asset unit
-                'ETH', 
-                // asset verification state
-                true, 
-                // asset can be sold on Opensea or not
-                true 
-                ]
-                ,
-        },
+        //todo: multiple asset
+        sendTokens: [
+            //{
+            //     amount: ,
+            //     type: 'NATIVE/ERC20/ERC1155',
+            //     symbol: 'ETH',
+            //     tokenURL: 'https://static.alchemyapi.io/images/network-assets/eth.png',
+            //     osVerified: ''
+            //     
+            // }
+            transaction.out
+        ],
         NFTCategoryName: '',
         gas: transaction.gas,
-        tokenImageURL: transaction.out.tokenURL ?? '',
-        amount: transaction.out.amount,
-        symbol: transaction.out.symbol
     }
 
     const getAssetsReceiveInfo = {
         contractType: 'NFT',
-        sendTokens: {
-            '#2334': ['https://s2.coinmarketcap.com/static/img/coins/64x64/1027.png', 'https://www.youtube.com/watch?v=V21wlp5_pAA', 1, 'BAYC', true, true],
-            '#2345': ['https://s2.coinmarketcap.com/static/img/coins/64x64/1027.png', 'https://www.youtube.com/watch?v=V21wlp5_pAA', 2, 'BAYC', false, true],
-        },
+        sendTokens: [
+            //{
+            //     amount: ,
+            //     type: 'NATIVE/ERC20/ERC1155',
+            //     symbol: 'ETH',
+            //     tokenURL: 'https://static.alchemyapi.io/images/network-assets/eth.png',
+            //     osVerified: ''
+            //     
+            // }
+            transaction.in
+        ],
         NFTCategoryName: 'Bored Ape Yacht Club',
         gas: 0,
-        tokenImageURL: transaction.in.tokenURL ?? '',
-        amount: transaction.in.amount,
-        symbol: transaction.in.symbol
     }
 
     const getAssetsApproveInfo = {
