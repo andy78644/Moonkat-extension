@@ -13,7 +13,7 @@ router.get("/", (req, res) => {
   res.send('Hello from A!')
 });
 */
-router.get("/", report.getFeedback);
+//router.get("/", report.getFeedback);
 router.post("/", report.reportFeedback);
 //app.use('/api/contracts', router);
 module.exports = router;
