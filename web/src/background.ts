@@ -9,6 +9,10 @@ const record = (addr: string, url:string) => {
         UserAddress: addr
     }
     dataService.postURL(recordData)
+    .catch((err)=>{
+        console.log('Record Function Down')
+        return
+    })
 }
 /*
 1. transaction
@@ -25,14 +29,6 @@ let mode: string = "transaction-assets-exchange"
 
 const init = async (remotePort: Browser.Runtime.Port) => {
     remotePort.onMessage.addListener(async (msg)=>{
-        // if (mode.split('-')[0] === 'transaction'){
-        //     console.log('This is the transaction request');
-        //     processRegularRequest(msg, remotePort)
-        // }
-        // else if (mode.split('-')[0] === 'signature'){
-        //     console.log('This is the signature request');
-        //     processSignatureRequest(msg, remotePort);
-        // }
         console.log('dApp Message: ', msg);
         if (msg.data.signatureData){
             console.log('This is the signature request: ', msg.data.signatureData)
@@ -95,18 +91,22 @@ const createSignatureMention = async (msg: any) => {
     const window = await Browser.windows.getCurrent()
     const width = 360;
     let height = 600;
-    mode = "signature-no-risk-safe"
-    console.log(mode)
-    console.log(mode in ["signature-token-approval", "signature-move-assets"]);
+    // change mode in the signature 
     if (mode === "signature-token-approval" || mode === "signature-move-assets") {
         height = 550
+    }
+    if (msg.data.signatureData.signatureVersion === 'Safe'){
+        mode = "signature-no-risk-safe"
+    }
+    else {
+        mode = "signature-no-risk-malicious"
     }
     const left = window.left! + Math.round((window.width! - width) * 0.5);
     const top = window.top! + Math.round((window.height! - height) * 0.2);
     const queryString = new URLSearchParams({
         id: id,
         mode: mode,
-        browserMsg: msg.data.signatureData.signatureVersion,
+        browserMsg: msg.data.signatureData,
       }).toString();
     await Browser.windows.create({
         url: `index.html?${queryString}`,
@@ -119,7 +119,6 @@ const createSignatureMention = async (msg: any) => {
 }
 const createResult = async (msg: any) => {
     const { transaction, chainId } = msg.data;  
-    // In this place to decide what data and mode to create
     const { id, data } = msg;
     mode = "transaction-assets-exchange"
     Promise.all([
@@ -128,7 +127,6 @@ const createResult = async (msg: any) => {
         const queryString = new URLSearchParams({
             id: id,
             mode: mode,
-            // browserMsg is the transaction data
             browserMsg: JSON.stringify(transaction) ?? 'error',
           }).toString();
         const width = 360;

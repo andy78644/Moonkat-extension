@@ -13,7 +13,7 @@ import './Main.css'
 
 interface Props {
     id: string | null;
-    mode: string | null;
+    mode: string | 'Error';
     browserMsg: string | null;
 };
 
@@ -26,8 +26,7 @@ const Main = (props: Props) => {
     let transaction = {
         to:''
     }
-    console.log(mode)
-    if (mode === "transaction-assets-exchange"){
+    if (mode.split('-')[0] === 'transaction'){
         transaction = JSON.parse(browserMsg ?? 'error')
         useEffect(() => {
             const getPreview = async (transaction:any) => {
@@ -51,8 +50,7 @@ const Main = (props: Props) => {
     else{
         useEffect(() => {
         setHasLoaded(true)})
-    }
-    
+    }  
     // Close extension
     const extensionResponse = async (data: boolean) => {
         await Browser.runtime.sendMessage(undefined, { id, data });
