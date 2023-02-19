@@ -1,4 +1,4 @@
-import React from 'react';
+import React,{useState, useEffect} from 'react';
 import TransferHeader from './TransferHeader';
 import AssetsIn from './AssetsIn';
 import AssetsOut from './AssetsOut';
@@ -13,6 +13,7 @@ interface Props {
 const Transfer =  (props: Props) => {
     const {mode, transaction} = props;
     console.log('transaction: ',transaction)
+    const [renderMode, setRenderMode] = useState('')
     const getAssetsSendInfo = {
         contractType: 'ERC-20',
         //todo: multiple asset
@@ -57,7 +58,10 @@ const Transfer =  (props: Props) => {
         NFTCategoryName: 'Bored Ape Yacht Club',
         gas: 0,
     }
-
+    if (mode === 'transaction'){
+        useEffect(() => {
+        setRenderMode('transaction-assets-exchange')})
+    }
     const renderCurrentSelection = (mode: string | null) => {
         switch (mode) {
             case 'transaction-assets-exchange': {
@@ -112,7 +116,7 @@ const Transfer =  (props: Props) => {
     }
 
     return (<div>
-        {renderCurrentSelection(mode)}
+        {renderCurrentSelection(renderMode)}
     </div>)
 };
 

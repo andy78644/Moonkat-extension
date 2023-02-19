@@ -19,19 +19,21 @@ interface Props {
 
 
 const Main = (props: Props) => {
-    // props
     const { id, mode, browserMsg } = props;
     const [previewTxn, setPreviewTxnState] = useState({})
+    const [renderMode, setRenderMode] = useState('')
     const [hasLoaded, setHasLoaded] = useState(false);
     let transaction = {
         to:''
     }
-    if (mode.split('-')[0] === 'transaction'){
+    
+    if (mode === 'transaction'){
         transaction = JSON.parse(browserMsg ?? 'error')
         useEffect(() => {
             const getPreview = async (transaction:any) => {
                 await dataService.postTransactionSimulation(transaction)
                     .then(res => {
+                        setRenderMode('transaction-assets-exchange')
                         setPreviewTxnState(res)
                         setHasLoaded(true)
                         return res
@@ -49,6 +51,7 @@ const Main = (props: Props) => {
     }
     else{
         useEffect(() => {
+        setRenderMode(mode)
         setHasLoaded(true)})
     }  
     // Close extension
@@ -58,8 +61,9 @@ const Main = (props: Props) => {
     }
     const accept = () => extensionResponse(true);
     const reject = () => extensionResponse(false);
-    const renderCurrentSelection = (mode: string | null) => {
-        switch (mode) {
+
+    const renderCurrentSelection = (renderMode: string | null) => {
+        switch (renderMode) {
             case 'transaction-assets-exchange': {
                 return (
                     <>
@@ -129,7 +133,7 @@ const Main = (props: Props) => {
         {
         hasLoaded?
         <div>
-            {renderCurrentSelection(mode)}
+            {renderCurrentSelection(renderMode)}
         </div>
         :
         <Loading />

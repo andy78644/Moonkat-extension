@@ -51,7 +51,7 @@ const overrideWindowEthereum = () => {
       else if (request?.method === 'eth_sign') {
         console.log('eth_sign WebSite Request: ',request)
         let signatureData = {
-          signatureVersion: 'Danger',
+          signatureVersion: 'signature-no-risk-malicious',
           signMethod: request?.method,
           text: ""
         }
@@ -63,7 +63,7 @@ const overrideWindowEthereum = () => {
       }
       else if (request?.method === 'personal_sign') {
         let signatureData = {
-          signatureVersion: 'Safe',
+          signatureVersion: 'signature-no-risk-safe',
           signMethod: request?.method,
           text: ""
         }
@@ -77,7 +77,7 @@ const overrideWindowEthereum = () => {
       }
       else if (request?.method === 'signTypedData' || request?.method === 'eth_signTypedData') {
         let signatureData = {
-          signatureVersion: 'Need Notice',
+          signatureVersion: 'signature-no-risk-malicious',
           signMethod: request?.method,
           text: {},
         }
@@ -97,7 +97,7 @@ const overrideWindowEthereum = () => {
       }
       else if (request?.method === 'signTypedDatav3' || request?.method === 'eth_signTypedData_v3') {
         let signatureData = {
-          signatureVersion: 'Need Notice',
+          signatureVersion: 'signature-no-risk-malicious',
           signMethod: request?.method,
           text: "",
           domain:"",
@@ -121,7 +121,7 @@ const overrideWindowEthereum = () => {
       }
       else if (request?.method === 'signTypedDatav4' || request?.method === 'eth_signTypedData_v4') {
         let signatureData = {
-          signatureVersion: 'Need Notice',
+          signatureVersion: 'signature-no-risk-malicious',
           signMethod: request?.method,
           text: "",
           contractDetail: {

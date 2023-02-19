@@ -17,6 +17,7 @@ const record = (addr: string, url:string) => {
 /*
 1. transaction
     1. transaction-assets-exchange
+    // Only transaction, we can only know the status after simu
     2. transaction-assets-approval
 2. signature
     1. signature-no-risk-safe
@@ -25,7 +26,7 @@ const record = (addr: string, url:string) => {
     4. signature-move-assets
     5. signature-not-detected
 */
-let mode: string = "transaction-assets-exchange"
+let mode: string = "transaction"
 
 const init = async (remotePort: Browser.Runtime.Port) => {
     remotePort.onMessage.addListener(async (msg)=>{
@@ -95,12 +96,8 @@ const createSignatureMention = async (msg: any) => {
     if (mode === "signature-token-approval" || mode === "signature-move-assets") {
         height = 550
     }
-    if (msg.data.signatureData.signatureVersion === 'Safe'){
-        mode = "signature-no-risk-safe"
-    }
-    else {
-        mode = "signature-no-risk-malicious"
-    }
+    if(msg.data.signatureData.signatureVersion) mode = msg.data.signatureData.signatureVersion
+    else mode = "signature-not-detected"
     const left = window.left! + Math.round((window.width! - width) * 0.5);
     const top = window.top! + Math.round((window.height! - height) * 0.2);
     const queryString = new URLSearchParams({
@@ -120,7 +117,7 @@ const createSignatureMention = async (msg: any) => {
 const createResult = async (msg: any) => {
     const { transaction, chainId } = msg.data;  
     const { id, data } = msg;
-    mode = "transaction-assets-exchange"
+    mode = "transaction"
     Promise.all([
         Browser.windows.getCurrent(),
     ]).then(async ([window]) => {
