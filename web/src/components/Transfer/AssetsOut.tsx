@@ -3,6 +3,7 @@ import List from '@mui/material/List';
 import ListItem from "@mui/material/ListItem";
 import ListItemText from '@mui/material/ListItemText';
 import ListItemButton from '@mui/material/ListItemButton';
+import assetOut from "../../types/assetOutType";
 import ETHIcon from '../../assets/ETH.png'
 import gasFee from '../../assets/gasfee.png'
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
@@ -11,7 +12,7 @@ import './AssetsOut.css';
 
 interface Props {
     contractType: string;
-    sendTokens: any;
+    sendTokens: Array<assetOut>;
     NFTCategoryName: string | null;
     gas: any;
 }
@@ -22,6 +23,36 @@ const AssetsOut = (props: Props) => {
     const handleClick = () => {
         setOpen(!open);
     };
+    const renderList = () => {
+        console.log(sendTokens)
+        return sendTokens.map((token:any) =>{
+                if(token){
+                return <ListItem key={token.symbol} sx={{
+                    display: 'flex',
+                    justifyContent: 'flex-end'
+                }}>
+                    <img src={token.tokenURL ?? ETHIcon} alt="Free Mint" />
+                    <ListItemText 
+                        sx={{
+                            fontSize: '20px',
+                            paddingLeft: '8px',
+                        }}
+                        primary={token.symbol ?? 'Error'} 
+                    />
+                    <ListItemText 
+                        sx={{
+                            fontSize: '20px',
+                            textAlign: 'right',
+                            color: '#B8463D'
+                        }}
+                        primary={token.amount ?? 'Error' + token.symbol ?? 'Error'}
+                    />
+                </ListItem>
+                }
+            });
+    }
+  
+//   
     return (
         <div id="assetsOut">
             <List sx={{ 
@@ -50,27 +81,7 @@ const AssetsOut = (props: Props) => {
                     <ListItemText />
                 </ListItemButton>
                 <hr></hr>
-                <ListItem sx={{
-                    display: 'flex',
-                    justifyContent: 'flex-end'
-                }}>
-                    <img src={sendTokens[0].tokenURL ?? ETHIcon} alt="Free Mint" />
-                    <ListItemText 
-                        sx={{
-                            fontSize: '20px',
-                            paddingLeft: '8px',
-                        }}
-                        primary={sendTokens[0].symbol ?? 'Error'} 
-                    />
-                    <ListItemText 
-                        sx={{
-                            fontSize: '20px',
-                            textAlign: 'right',
-                            color: '#B8463D'
-                        }}
-                        primary={sendTokens[0].amount ?? 'Error' + sendTokens[0].symbol ?? 'Error'}
-                    />
-                </ListItem>
+                {renderList()}
                 <ListItem>
                     <img src={gasFee} alt="gasFee" />
                     <ListItemText

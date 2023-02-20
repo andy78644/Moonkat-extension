@@ -33,8 +33,10 @@ const Main = (props: Props) => {
             const getPreview = async (transaction:any) => {
                 await dataService.postTransactionSimulation(transaction)
                     .then(res => {
-                        setRenderMode('transaction-assets-exchange')
                         setPreviewTxnState(res)
+                        if (res.changeType === 'APPROVE') setRenderMode('transaction-assets-approval')
+                        else setRenderMode('transaction-assets-exchange')
+
                         setHasLoaded(true)
                         return res
                     })
@@ -47,7 +49,7 @@ const Main = (props: Props) => {
                     setHasLoaded(true)
                 });
         }, [])
-        console.log('previewTxn: ', JSON.stringify(previewTxn))
+        console.log('PreviewTxn: ', JSON.stringify(previewTxn))
     }
     else{
         useEffect(() => {
@@ -69,7 +71,7 @@ const Main = (props: Props) => {
                     <>
                         <MainHeader></MainHeader>
                         <ContractInfo mode={mode} contractData={transaction.to}/>
-                        <Transfer mode={mode} transaction={previewTxn}/>
+                        <Transfer mode={renderMode} transaction={previewTxn}/>
                         <Footer onAccept={accept} onReject={reject} />
                     </>
                 )
@@ -79,7 +81,7 @@ const Main = (props: Props) => {
                     <>
                         <MainHeader></MainHeader>
                         <ContractInfo mode={mode} contractData={transaction.to}/>
-                        <Transfer mode={mode} transaction={previewTxn}/>
+                        <Transfer mode={renderMode} transaction={previewTxn}/>
                         <Footer onAccept={accept} onReject={reject} />
                     </>
                 )

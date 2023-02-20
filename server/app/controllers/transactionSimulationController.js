@@ -30,13 +30,13 @@ const getAssetData = async (change, txn) => {
 
 const approvalHandler = (txn) => {
   let assetApprove = {
-    token:"",
+    symbol:"",
     contractAddress:"",
     amount:"",
     tokenURL:"",
     name:"",
   }
-  assetApprove.token = txn.symbol
+  assetApprove.symbol = txn.symbol
   assetApprove.contractAddress = txn.contractAddress
   assetApprove.amount = txn.amount
   assetApprove.tokenURL = txn.logo
@@ -56,10 +56,11 @@ exports.sendTransaction = async (req, res) => {
     //todo: define the user address
     const from = req.body.from
     let transactionInfo = {
+      changeType:"",
       gas: "",
-      approve:"",
-      in:"",
-      out:""
+      in:null,
+      out:null,
+      approve:null
     };
     let assetOut = {
       amount:"",
@@ -89,36 +90,48 @@ exports.sendTransaction = async (req, res) => {
         })
     };
     await fetch(`https://eth-mainnet.g.alchemy.com/v2/${process.env.ALCHEMY_API_KEY}`, options)
-    .then(response => 
+    .then((response) => 
         response.json()
     )
     .then(async response => {
         console.log('Simulation Success! Result: ', response)
         const result = response.result
         transactionInfo.gas = result.gasUsed
-        for ( let changeObj of result.changes){
+        new Promise (async (resolve, reject)=>{
+          for ( let changeObj of result.changes){
             if(changeObj.from === from){
               if (changeObj.changeType === 'APPROVE'){
                 assetApprove = approvalHandler(changeObj)
+                transactionInfo.changeType = 'APPROVE'
                 transactionInfo.approve = assetApprove
                 console.log('Approve: ', transactionInfo)
-                res.status(200).send(transactionInfo)
+                resolve()
               }
               else if (changeObj.changeType === 'TRANSFER'){
+                transactionInfo.changeType = 'TRANSFER'
                 assetOut = await transferHandler(assetOut, changeObj)
+                .catch((err)=>{
+                  res.status(500).send(err)
+                  reject()
+                })
+                transactionInfo.out = assetOut
               }
             }
             else if(changeObj.to === from){
               if (changeObj.changeType === 'TRANSFER'){
+                transactionInfo.changeType = 'TRANSFER'
                 assetIn = await transferHandler(assetIn, changeObj)
+                .catch((err)=>{
+                  res.status(500).send(err)
+                  reject()
+                })
+                transactionInfo.in = assetIn
               }
             }
-        }
-        console.log('In: ', assetIn)
-        console.log('Out: ', assetOut)
-        transactionInfo.in = assetIn
-        transactionInfo.out = assetOut 
+        } 
         res.status(200).send(transactionInfo)
+        resolve()
+        })
     })
     .catch(err => {
         console.log(err.message)  

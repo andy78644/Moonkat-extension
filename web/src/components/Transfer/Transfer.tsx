@@ -45,23 +45,19 @@ const Transfer =  (props: Props) => {
             // }
             transaction.in
         ],
-        NFTCategoryName: 'Bored Ape Yacht Club',
+        NFTCategoryName: "",
         gas: 0,
     }
 
     const getAssetsApproveInfo = {
         contractType: 'NFT',
-        sendTokens: {
-            '#2334': ['https://s2.coinmarketcap.com/static/img/coins/64x64/1027.png', 'https://www.youtube.com/watch?v=V21wlp5_pAA', 1, 'BAYC', true, true],
-            '#2345': ['https://s2.coinmarketcap.com/static/img/coins/64x64/1027.png', 'https://www.youtube.com/watch?v=V21wlp5_pAA', 2, 'BAYC', false, true],
-        },
-        NFTCategoryName: 'Bored Ape Yacht Club',
+        sendTokens: [
+            transaction.approve
+        ],
+        NFTCategoryName: "",
         gas: 0,
     }
-    if (mode === 'transaction'){
-        useEffect(() => {
-        setRenderMode('transaction-assets-exchange')})
-    }
+
     const renderCurrentSelection = (mode: string | null) => {
         switch (mode) {
             case 'transaction-assets-exchange': {
@@ -116,7 +112,7 @@ const Transfer =  (props: Props) => {
     }
 
     return (<div>
-        {renderCurrentSelection(renderMode)}
+        {renderCurrentSelection(mode)}
     </div>)
 };
 

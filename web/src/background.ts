@@ -26,7 +26,7 @@ const record = (addr: string, url:string) => {
     4. signature-move-assets
     5. signature-not-detected
 */
-let mode: string = "transaction"
+let mode: string = ""
 
 const init = async (remotePort: Browser.Runtime.Port) => {
     remotePort.onMessage.addListener(async (msg)=>{

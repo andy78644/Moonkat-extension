@@ -43,7 +43,7 @@ const AssetsApprove = (props: Props) => {
                     onClick={handleClick}
                     disableRipple
                 >
-                    Assets Receive &nbsp;
+                    Assets Approve &nbsp;
                     <HelpOutlineIcon sx={{fontSize: 20}}/> 
                     <ListItemText />
                 </ListItemButton>
@@ -53,17 +53,17 @@ const AssetsApprove = (props: Props) => {
                         sx={{
                             fontSize: '20px',
                         }}
-                        primary="Bored Ape Yacht Club" 
+                        primary={sendTokens[0].name}
                     />
                 </ListItem>
                 <ListItem>
-                    <img src={skeleton} alt="skeleton" />
+                    <img src={sendTokens[0].tokenURL} alt="skeleton" />
                     <ListItemText 
                         sx={{
                             fontSize: '20px',
                             textAlign: 'right',
                         }}
-                        primary="Can withdraw all BAYCs" 
+                        primary={`Can withdraw all ${sendTokens[0].symbol}`}
                     />
                 </ListItem>
             </List>
