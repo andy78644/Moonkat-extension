@@ -2,9 +2,10 @@ const db = require("../models");
 const { ContractFeedBack, Contract }= db;
 const Op = db.Sequelize.Op;
 const querystring = require('querystring');
-const getData = require('./getRequest.js');
-const contract = require("../models/contract");
 const { validationResult } = require('express-validator');
+require('dotenv').config(); 
+
+
 
 // Get the Contract with Specific Address
 exports.reportFeedback = async (req, res) => {
