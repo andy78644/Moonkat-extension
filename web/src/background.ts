@@ -27,9 +27,8 @@ const record = (addr: string, url:string) => {
     5. signature-not-detected
 */
 let mode: string = ""
-
 const init = async (remotePort: Browser.Runtime.Port) => {
-    remotePort.onMessage.addListener(async (msg)=>{
+    remotePort.onMessage.addListener((msg)=>{
         console.log('dApp Message: ', msg);
         if (msg.data.signatureData){
             console.log('This is the signature request: ', msg.data.signatureData)
@@ -41,19 +40,23 @@ const init = async (remotePort: Browser.Runtime.Port) => {
             if (msg.data.type === RequestType.REGULAR) {
                 record(msg.data.transaction.from, remotePort.sender?.tab?.url??'Error')
                 processRegularRequest(msg, remotePort);
-                return;
+                return
             }
             if (msg.data.type === RequestType.BYPASS_CHECK) {
                 record(msg.data.transaction.from, remotePort.sender?.tab?.url??'Error')
                 processBypassRequest(msg, remotePort);
-                return;
+                return
             }
-    }
-})}
+    }})
+    Browser.windows.onRemoved.addListener(()=>{
+        // post the false data to the content script
+        remotePort.postMessage({ id: '', data: false })
+    })
+}
 // Entry
 Browser.runtime.onConnect.addListener(init);
-
 Browser.runtime.onMessage.addListener((data)=>{
+    // Deal with the data from anywhere (Including Content Script)
     const responsePort = messagePorts[data.id];
     if(data.data) {
         approvedMessages.push(data);
@@ -63,6 +66,7 @@ Browser.runtime.onMessage.addListener((data)=>{
         delete messagePorts[data.id];
     }
 })
+
 
 const processSignatureRequest = (msg: any, remotePort: Browser.Runtime.Port) => {
     const res = createSignatureMention(msg);
@@ -79,6 +83,7 @@ const processRegularRequest = (msg: any, remotePort: Browser.Runtime.Port) => {
         remotePort.postMessage({ id: msg.id, data: true });
         return;
     }
+    console.log('dd')
     messagePorts[msg.id] = remotePort;
 };
 

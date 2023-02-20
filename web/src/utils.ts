@@ -12,6 +12,10 @@ export const sendAndAwaitResponseFromPort = (stream: Browser.Runtime.Port, data:
                 stream.onMessage.removeListener(callback);
                 resolve(res.data);
             }
+            else{
+              stream.onMessage.removeListener(callback);
+              resolve('close');
+            }
         };
         // Trace the message and execute callback function
         stream.onMessage.addListener(callback);
