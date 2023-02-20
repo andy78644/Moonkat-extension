@@ -36,7 +36,6 @@ const Main = (props: Props) => {
                         setPreviewTxnState(res)
                         if (res.changeType === 'APPROVE') setRenderMode('transaction-assets-approval')
                         else setRenderMode('transaction-assets-exchange')
-
                         setHasLoaded(true)
                         return res
                     })

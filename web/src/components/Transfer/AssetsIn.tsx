@@ -6,8 +6,7 @@ import ListItemButton from '@mui/material/ListItemButton';
 import ExpandLess from '@mui/icons-material/ExpandLess';
 import ExpandMore from '@mui/icons-material/ExpandMore';
 import monkey1 from '../../assets/monkey1.png'
-import monkey2 from '../../assets/monkey2.png'
-import skeleton from '../../assets/skeleton.png'
+import nft from '../../assets/icons8-nft-64.png'
 import Collapse from '@mui/material/Collapse';
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 
@@ -26,6 +25,28 @@ const AssetsIn = (props: Props) => {
     const handleClick = () => {
         setOpen(!open);
     };
+    const renderList = () => {
+        console.log(sendTokens)
+        return sendTokens.map((token:any) =>{
+                if(token){
+                return <ListItem key={token.symbol} sx={{
+                    width:"75%",
+                    display: 'flex',
+                    justifyContent: 'flex-end'
+                }}>
+                    <img src={token.tokenURL ?? monkey1} alt="Free Mint" />
+                    <ListItemText 
+                        sx={{
+                            fontSize: '20px',
+                            textAlign: 'right',
+                            color: '#B8463D'
+                        }}
+                        primary={`${token.amount}${token.symbol}`}
+                    />
+                </ListItem>
+                }
+        });
+    }
     return (
         <div id="assetsIn">
             <List sx={{ 
@@ -59,65 +80,26 @@ const AssetsIn = (props: Props) => {
                         sx={{
                             fontSize: '20px',
                         }}
-                        primary="Bored Ape Yacht Club" 
+                        primary={sendTokens[0].name}
                     />
                 </ListItem>
                 <Collapse in={!open} timeout="auto" unmountOnExit>
-                    <ListItem>
-                        <img src={sendTokens[0].tokenURL ?? skeleton} alt="skeleton" />
-                        <ListItemText 
-                            sx={{
-                                fontSize: '20px',
-                                paddingLeft: '8px',
-                            }}
-                        />
+                    <ListItem sx={{
+                        width: '75%',
+                    }}>
+                        <img src={sendTokens[0].tokenURL ?? nft} alt="Tokens" />
                         <ListItemText 
                             sx={{
                                 fontSize: '20px',
                                 textAlign: 'right',
                                 color: '#509A57'
                             }}
-                            primary={sendTokens[0].amount ?? 'Error' + sendTokens[0].symbol?? 'Error' }
+                            primary={sendTokens.length ?? 'Error' + sendTokens[0].symbol?? 'Error' }
                         />
                     </ListItem>
                 </Collapse>
                 <Collapse in={open} timeout="auto" unmountOnExit>
-                    <ListItem>
-                        <img src={monkey1} alt="monkey1" />
-                        <ListItemText
-                            sx={{
-                                fontSize: '20px',
-                                paddingLeft: '8px',
-                            }}
-                            primary="#2337" 
-                        />
-                        <ListItemText 
-                            sx={{
-                                fontSize: '20px',
-                                textAlign: 'right',
-                                color: '#509A57'
-                            }}
-                            primary="+1 BAYC" 
-                        />
-                    </ListItem>
-                    <ListItem>
-                        <img src={monkey2} alt="monkey2" />
-                        <ListItemText
-                            sx={{
-                                fontSize: '20px',
-                                paddingLeft: '8px',
-                            }}
-                            primary="#2345" 
-                        />
-                        <ListItemText 
-                            sx={{
-                                fontSize: '20px',
-                                textAlign: 'right',
-                                color: '#509A57'
-                            }}
-                            primary="+2 BAYC" 
-                        />
-                    </ListItem>
+                    {renderList()}
                 </Collapse>
             </List>
         </div>

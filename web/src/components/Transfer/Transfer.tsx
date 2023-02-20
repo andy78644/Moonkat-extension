@@ -17,7 +17,7 @@ const Transfer =  (props: Props) => {
     const getAssetsSendInfo = {
         contractType: 'ERC-20',
         //todo: multiple asset
-        sendTokens: [
+        sendTokens: 
             //{
             //     amount: ,
             //     type: 'NATIVE/ERC20/ERC1155',
@@ -26,15 +26,14 @@ const Transfer =  (props: Props) => {
             //     osVerified: ''
             //     
             // }
-            transaction.out
-        ],
+            transaction.out,
         NFTCategoryName: '',
         gas: transaction.gas,
     }
 
     const getAssetsReceiveInfo = {
         contractType: 'NFT',
-        sendTokens: [
+        sendTokens:
             //{
             //     amount: ,
             //     type: 'NATIVE/ERC20/ERC1155',
@@ -43,17 +42,14 @@ const Transfer =  (props: Props) => {
             //     osVerified: ''
             //     
             // }
-            transaction.in
-        ],
+            transaction.in,
         NFTCategoryName: "",
         gas: 0,
     }
 
     const getAssetsApproveInfo = {
         contractType: 'NFT',
-        sendTokens: [
-            transaction.approve
-        ],
+        sendTokens: transaction.approve,
         NFTCategoryName: "",
         gas: 0,
     }

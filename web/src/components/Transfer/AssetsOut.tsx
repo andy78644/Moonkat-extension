@@ -49,7 +49,7 @@ const AssetsOut = (props: Props) => {
                     />
                 </ListItem>
                 }
-            });
+        });
     }
   
 //   

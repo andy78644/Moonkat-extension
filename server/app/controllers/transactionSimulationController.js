@@ -20,6 +20,7 @@ const getAssetData = async (change, txn) => {
       }
       change.osVerified = response.contractMetadata.openSea.safelistRequestStatus
       change.amount = txn.amount
+      change.tokenId = txn.tokenId
     })
     .catch(err => {
       console.log(err.message) 
@@ -58,8 +59,8 @@ exports.sendTransaction = async (req, res) => {
     let transactionInfo = {
       changeType:"",
       gas: "",
-      in:null,
-      out:null,
+      in:[],
+      out:[],
       approve:null
     };
     let assetOut = {
@@ -68,6 +69,7 @@ exports.sendTransaction = async (req, res) => {
       symbol:"",
       tokenURL:"",
       osVerified:"",
+      tokenId:null
     }
     let assetIn = {
       amount:"",
@@ -75,6 +77,7 @@ exports.sendTransaction = async (req, res) => {
       symbol:"",
       tokenURL:"",
       osVerified:"",
+      tokenId:null
     }
     
     const options = {
@@ -94,7 +97,7 @@ exports.sendTransaction = async (req, res) => {
         response.json()
     )
     .then(async response => {
-        console.log('Simulation Success! Result: ', response)
+        console.log('Simulation Success!')
         const result = response.result
         transactionInfo.gas = result.gasUsed
         new Promise (async (resolve, reject)=>{
@@ -114,7 +117,7 @@ exports.sendTransaction = async (req, res) => {
                   res.status(500).send(err)
                   reject()
                 })
-                transactionInfo.out = assetOut
+                transactionInfo.out.push(assetOut)
               }
             }
             else if(changeObj.to === from){
@@ -125,10 +128,11 @@ exports.sendTransaction = async (req, res) => {
                   res.status(500).send(err)
                   reject()
                 })
-                transactionInfo.in = assetIn
+                transactionInfo.in.push(assetIn)
               }
             }
         } 
+        console.log(transactionInfo)
         res.status(200).send(transactionInfo)
         resolve()
         })
