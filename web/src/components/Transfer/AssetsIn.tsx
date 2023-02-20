@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import List from '@mui/material/List';
 import ListItem from "@mui/material/ListItem";
 import ListItemText from '@mui/material/ListItemText';
@@ -18,10 +18,13 @@ interface Props {
     sendTokens: any;
     NFTCategoryName: string | null;
     gas: any;
+    tokenImageURL: string | null;
+    amount: string | null;
+    symbol: string | null;
 }
 
 const AssetsIn = (props: Props) => {
-    const {contractType, sendTokens, NFTCategoryName} = props
+    const {contractType, sendTokens, NFTCategoryName, tokenImageURL, amount, symbol} = props
     const [open, setOpen] = React.useState(false);
     const handleClick = () => {
         setOpen(!open);
@@ -64,7 +67,7 @@ const AssetsIn = (props: Props) => {
                 </ListItem>
                 <Collapse in={!open} timeout="auto" unmountOnExit>
                     <ListItem>
-                        <img src={skeleton} alt="skeleton" />
+                        <img src={tokenImageURL ?? skeleton} alt="skeleton" />
                         <ListItemText 
                             sx={{
                                 fontSize: '20px',
@@ -77,7 +80,7 @@ const AssetsIn = (props: Props) => {
                                 textAlign: 'right',
                                 color: '#509A57'
                             }}
-                            primary="+3 BAYC" 
+                            primary={amount ?? 'Error' + {symbol}?? 'Error' }
                         />
                     </ListItem>
                 </Collapse>

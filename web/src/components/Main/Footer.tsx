@@ -31,7 +31,7 @@ const Footer = (props: Props) => {
                     outlineColor: '#77736A',
                     padding: '6px',
                 }}
-                    onClick={onAccept}
+                    onClick={onReject}
                     >
                     Cancel
                 </Button>
@@ -42,7 +42,7 @@ const Footer = (props: Props) => {
                     backgroundColor: '#77736A',
                     padding: '6px',
                 }}
-                    onClick={onReject}
+                    onClick={onAccept}
                 >
                     Continue
                 </Button>
