@@ -28,8 +28,6 @@ const AssetsOut = (props: Props) => {
         return sendTokens.map((token:any) =>{
                 if(token){
                 return <ListItem key={token.symbol} sx={{
-                    display: 'flex',
-                    justifyContent: 'flex-end'
                 }}>
                     <img src={token.tokenURL ?? ETHIcon} alt="Free Mint" />
                     <ListItemText 
@@ -97,7 +95,7 @@ const AssetsOut = (props: Props) => {
                             textAlign: 'right',
                             color: '#B8463D'
                         }}
-                        primary={gas}
+                        primary={parseInt(gas, 16)}
                     />
                 </ListItem>
             </List>

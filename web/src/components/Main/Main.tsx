@@ -37,16 +37,14 @@ const Main = (props: Props) => {
                         if (res.changeType === 'APPROVE') setRenderMode('transaction-assets-approval')
                         else setRenderMode('transaction-assets-exchange')
                         setHasLoaded(true)
-                        return res
                     })
                     .catch((err)=>{
+                        //setRenderMode('Server Down Page')
+                        setHasLoaded(true)
                         console.log('Server is down: ', err)
                     })
             }
             getPreview(transaction)
-                .catch(e => {
-                    setHasLoaded(true)
-                });
         }, [])
         console.log('PreviewTxn: ', JSON.stringify(previewTxn))
     }

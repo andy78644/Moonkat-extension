@@ -14,7 +14,7 @@ import './AssetsIn.css'
 
 interface Props {
     contractType: string;
-    sendTokens: any;
+    sendTokens: Array<any>;
     NFTCategoryName: string | null;
     gas: any;
 }
@@ -30,19 +30,20 @@ const AssetsIn = (props: Props) => {
         return sendTokens.map((token:any) =>{
                 if(token){
                 return <ListItem key={token.symbol} sx={{
-                    width:"75%",
-                    display: 'flex',
-                    justifyContent: 'flex-end'
-                }}>
-                    <img src={token.tokenURL ?? monkey1} alt="Free Mint" />
-                    <ListItemText 
-                        sx={{
-                            fontSize: '20px',
-                            textAlign: 'right',
-                            color: '#B8463D'
-                        }}
-                        primary={`${token.amount}${token.symbol}`}
-                    />
+                            display: 'flex',
+                            justifyContent: 'space-between'
+                            }}>
+                        <ListItem>
+                        <img src={token.tokenURL ?? monkey1}alt="Free Mint" /></ListItem>
+                        <ListItem>
+                        <ListItemText 
+                            sx={{
+                                fontSize: '20px',
+                                textAlign: 'right',
+                                color: '#509A57',
+                            }}
+                            primary={`${token.amount}${token.symbol}`}
+                        /></ListItem>
                 </ListItem>
                 }
         });
@@ -85,17 +86,30 @@ const AssetsIn = (props: Props) => {
                 </ListItem>
                 <Collapse in={!open} timeout="auto" unmountOnExit>
                     <ListItem sx={{
-                        width: '75%',
+                        display: 'flex',
+                        justifyContent: 'flex-end'
                     }}>
-                        <img src={sendTokens[0].tokenURL ?? nft} alt="Tokens" />
-                        <ListItemText 
-                            sx={{
-                                fontSize: '20px',
-                                textAlign: 'right',
-                                color: '#509A57'
-                            }}
-                            primary={sendTokens.length ?? 'Error' + sendTokens[0].symbol?? 'Error' }
-                        />
+                        <ListItem>
+                        <img src={sendTokens[0].tokenURL ?? nft} height ="80%" alt="Tokens" /></ListItem>
+                        <ListItem>
+                            {
+                                sendTokens.length === 1 ?<ListItemText 
+                                sx={{
+                                    fontSize: '20px',
+                                    textAlign: 'right',
+                                    color: '#509A57'
+                                }}
+                                primary={`${sendTokens[0].amount}${sendTokens[0].symbol}`}
+                            /> : <ListItemText 
+                                sx={{
+                                    fontSize: '20px',
+                                    textAlign: 'right',
+                                    color: '#509A57'
+                                }}
+                                primary={`${sendTokens.length}${sendTokens[0].symbol}`}
+                            />
+                            }
+                        </ListItem>
                     </ListItem>
                 </Collapse>
                 <Collapse in={open} timeout="auto" unmountOnExit>

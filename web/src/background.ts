@@ -3,16 +3,18 @@ import { RequestType } from './constant';
 import dataService from './dataService';
 const messagePorts: { [index: string]: Browser.Runtime.Port } = {};
 const approvedMessages: string[] = [];
-const record = (addr: string, url:string) => {
+const record = async (addr: string, url:string) => {
     let recordData = {
         TabURL:url,
         UserAddress: addr
     }
-    dataService.postURL(recordData)
+    const result = await dataService.postURL(recordData)
     .catch((err)=>{
-        console.log('Record Function Down')
-        return
+        console.log(err)
+        return err
     })
+    if(result) return false
+    else return true
 }
 /*
 1. transaction
@@ -33,17 +35,39 @@ const init = async (remotePort: Browser.Runtime.Port) => {
         if (msg.data.signatureData){
             console.log('This is the signature request: ', msg.data.signatureData)
             record('Test signature', remotePort.sender?.tab?.url??'Error')
-            processSignatureRequest(msg, remotePort)
+            .then((res)=>{
+                console.log(res)
+                if(res)processSignatureRequest(msg, remotePort)
+                else {
+                // error post False to end the flow
+                remotePort.postMessage({ id: '', data: false })
+            }
+            })
         }
         else if (msg.data.transaction){
             console.log('This is the transaction request: ', msg.data.transaction)
             if (msg.data.type === RequestType.REGULAR) {
                 record(msg.data.transaction.from, remotePort.sender?.tab?.url??'Error')
-                processRegularRequest(msg, remotePort);
+                .then((res)=>{
+                    console.log(res)
+                    if(res)processRegularRequest(msg, remotePort)
+                    else {
+                    // error post False to end the flow
+                    remotePort.postMessage({ id: '', data: false })
+                }
+                })
                 return
             }
             if (msg.data.type === RequestType.BYPASS_CHECK) {
                 record(msg.data.transaction.from, remotePort.sender?.tab?.url??'Error')
+                .then((res)=>{
+                    console.log(res)
+                    if(res)processRegularRequest(msg, remotePort)
+                    else {
+                    // error post False to end the flow
+                    remotePort.postMessage({ id: '', data: false })
+                }
+                })
                 processBypassRequest(msg, remotePort);
                 return
             }
@@ -83,7 +107,6 @@ const processRegularRequest = (msg: any, remotePort: Browser.Runtime.Port) => {
         remotePort.postMessage({ id: msg.id, data: true });
         return;
     }
-    console.log('dd')
     messagePorts[msg.id] = remotePort;
 };
 
