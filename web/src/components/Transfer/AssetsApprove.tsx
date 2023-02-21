@@ -3,7 +3,7 @@ import List from '@mui/material/List';
 import ListItem from "@mui/material/ListItem";
 import ListItemText from '@mui/material/ListItemText';
 import ListItemButton from '@mui/material/ListItemButton';
-import skeleton from '../../assets/skeleton.png'
+import nft from '../../assets/icons8-nft-64.png'
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 
 import './AssetsApprove.css';
@@ -43,7 +43,7 @@ const AssetsApprove = (props: Props) => {
                     onClick={handleClick}
                     disableRipple
                 >
-                    Assets Receive &nbsp;
+                    Assets Approve &nbsp;
                     <HelpOutlineIcon sx={{fontSize: 20}}/> 
                     <ListItemText />
                 </ListItemButton>
@@ -53,17 +53,17 @@ const AssetsApprove = (props: Props) => {
                         sx={{
                             fontSize: '20px',
                         }}
-                        primary="Bored Ape Yacht Club" 
+                        primary={sendTokens.name}
                     />
                 </ListItem>
                 <ListItem>
-                    <img src={skeleton} alt="skeleton" />
+                    <img src={sendTokens.tokenURL ?? nft} alt="nft" />
                     <ListItemText 
                         sx={{
                             fontSize: '20px',
                             textAlign: 'right',
                         }}
-                        primary="Can withdraw all BAYCs" 
+                        primary={`Can withdraw all ${sendTokens.symbol}`}
                     />
                 </ListItem>
             </List>

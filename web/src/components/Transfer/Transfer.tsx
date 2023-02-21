@@ -1,4 +1,4 @@
-import React from 'react';
+import React,{useState, useEffect} from 'react';
 import TransferHeader from './TransferHeader';
 import AssetsIn from './AssetsIn';
 import AssetsOut from './AssetsOut';
@@ -13,53 +13,44 @@ interface Props {
 const Transfer =  (props: Props) => {
     const {mode, transaction} = props;
     console.log('transaction: ',transaction)
+    const [renderMode, setRenderMode] = useState('')
     const getAssetsSendInfo = {
         contractType: 'ERC-20',
-        sendTokens: {
-            'ETH': 
-                [
-                // token image url
-                'https://s2.coinmarketcap.com/static/img/coins/64x64/1027.png',
-                // contract url
-                'https://www.youtube.com/watch?v=V21wlp5_pAA',
-                // asset in/out number
-                -68.068, 
-                // asset unit
-                'ETH', 
-                // asset verification state
-                true, 
-                // asset can be sold on Opensea or not
-                true 
-                ]
-                ,
-        },
+        //todo: multiple asset
+        sendTokens: 
+            //{
+            //     amount: ,
+            //     type: 'NATIVE/ERC20/ERC1155',
+            //     symbol: 'ETH',
+            //     tokenURL: 'https://static.alchemyapi.io/images/network-assets/eth.png',
+            //     osVerified: ''
+            //     
+            // }
+            transaction.out,
         NFTCategoryName: '',
         gas: transaction.gas,
-        tokenImageURL: transaction.out.tokenURL ?? '',
-        amount: transaction.out.amount,
-        symbol: transaction.out.symbol
     }
 
     const getAssetsReceiveInfo = {
         contractType: 'NFT',
-        sendTokens: {
-            '#2334': ['https://s2.coinmarketcap.com/static/img/coins/64x64/1027.png', 'https://www.youtube.com/watch?v=V21wlp5_pAA', 1, 'BAYC', true, true],
-            '#2345': ['https://s2.coinmarketcap.com/static/img/coins/64x64/1027.png', 'https://www.youtube.com/watch?v=V21wlp5_pAA', 2, 'BAYC', false, true],
-        },
-        NFTCategoryName: 'Bored Ape Yacht Club',
+        sendTokens:
+            //{
+            //     amount: ,
+            //     type: 'NATIVE/ERC20/ERC1155',
+            //     symbol: 'ETH',
+            //     tokenURL: 'https://static.alchemyapi.io/images/network-assets/eth.png',
+            //     osVerified: ''
+            //     
+            // }
+            transaction.in,
+        NFTCategoryName: "",
         gas: 0,
-        tokenImageURL: transaction.in.tokenURL ?? '',
-        amount: transaction.in.amount,
-        symbol: transaction.in.symbol
     }
 
     const getAssetsApproveInfo = {
         contractType: 'NFT',
-        sendTokens: {
-            '#2334': ['https://s2.coinmarketcap.com/static/img/coins/64x64/1027.png', 'https://www.youtube.com/watch?v=V21wlp5_pAA', 1, 'BAYC', true, true],
-            '#2345': ['https://s2.coinmarketcap.com/static/img/coins/64x64/1027.png', 'https://www.youtube.com/watch?v=V21wlp5_pAA', 2, 'BAYC', false, true],
-        },
-        NFTCategoryName: 'Bored Ape Yacht Club',
+        sendTokens: transaction.approve,
+        NFTCategoryName: "",
         gas: 0,
     }
 

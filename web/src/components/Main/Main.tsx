@@ -13,37 +13,46 @@ import './Main.css'
 
 interface Props {
     id: string | null;
-    mode: string | null;
+    mode: string | 'Error';
     browserMsg: string | null;
 };
 
 
 const Main = (props: Props) => {
-    // props
     const { id, mode, browserMsg } = props;
-    const [previewTxn, setTxnState] = useState({})
+    const [previewTxn, setPreviewTxnState] = useState({})
+    const [renderMode, setRenderMode] = useState('')
     const [hasLoaded, setHasLoaded] = useState(false);
-    const transaction = JSON.parse(browserMsg ?? 'error')
-    console.log('b')
-    useEffect(() => {
-        const getPreview = async (transaction:any) => {
-            await dataService.postTransactionSimulation(transaction)
-                .then(res => {
-                    setTxnState(res)
-                    setHasLoaded(true)
-                    return res
-                })
-                .catch((err)=>{
-                    console.log('Server is down: ', err)
-                })
-        }
-        getPreview(transaction)
-            .catch(e => {
-                setHasLoaded(true)
-            });
-    }, [])
-
-    console.log('a: ', JSON.stringify(previewTxn))
+    let transaction = {
+        to:''
+    }
+    
+    if (mode === 'transaction'){
+        transaction = JSON.parse(browserMsg ?? 'error')
+        useEffect(() => {
+            const getPreview = async (transaction:any) => {
+                await dataService.postTransactionSimulation(transaction)
+                    .then(res => {
+                        setPreviewTxnState(res)
+                        if (res.changeType === 'APPROVE') setRenderMode('transaction-assets-approval')
+                        else setRenderMode('transaction-assets-exchange')
+                        setHasLoaded(true)
+                    })
+                    .catch((err)=>{
+                        //setRenderMode('Server Down Page')
+                        setHasLoaded(true)
+                        console.log('Server is down: ', err)
+                    })
+            }
+            getPreview(transaction)
+        }, [])
+        console.log('PreviewTxn: ', JSON.stringify(previewTxn))
+    }
+    else{
+        useEffect(() => {
+        setRenderMode(mode)
+        setHasLoaded(true)})
+    }  
     // Close extension
     const extensionResponse = async (data: boolean) => {
         await Browser.runtime.sendMessage(undefined, { id, data });
@@ -51,21 +60,15 @@ const Main = (props: Props) => {
     }
     const accept = () => extensionResponse(true);
     const reject = () => extensionResponse(false);
-    const Test = () => {
-        return (
-            <>
-            {mode}, TTTT
-            </>
-        )
-    }
-    const renderCurrentSelection = (mode: string | null) => {
-        switch (mode) {
+
+    const renderCurrentSelection = (renderMode: string | null) => {
+        switch (renderMode) {
             case 'transaction-assets-exchange': {
                 return (
                     <>
                         <MainHeader></MainHeader>
                         <ContractInfo mode={mode} contractData={transaction.to}/>
-                        <Transfer mode={mode} transaction={previewTxn}/>
+                        <Transfer mode={renderMode} transaction={previewTxn}/>
                         <Footer onAccept={accept} onReject={reject} />
                     </>
                 )
@@ -75,7 +78,7 @@ const Main = (props: Props) => {
                     <>
                         <MainHeader></MainHeader>
                         <ContractInfo mode={mode} contractData={transaction.to}/>
-                        <Transfer mode={mode} transaction={previewTxn}/>
+                        <Transfer mode={renderMode} transaction={previewTxn}/>
                         <Footer onAccept={accept} onReject={reject} />
                     </>
                 )
@@ -128,7 +131,9 @@ const Main = (props: Props) => {
     <div>
         {
         hasLoaded?
-        <div>{renderCurrentSelection(mode)}</div>
+        <div>
+            {renderCurrentSelection(renderMode)}
+        </div>
         :
         <Loading />
         }

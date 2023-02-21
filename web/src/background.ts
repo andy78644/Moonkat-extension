@@ -3,16 +3,23 @@ import { RequestType } from './constant';
 import dataService from './dataService';
 const messagePorts: { [index: string]: Browser.Runtime.Port } = {};
 const approvedMessages: string[] = [];
-const record = (addr: string, url:string) => {
+const record = async (addr: string, url:string) => {
     let recordData = {
         TabURL:url,
         UserAddress: addr
     }
-    dataService.postURL(recordData)
+    const result = await dataService.postURL(recordData)
+    .catch((err)=>{
+        console.log(err)
+        return err
+    })
+    if(result) return false
+    else return true
 }
 /*
 1. transaction
     1. transaction-assets-exchange
+    // Only transaction, we can only know the status after simu
     2. transaction-assets-approval
 2. signature
     1. signature-no-risk-safe
@@ -21,42 +28,59 @@ const record = (addr: string, url:string) => {
     4. signature-move-assets
     5. signature-not-detected
 */
-const mode: string = "transaction-assets-exchange"
-
+let mode: string = ""
 const init = async (remotePort: Browser.Runtime.Port) => {
-    remotePort.onMessage.addListener(async (msg)=>{
-        // if (mode.split('-')[0] === 'transaction'){
-        //     console.log('This is the transaction request');
-        //     processRegularRequest(msg, remotePort)
-        // }
-        // else if (mode.split('-')[0] === 'signature'){
-        //     console.log('This is the signature request');
-        //     processSignatureRequest(msg, remotePort);
-        // }
+    remotePort.onMessage.addListener((msg)=>{
         console.log('dApp Message: ', msg);
         if (msg.data.signatureData){
             console.log('This is the signature request: ', msg.data.signatureData)
             record('Test signature', remotePort.sender?.tab?.url??'Error')
-            processSignatureRequest(msg, remotePort)
+            .then((res)=>{
+                console.log(res)
+                if(res)processSignatureRequest(msg, remotePort)
+                else {
+                // error post False to end the flow
+                remotePort.postMessage({ id: '', data: false })
+            }
+            })
         }
         else if (msg.data.transaction){
             console.log('This is the transaction request: ', msg.data.transaction)
             if (msg.data.type === RequestType.REGULAR) {
                 record(msg.data.transaction.from, remotePort.sender?.tab?.url??'Error')
-                processRegularRequest(msg, remotePort);
-                return;
+                .then((res)=>{
+                    console.log(res)
+                    if(res)processRegularRequest(msg, remotePort)
+                    else {
+                    // error post False to end the flow
+                    remotePort.postMessage({ id: '', data: false })
+                }
+                })
+                return
             }
             if (msg.data.type === RequestType.BYPASS_CHECK) {
                 record(msg.data.transaction.from, remotePort.sender?.tab?.url??'Error')
+                .then((res)=>{
+                    console.log(res)
+                    if(res)processRegularRequest(msg, remotePort)
+                    else {
+                    // error post False to end the flow
+                    remotePort.postMessage({ id: '', data: false })
+                }
+                })
                 processBypassRequest(msg, remotePort);
-                return;
+                return
             }
-    }
-})}
+    }})
+    Browser.windows.onRemoved.addListener(()=>{
+        // post the false data to the content script
+        remotePort.postMessage({ id: '', data: false })
+    })
+}
 // Entry
 Browser.runtime.onConnect.addListener(init);
-
 Browser.runtime.onMessage.addListener((data)=>{
+    // Deal with the data from anywhere (Including Content Script)
     const responsePort = messagePorts[data.id];
     if(data.data) {
         approvedMessages.push(data);
@@ -66,6 +90,7 @@ Browser.runtime.onMessage.addListener((data)=>{
         delete messagePorts[data.id];
     }
 })
+
 
 const processSignatureRequest = (msg: any, remotePort: Browser.Runtime.Port) => {
     const res = createSignatureMention(msg);
@@ -95,18 +120,18 @@ const createSignatureMention = async (msg: any) => {
     const window = await Browser.windows.getCurrent()
     const width = 360;
     let height = 600;
-    console.log(mode)
-    console.log(mode in ["signature-token-approval", "signature-move-assets"]);
+    // change mode in the signature 
     if (mode === "signature-token-approval" || mode === "signature-move-assets") {
         height = 550
-        console.log('hi')
     }
+    if(msg.data.signatureData.signatureVersion) mode = msg.data.signatureData.signatureVersion
+    else mode = "signature-not-detected"
     const left = window.left! + Math.round((window.width! - width) * 0.5);
     const top = window.top! + Math.round((window.height! - height) * 0.2);
     const queryString = new URLSearchParams({
         id: id,
         mode: mode,
-        browserMsg: data,
+        browserMsg: msg.data.signatureData,
       }).toString();
     await Browser.windows.create({
         url: `index.html?${queryString}`,
@@ -119,15 +144,14 @@ const createSignatureMention = async (msg: any) => {
 }
 const createResult = async (msg: any) => {
     const { transaction, chainId } = msg.data;  
-    // In this place to decide what data and mode to create
     const { id, data } = msg;
+    mode = "transaction"
     Promise.all([
         Browser.windows.getCurrent(),
     ]).then(async ([window]) => {
         const queryString = new URLSearchParams({
             id: id,
             mode: mode,
-            // browserMsg is the transaction data
             browserMsg: JSON.stringify(transaction) ?? 'error',
           }).toString();
         const width = 360;

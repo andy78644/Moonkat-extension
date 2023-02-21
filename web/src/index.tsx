@@ -13,7 +13,7 @@ root.render(
     
     <Main
         id={params.get("id")}
-        mode={params.get("mode")}
+        mode={params.get("mode")??''}
         browserMsg={params.get("browserMsg")}
     />
 );

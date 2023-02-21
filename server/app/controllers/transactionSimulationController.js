@@ -20,6 +20,7 @@ const getAssetData = async (change, txn) => {
       }
       change.osVerified = response.contractMetadata.openSea.safelistRequestStatus
       change.amount = txn.amount
+      change.tokenId = txn.tokenId
     })
     .catch(err => {
       console.log(err.message) 
@@ -30,13 +31,13 @@ const getAssetData = async (change, txn) => {
 
 const approvalHandler = (txn) => {
   let assetApprove = {
-    token:"",
+    symbol:"",
     contractAddress:"",
     amount:"",
     tokenURL:"",
     name:"",
   }
-  assetApprove.token = txn.symbol
+  assetApprove.symbol = txn.symbol
   assetApprove.contractAddress = txn.contractAddress
   assetApprove.amount = txn.amount
   assetApprove.tokenURL = txn.logo
@@ -44,32 +45,40 @@ const approvalHandler = (txn) => {
   return assetApprove
 }
 
-const transferHandler = async (txn, direction) => {
-  let assetMove = {
-    direction:direction,
-    amount:"",
-    type:"",
-    symbol:"",
-    tokenURL:"",
-    osVerified:"",
-  }
-  assetMove.type = txn.assetType
-  assetMove.symbol = txn.symbol
-  let err = await getAssetData(assetMove, txn)
+const transferHandler = async (move, txn) => {
+  move.type = txn.assetType
+  move.symbol = txn.symbol
+  let err = await getAssetData(move, txn)
   if (err) return err
-  return assetMove
+  return move
 }
 
 exports.sendTransaction = async (req, res) => {
     //todo: define the user address
     const from = req.body.from
     let transactionInfo = {
+      changeType:"",
       gas: "",
-      approve:"",
-      in:"",
-      out:""
+      in:[],
+      out:[],
+      approve:null
     };
-    let assetApprove, assetOut, assetIn
+    let assetOut = {
+      amount:"",
+      type:"",
+      symbol:"",
+      tokenURL:"",
+      osVerified:"",
+      tokenId:null
+    }
+    let assetIn = {
+      amount:"",
+      type:"",
+      symbol:"",
+      tokenURL:"",
+      osVerified:"",
+      tokenId:null
+    }
     
     const options = {
         method: 'POST',
@@ -84,36 +93,49 @@ exports.sendTransaction = async (req, res) => {
         })
     };
     await fetch(`https://eth-mainnet.g.alchemy.com/v2/${process.env.ALCHEMY_API_KEY}`, options)
-    .then(response => 
+    .then((response) => 
         response.json()
     )
     .then(async response => {
-        console.log('Simulation Success! Result: ', response)
+        console.log('Simulation Success!')
         const result = response.result
         transactionInfo.gas = result.gasUsed
-        for ( let changeObj of result.changes){
+        new Promise (async (resolve, reject)=>{
+          for ( let changeObj of result.changes){
             if(changeObj.from === from){
               if (changeObj.changeType === 'APPROVE'){
                 assetApprove = approvalHandler(changeObj)
+                transactionInfo.changeType = 'APPROVE'
                 transactionInfo.approve = assetApprove
                 console.log('Approve: ', transactionInfo)
-                res.status(200).send(transactionInfo)
+                resolve()
               }
               else if (changeObj.changeType === 'TRANSFER'){
-                assetOut = await transferHandler(changeObj, "out")
+                transactionInfo.changeType = 'TRANSFER'
+                assetOut = await transferHandler(assetOut, changeObj)
+                .catch((err)=>{
+                  res.status(500).send(err)
+                  reject()
+                })
+                transactionInfo.out.push(assetOut)
               }
             }
             else if(changeObj.to === from){
               if (changeObj.changeType === 'TRANSFER'){
-                assetIn = await transferHandler(changeObj, "in")
+                transactionInfo.changeType = 'TRANSFER'
+                assetIn = await transferHandler(assetIn, changeObj)
+                .catch((err)=>{
+                  res.status(500).send(err)
+                  reject()
+                })
+                transactionInfo.in.push(assetIn)
               }
             }
-        }
-        console.log('In: ', assetIn)
-        console.log('Out: ', assetOut)
-        transactionInfo.in = assetIn
-        transactionInfo.out = assetOut 
+        } 
+        console.log(transactionInfo)
         res.status(200).send(transactionInfo)
+        resolve()
+        })
     })
     .catch(err => {
         console.log(err.message)  
