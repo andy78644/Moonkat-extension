@@ -49,24 +49,20 @@ const init = async (remotePort: Browser.Runtime.Port) => {
             if (msg.data.type === RequestType.REGULAR) {
                 record(msg.data.transaction.from, remotePort.sender?.tab?.url??'transaction error')
                 .then((res)=>{
-                    console.log(res)
                     if(res)processRegularRequest(msg, remotePort)
                     else {
                     // error post False to end the flow
-                    remotePort.postMessage({ id: '', data: false })
-                }
+                    remotePort.postMessage({ id: '', data: false })}
                 })
                 return
             }
             if (msg.data.type === RequestType.BYPASS_CHECK) {
                 record(msg.data.transaction.from, remotePort.sender?.tab?.url??'transaction error')
                 .then((res)=>{
-                    console.log(res)
                     if(res)processRegularRequest(msg, remotePort)
                     else {
                     // error post False to end the flow
-                    remotePort.postMessage({ id: '', data: false })
-                }
+                    remotePort.postMessage({ id: '', data: false })}
                 })
                 processBypassRequest(msg, remotePort);
                 return

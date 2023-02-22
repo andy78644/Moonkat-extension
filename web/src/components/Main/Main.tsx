@@ -40,8 +40,9 @@ const Main = (props: Props) => {
                     })
                     .catch((err)=>{
                         //setRenderMode('Server Down Page')
+                        setRenderMode("debug-end")
                         setHasLoaded(true)
-                        console.log('Server is down: ', err)
+                        console.log('Server is down: ', err.message)
                     })
             }
             getPreview(transaction)
@@ -123,6 +124,12 @@ const Main = (props: Props) => {
             }
             case 'signature-not-detected': {
                 return <div></div>
+            }
+            case 'debug-end': {
+                return (<>
+                    <h1>Something Wrong Press cancel!</h1>
+                    <Footer onAccept={accept} onReject={reject} />
+                </>)
             }
             }
     }
