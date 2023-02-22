@@ -1,3 +1,4 @@
+require('dotenv').config(); 
 module.exports = {
     development: {
       username: JSON.parse(process.env.DB_CONFIG).username,

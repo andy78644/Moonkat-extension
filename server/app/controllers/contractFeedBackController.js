@@ -2,17 +2,18 @@ const db = require("../models");
 const { ContractFeedBack, Contract }= db;
 const Op = db.Sequelize.Op;
 const querystring = require('querystring');
-const getData = require('./getRequest.js');
-const contract = require("../models/contract");
+const { validationResult } = require('express-validator');
+require('dotenv').config(); 
+
+
 
 // Get the Contract with Specific Address
 exports.reportFeedback = async (req, res) => {
-    const check = detectFunc(req.body);
-    if(!check)
-        res.status(500).send({
-            message:
-                err.message || "type error"
-        });
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(422).json({ errors: errors.array() });
+    }
+    
     const report = {
         Provider: req.body.Provider,
         ReportedContract: req.body.Address,
