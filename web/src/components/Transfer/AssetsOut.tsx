@@ -12,7 +12,7 @@ import './AssetsOut.css';
 
 interface Props {
     contractType: string;
-    sendTokens: Array<assetOut>;
+    sendTokens: Array<any>;
     NFTCategoryName: string | null;
     gas: any;
 }

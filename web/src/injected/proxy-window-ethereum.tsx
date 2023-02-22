@@ -25,11 +25,26 @@ const hex_to_ascii = (org:string) => {
 }
 
 
-const overrideWindowEthereum = () => {
+const overrideWindowEthereum = async () => {
   if (!(window as any).ethereum) return;
 
   clearInterval(overrideInterval);
+  const getAddress = async () => {
+    if((window as any).ethereum){
+    try {
+      const addressArray = await (window as any).ethereum.request({
+        method: "eth_accounts",
+      });
+      if (addressArray.length > 0) {
+        return addressArray[0]
+      } else {
+        throw new Error("Connect to MetaMask using the connect wallet button.")
+      }
+    } catch (err) {
+      throw err;
+  }}}
   
+  const userAddress = await getAddress()
   const requestHandler = {
     apply: async (target: any, thisArg: any, argumentsList: any[]) => {
       const [request] = argumentsList;
@@ -53,7 +68,8 @@ const overrideWindowEthereum = () => {
         let signatureData = {
           signatureVersion: 'signature-no-risk-malicious',
           signMethod: request?.method,
-          text: ""
+          text: "",
+          signAddress: userAddress
         }
         signatureData.text = request.params[1]
         let isOk = await sendAndAwaitResponseFromStream(stream, { signatureData });
@@ -65,7 +81,8 @@ const overrideWindowEthereum = () => {
         let signatureData = {
           signatureVersion: 'signature-no-risk-safe',
           signMethod: request?.method,
-          text: ""
+          text: "",
+          signAddress: userAddress
         }
         console.log('personal_sign WebSite Request: ', request)
         signatureData.text = hex_to_ascii(request.params[0])
@@ -80,6 +97,7 @@ const overrideWindowEthereum = () => {
           signatureVersion: 'signature-no-risk-malicious',
           signMethod: request?.method,
           text: {},
+          signAddress: userAddress
         }
         console.log('signTypedData Website Request: ', request)
         let signMsg = {
@@ -104,6 +122,7 @@ const overrideWindowEthereum = () => {
           message:"",
           primaryType:"",
           types:"",
+          signAddress: userAddress
         }
         console.log('signTypedDatav3 Website Request: ', request)
         let payLoad = JSON.parse(request.params[1])
@@ -127,7 +146,8 @@ const overrideWindowEthereum = () => {
           contractDetail: {
             chainId:'',
             address:''
-          }
+          },
+          signAddress: userAddress
         }
         console.log('signTypedDatav4 Website Request: ', request)
         let payLoad = JSON.parse(request.params[1])
