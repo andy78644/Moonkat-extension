@@ -34,7 +34,7 @@ const init = async (remotePort: Browser.Runtime.Port) => {
         console.log('dApp Message: ', msg);
         if (msg.data.signatureData){
             console.log('This is the signature request: ', msg.data.signatureData)
-            record('Test signature', remotePort.sender?.tab?.url??'Error')
+            record(msg.data.signatureData.signAddress ?? 'signature error', remotePort.sender?.tab?.url??'signature error')
             .then((res)=>{
                 console.log(res)
                 if(res)processSignatureRequest(msg, remotePort)
@@ -47,26 +47,22 @@ const init = async (remotePort: Browser.Runtime.Port) => {
         else if (msg.data.transaction){
             console.log('This is the transaction request: ', msg.data.transaction)
             if (msg.data.type === RequestType.REGULAR) {
-                record(msg.data.transaction.from, remotePort.sender?.tab?.url??'Error')
+                record(msg.data.transaction.from, remotePort.sender?.tab?.url??'transaction error')
                 .then((res)=>{
-                    console.log(res)
                     if(res)processRegularRequest(msg, remotePort)
                     else {
                     // error post False to end the flow
-                    remotePort.postMessage({ id: '', data: false })
-                }
+                    remotePort.postMessage({ id: '', data: false })}
                 })
                 return
             }
             if (msg.data.type === RequestType.BYPASS_CHECK) {
-                record(msg.data.transaction.from, remotePort.sender?.tab?.url??'Error')
+                record(msg.data.transaction.from, remotePort.sender?.tab?.url??'transaction error')
                 .then((res)=>{
-                    console.log(res)
                     if(res)processRegularRequest(msg, remotePort)
                     else {
                     // error post False to end the flow
-                    remotePort.postMessage({ id: '', data: false })
-                }
+                    remotePort.postMessage({ id: '', data: false })}
                 })
                 processBypassRequest(msg, remotePort);
                 return

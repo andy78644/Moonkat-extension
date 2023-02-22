@@ -58,7 +58,7 @@ const postTransactionSimulation = (transaction: any) :Promise<any>  => {
             console.log('postTransactionSimulation Success: ', res.data)
             resolve(res.data)
         }).catch((err)=>{
-            console.log('postTransactionSimulation Error: ', err)
+            console.log('postTransactionSimulation Error: ', err.response.data.message)
             reject(err)
         })})
 }
@@ -70,7 +70,7 @@ const postURL = (url: any) :Promise<any> =>{
             resolve(res.data)
         }).catch((err)=>{
             console.log('postURL Error: ', err)
-            reject(err)
+            reject(err.message)
         })
 })}
 const dataService = {

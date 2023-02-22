@@ -45,12 +45,20 @@ const approvalHandler = (txn) => {
   return assetApprove
 }
 
-const transferHandler = async (move, txn) => {
-  move.type = txn.assetType
-  move.symbol = txn.symbol
-  let err = await getAssetData(move, txn)
+const transferHandler = async (txn) => {
+  let asset = {
+    amount:"",
+    type:"",
+    symbol:"",
+    tokenURL:"",
+    osVerified:"",
+    tokenId:null
+  }
+  asset.type = txn.assetType
+  asset.symbol = txn.symbol
+  let err = await getAssetData(asset, txn)
   if (err) return err
-  return move
+  return asset
 }
 
 exports.sendTransaction = async (req, res) => {
@@ -63,22 +71,6 @@ exports.sendTransaction = async (req, res) => {
       out:[],
       approve:null
     };
-    let assetOut = {
-      amount:"",
-      type:"",
-      symbol:"",
-      tokenURL:"",
-      osVerified:"",
-      tokenId:null
-    }
-    let assetIn = {
-      amount:"",
-      type:"",
-      symbol:"",
-      tokenURL:"",
-      osVerified:"",
-      tokenId:null
-    }
     
     const options = {
         method: 'POST',
@@ -97,7 +89,13 @@ exports.sendTransaction = async (req, res) => {
         response.json()
     )
     .then(async response => {
-        console.log('Simulation Success!')
+        console.log('Simulation Response: ', response)
+        if(response.error){
+          res.status(500).send({
+            message:response.error.message
+          })
+          return
+        }
         const result = response.result
         transactionInfo.gas = result.gasUsed
         new Promise (async (resolve, reject)=>{
@@ -112,23 +110,23 @@ exports.sendTransaction = async (req, res) => {
               }
               else if (changeObj.changeType === 'TRANSFER'){
                 transactionInfo.changeType = 'TRANSFER'
-                assetOut = await transferHandler(assetOut, changeObj)
+                let outObj = await transferHandler(changeObj)
                 .catch((err)=>{
                   res.status(500).send(err)
                   reject()
                 })
-                transactionInfo.out.push(assetOut)
+                transactionInfo.out.push(outObj)
               }
             }
             else if(changeObj.to === from){
               if (changeObj.changeType === 'TRANSFER'){
                 transactionInfo.changeType = 'TRANSFER'
-                assetIn = await transferHandler(assetIn, changeObj)
+                let inObj = await transferHandler(changeObj)
                 .catch((err)=>{
                   res.status(500).send(err)
                   reject()
                 })
-                transactionInfo.in.push(assetIn)
+                transactionInfo.in.push(inObj)
               }
             }
         } 
