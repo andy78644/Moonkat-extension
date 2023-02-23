@@ -1,43 +1,115 @@
-import React, { useState } from 'react';
-import Header from './Header';
+import React,{useState, useEffect} from 'react';
+import TransferHeader from './TransferHeader';
 import AssetsIn from './AssetsIn';
 import AssetsOut from './AssetsOut';
-import MoreTags from './MoreTags/MoreTags';
+import AssetsApprove from './AssetsApprove';
 import './Transfer.css';
 
 interface Props {
-    assetOut: any;
-    assetIn: any;
-    gas: any;
-    outSymbol: any;
-    inSymbol:any;
-    tokenURL:string;
+    mode: any;
+    transaction: any
 }
 
-const Transfer = (props: Props) => {
-  const [moreTags, setMoreTags] = useState(false);
-  const {assetOut, assetIn, gas, outSymbol, inSymbol, tokenURL} = props;
-  return (
-    <div>
-      <Header tagState={moreTags} changeTag={setMoreTags}></Header>
-      {
-        moreTags
-          ?
-          <div>
-            <MoreTags></MoreTags>
-          </div>
-          :
-          <div>
-            <AssetsIn
-              { ...{asset:assetIn, symbol:inSymbol, tokenURL:tokenURL}}
-            ></AssetsIn>
-          </div>
-      }
-      <AssetsOut
-        {...{asset:assetOut, symbol:outSymbol, gas:gas}}
-      ></AssetsOut>
-    </div>
-  );
+const Transfer =  (props: Props) => {
+    const {mode, transaction} = props;
+    console.log('transaction: ',transaction)
+    const [renderMode, setRenderMode] = useState('')
+    const getAssetsSendInfo = {
+        contractType: 'ERC-20',
+        //todo: multiple asset
+        sendTokens: 
+            //{
+            //     amount: ,
+            //     type: 'NATIVE/ERC20/ERC1155',
+            //     symbol: 'ETH',
+            //     tokenURL: 'https://static.alchemyapi.io/images/network-assets/eth.png',
+            //     osVerified: ''
+            //     
+            // }
+            transaction.out,
+        NFTCategoryName: '',
+        gas: transaction.gas,
+    }
+
+    const getAssetsReceiveInfo = {
+        contractType: 'NFT',
+        sendTokens:
+            //{
+            //     amount: ,
+            //     type: 'NATIVE/ERC20/ERC1155',
+            //     symbol: 'ETH',
+            //     tokenURL: 'https://static.alchemyapi.io/images/network-assets/eth.png',
+            //     osVerified: ''
+            //     
+            // }
+            transaction.in,
+        NFTCategoryName: "",
+        gas: 0,
+    }
+
+    const getAssetsApproveInfo = {
+        contractType: 'NFT',
+        sendTokens: transaction.approve,
+        NFTCategoryName: "",
+        gas: 0,
+    }
+
+    const renderCurrentSelection = (mode: string | null) => {
+        switch (mode) {
+            case 'transaction-assets-exchange': {
+                return (
+                    <>
+                        <TransferHeader mode={mode}></TransferHeader>
+                        <AssetsOut {...getAssetsSendInfo} />
+                        <AssetsIn {...getAssetsReceiveInfo} />
+                    </>
+                )
+            }
+            case 'transaction-assets-approval': {
+                return (
+                    <>
+                        <TransferHeader mode={mode}></TransferHeader>
+                        <AssetsOut {...getAssetsSendInfo} />
+                        <AssetsApprove {...getAssetsApproveInfo} />
+                    </>
+                )
+            }
+            case 'signature-token-approval': {
+                return (
+                    <>
+                        <TransferHeader mode={mode}></TransferHeader>
+                        <AssetsApprove {...getAssetsApproveInfo} />
+                    </>
+                )
+            }
+            case 'signature-move-assets': {
+                return (
+                    <>
+                        <TransferHeader mode={mode}></TransferHeader>
+                        <AssetsOut {...getAssetsSendInfo} />
+                    </>
+                )
+            }
+            case 'signature-not-detected': {
+                return (
+                    <>
+                        Not designed.
+                    </>
+                )
+            }
+            default: {
+                return (
+                    <>
+                        Not designed.
+                    </>
+                )
+            }
+        }
+    }
+
+    return (<div>
+        {renderCurrentSelection(mode)}
+    </div>)
 };
 
 export default Transfer;

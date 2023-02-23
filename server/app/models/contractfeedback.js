@@ -30,6 +30,7 @@ module.exports = (sequelize, DataTypes) => {
     },
     CategoryTag: DataTypes.STRING,
     NameTag: DataTypes.STRING,
+    Description: DataTypes.STRING,
     FeatureTagOne: DataTypes.STRING,
     FeatureTagTwo: DataTypes.STRING,
     FeatureTagThree: DataTypes.STRING,

@@ -1,16 +1,77 @@
-// This is the Node client for sending the transaction which is waited to be simulated
-const net = require("net");
-// The .env require no compile, but it needs to be at the same folder 
 require('dotenv').config()
-  
+
+const getAssetData = async (change, txn) => {
+  if (txn.assetType === 'ERC20' || txn.assetType === 'NATIVE'){
+    change.amount = Number(txn.amount).toFixed(4);
+    change.tokenURL = txn.logo
+  }
+  else{
+    await fetch(`https://eth-mainnet.g.alchemy.com/v2/${process.env.ALCHEMY_API_KEY}\n
+    /getNFTMetadata?contractAddress=${txn.contractAddress}&tokenId=${txn.tokenId}`)
+    .then(response => 
+      response.json()
+    )
+    .then(response => {
+      if (response.error){
+        change.tokenURL = response.contractMetadata.openSea.imageUrl
+      }
+      else{
+        change.tokenURL = response.media[0].gateway
+      }
+      change.osVerified = response.contractMetadata.openSea.safelistRequestStatus
+      change.amount = txn.amount
+      change.tokenId = txn.tokenId
+    })
+    .catch(err => {
+      console.log(err.message) 
+      return 'Alchemy Error'    
+    })
+  }
+}
+
+const approvalHandler = (txn) => {
+  let assetApprove = {
+    symbol:"",
+    contractAddress:"",
+    amount:"",
+    tokenURL:"",
+    name:"",
+  }
+  assetApprove.symbol = txn.symbol
+  assetApprove.contractAddress = txn.contractAddress
+  assetApprove.amount = txn.amount
+  assetApprove.tokenURL = txn.logo
+  assetApprove.name = txn.name
+  return assetApprove
+}
+
+const transferHandler = async (txn) => {
+  let asset = {
+    amount:"",
+    type:"",
+    symbol:"",
+    tokenURL:"",
+    osVerified:"",
+    tokenId:null
+  }
+  asset.type = txn.assetType
+  asset.symbol = txn.symbol
+  let err = await getAssetData(asset, txn)
+  if (err) return err
+  return asset
+}
 
 exports.sendTransaction = async (req, res) => {
+    //todo: define the user address
     const from = req.body.from
-    let assetChange = {
-      out: "",
-      outSymbol:""
+    let transactionInfo = {
+      changeType:"",
+      gas: "",
+      in:[],
+      out:[],
+      approve:null
     };
-
+    
     const options = {
         method: 'POST',
         headers: {accept: 'application/json', 'content-type': 'application/json'},
@@ -24,55 +85,55 @@ exports.sendTransaction = async (req, res) => {
         })
     };
     await fetch(`https://eth-mainnet.g.alchemy.com/v2/${process.env.ALCHEMY_API_KEY}`, options)
-    .then(response => 
+    .then((response) => 
         response.json()
     )
     .then(async response => {
-        console.log('Simulation Success! Result: ', response)
+        console.log('Simulation Response: ', response)
+        if(response.error){
+          res.status(500).send({
+            message:response.error.message
+          })
+          return
+        }
         const result = response.result
-        assetChange.gas = result.gasUsed
-        for ( let changeObj of result.changes){
-            console.log(changeObj)
+        transactionInfo.gas = result.gasUsed
+        new Promise (async (resolve, reject)=>{
+          for ( let changeObj of result.changes){
             if(changeObj.from === from){
-              assetChange.outTokenType = changeObj.assetType
-              assetChange.outSymbol = changeObj.symbol
-              if(changeObj.assetType === 'ERC1155' || changeObj.assetType === 'ERC721'){
-                assetChange.out = changeObj.amount
+              if (changeObj.changeType === 'APPROVE'){
+                assetApprove = approvalHandler(changeObj)
+                transactionInfo.changeType = 'APPROVE'
+                transactionInfo.approve = assetApprove
+                console.log('Approve: ', transactionInfo)
+                resolve()
               }
-              else{
-                assetChange.out = Number(changeObj.amount).toFixed(4);
-              }
-            }
-            if(changeObj.to === from){
-              assetChange.TokenType = changeObj.assetType
-              assetChange.inSymbol = changeObj.name
-              if (changeObj.assetType === 'ERC20'){
-                assetChange.tokenURL = changeObj.logo
-                assetChange.in = Number(changeObj.amount).toFixed(4);
-              }
-              else {
-                await fetch(`https://eth-mainnet.g.alchemy.com/v2/${process.env.ALCHEMY_API_KEY}\n
-                /getNFTMetadata?contractAddress=${changeObj.contractAddress}&tokenId=${changeObj.tokenId}`)
-                .then(response => 
-                  response.json()
-                )
-                .then(response => {
-                  console.log(response)
-                  assetChange.tokenURL = response.media[0].gateway
-                  assetChange.in = changeObj.amount
+              else if (changeObj.changeType === 'TRANSFER'){
+                transactionInfo.changeType = 'TRANSFER'
+                let outObj = await transferHandler(changeObj)
+                .catch((err)=>{
+                  res.status(500).send(err)
+                  reject()
                 })
-                .catch(err => {
-                  console.log(err.message)  
-                  res.status(500).send({
-                      message:
-                        err.message || "error"
-                    });           
-              })
+                transactionInfo.out.push(outObj)
               }
             }
-          }
-          console.log('Decoded: ', assetChange)
-        res.status(200).send(assetChange)
+            else if(changeObj.to === from){
+              if (changeObj.changeType === 'TRANSFER'){
+                transactionInfo.changeType = 'TRANSFER'
+                let inObj = await transferHandler(changeObj)
+                .catch((err)=>{
+                  res.status(500).send(err)
+                  reject()
+                })
+                transactionInfo.in.push(inObj)
+              }
+            }
+        } 
+        console.log(transactionInfo)
+        res.status(200).send(transactionInfo)
+        resolve()
+        })
     })
     .catch(err => {
         console.log(err.message)  

@@ -1,0 +1,18 @@
+#mainHeader {
+    display: flex;
+    flex-direction: row;
+    height: 66px;
+    align-items: flex-start;
+    background: rgba(255, 248, 234, 0.5);
+}
+
+#logo {
+    padding: 9px 0px 9px 16px;
+}
+
+#brandName {
+    font-family: 'Kiona';
+    font-size: 24px;
+    padding: 15px 0px 15px 16px;
+}
+

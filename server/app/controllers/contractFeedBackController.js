@@ -2,16 +2,24 @@ const db = require("../models");
 const { ContractFeedBack, Contract }= db;
 const Op = db.Sequelize.Op;
 const querystring = require('querystring');
-const getData = require('./getRequest.js');
-const contract = require("../models/contract");
+const { validationResult } = require('express-validator');
+require('dotenv').config(); 
+
+
 
 // Get the Contract with Specific Address
 exports.reportFeedback = async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(422).json({ errors: errors.array() });
+    }
+    
     const report = {
         Provider: req.body.Provider,
         ReportedContract: req.body.Address,
         CategoryTag: req.body.Category,
         NameTag: req.body.Name,
+        Description: req.body.Description,
         FeatureTagOne: req.body.Tag[0],
         FeatureTagTwo: req.body.Tag[1],
         FeatureTagThree: req.body.Tag[2]
@@ -25,6 +33,7 @@ exports.reportFeedback = async (req, res) => {
             "Address" : data.ReportedContract,
             "Category" : data.CategoryTag,
             "Name": data.NameTag,
+            "Description": data.Description,
             "Tag":[
                 data.FeatureTagOne,
                 data.FeatureTagTwo,
@@ -39,53 +48,6 @@ exports.reportFeedback = async (req, res) => {
             err.message || "Create failed"
         });
     })
-
-    let ReportedContract = req.body.Address;
-    let tagMap = new Map();
-    const reportQuery = [
-        "Provider",
-        "ReportedContract",
-        "CategoryTag",
-        "NameTag",
-        "FeatureTagOne",
-        "FeatureTagTwo",
-        "FeatureTagThree",
-    ];
-    let condition = ReportedContract ? { ReportedContract: { [Op.like]: `%${ReportedContract}%` } } : null;
-    const contractFeedBacks = await ContractFeedBack.findAll( {where: condition, attributes: reportQuery})
-    contractFeedBacks.forEach(
-        (contractFeedBack) => {
-            if(tagMap.has(contractFeedBack.FeatureTagOne)) tagMap.set(contractFeedBack.FeatureTagOne, tagMap.get(contractFeedBack.FeatureTagOne)+1);
-            else  tagMap.set(contractFeedBack.FeatureTagOne, 1);
-            if(tagMap.has(contractFeedBack.FeatureTagTwo)) tagMap.set(contractFeedBack.FeatureTagTwo, tagMap.get(contractFeedBack.FeatureTagTwo)+1);
-            else  tagMap.set(contractFeedBack.FeatureTagTwo, 1);
-            if(tagMap.has(contractFeedBack.FeatureTagThree)) tagMap.set(contractFeedBack.FeatureTagThree, tagMap.get(contractFeedBack.FeatureTagThree)+1);
-            else  tagMap.set(contractFeedBack.FeatureTagThree, 1);
-        }
-    );
-    tagMap[Symbol.iterator] = function* () {
-        yield* [...this.entries()].sort((a, b) => b[1] - a[1]);
-    }
-    let featureTag = [null, null, null];
-    let count = 0;
-    tagMap.forEach(
-        (value, tag) => {
-            if(count == 3) return;
-            featureTag[count] = tag;
-            count++;
-            
-        }
-    )
-    const updateTag = {
-        FeatureTagOne: featureTag[0],
-        FeatureTagTwo: featureTag[1],
-        FeatureTagThree: featureTag[2]
-    };
-    const contract = await Contract.findByPk(ReportedContract);
-    contract.update(updateTag);
-
-        
-  
 }; 
 
 exports.getFeedback = async (req, res) => {
@@ -114,6 +76,11 @@ exports.getFeedback = async (req, res) => {
         
         
 };
+
+function detectFunc(reqBody){
+
+    return true;
+}
 
 
 

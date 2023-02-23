@@ -1,39 +1,104 @@
-import React from "react";
-import IconButton from "@mui/material/IconButton";
-import ArrowOutwardIcon from '@mui/icons-material/ArrowOutward';
-import GasFeeIcon from '@mui/icons-material/EvStation';
+import React, { useState } from "react";
+import List from '@mui/material/List';
+import ListItem from "@mui/material/ListItem";
+import ListItemText from '@mui/material/ListItemText';
+import ListItemButton from '@mui/material/ListItemButton';
+import assetOut from "../../types/assetOutType";
+import ETHIcon from '../../assets/ETH.png'
+import gasFee from '../../assets/gasfee.png'
+import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 
 import './AssetsOut.css';
 
 interface Props {
-    asset:any;
-    symbol:any;
-    gas:any
+    contractType: string;
+    sendTokens: Array<any>;
+    NFTCategoryName: string | null;
+    gas: any;
 }
 
 const AssetsOut = (props: Props) => {
-    const {asset, symbol, gas} = props
+    const {contractType, sendTokens, NFTCategoryName, gas} = props
+    const [open, setOpen] = React.useState(false);
+    const handleClick = () => {
+        setOpen(!open);
+    };
+    const renderList = () => {
+        console.log(sendTokens)
+        return sendTokens.map((token:any) =>{
+                if(token){
+                return <ListItem key={token.symbol} sx={{
+                }}>
+                    <img src={token.tokenURL ?? ETHIcon} alt="Free Mint" />
+                    <ListItemText 
+                        sx={{
+                            fontSize: '20px',
+                            paddingLeft: '8px',
+                        }}
+                        primary={token.symbol ?? 'Error'} 
+                    />
+                    <ListItemText 
+                        sx={{
+                            fontSize: '20px',
+                            textAlign: 'right',
+                            color: '#B8463D'
+                        }}
+                        primary={token.amount ?? 'Error' + token.symbol ?? 'Error'}
+                    />
+                </ListItem>
+                }
+        });
+    }
+  
+//   
     return (
         <div id="assetsOut">
-            <div id="assetsOutTitle">
-                Assets Out & Gas
-            </div>
-            <div id="assetsOutAssets">
-                <IconButton id="assetsOutIcon">
-                    <ArrowOutwardIcon sx={{fontSize: 25}}/>
-                </IconButton>
-                <div id="assetsOutAssetsFee">
-                    {Number(asset)}&nbsp;{symbol}
-                </div>
-            </div>
-            <div id="assetsOutGas">
-                <IconButton id="assetsOutGasFeeIcon">
-                    <GasFeeIcon sx={{fontSize: 25}}/>
-                </IconButton>
-                <div id="assetsOutGasFee">
-                    {Number(gas)}&nbsp;Wei
-                </div>
-            </div>
+            <List sx={{ 
+                width: '100%', 
+                bgcolor: '#FFF8EA',
+                borderRadius: 8
+            }}
+                component="nav"
+                aria-labelledby="nested-list-subheader"
+            >
+                <ListItemButton 
+                    sx={{
+                        width: '100%', 
+                        bgcolor: '#FFF8EA',
+                        "&:hover": {
+                            backgroundColor: '#FFF8EA'
+                        }
+                    }}
+                    component="div"
+                    id="assetsOutTitle"
+                    onClick={handleClick}
+                    disableRipple
+                >
+                    Assets Send &nbsp;
+                    <HelpOutlineIcon sx={{fontSize: 20}}/> 
+                    <ListItemText />
+                </ListItemButton>
+                <hr></hr>
+                {renderList()}
+                <ListItem>
+                    <img src={gasFee} alt="gasFee" />
+                    <ListItemText
+                        sx={{
+                            fontSize: '20px',
+                            paddingLeft: '8px',
+                        }}
+                        primary="GasFee" 
+                    />
+                    <ListItemText 
+                        sx={{
+                            fontSize: '20px',
+                            textAlign: 'right',
+                            color: '#B8463D'
+                        }}
+                        primary={parseInt(gas, 16)}
+                    />
+                </ListItem>
+            </List>
         </div>
     );
 }

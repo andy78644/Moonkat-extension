@@ -3,32 +3,80 @@ import { RequestType } from './constant';
 import dataService from './dataService';
 const messagePorts: { [index: string]: Browser.Runtime.Port } = {};
 const approvedMessages: string[] = [];
-
+const record = async (addr: string, url:string) => {
+    let recordData = {
+        TabURL:url,
+        UserAddress: addr
+    }
+    const result = await dataService.postURL(recordData)
+    .catch((err)=>{
+        console.log(err)
+        return err
+    })
+    if(result) return false
+    else return true
+}
+/*
+1. transaction
+    1. transaction-assets-exchange
+    // Only transaction, we can only know the status after simu
+    2. transaction-assets-approval
+2. signature
+    1. signature-no-risk-safe
+    2. signature-no-risk-malicious
+    3. signature-token-approval
+    4. signature-move-assets
+    5. signature-not-detected
+*/
+let mode: string = ""
 const init = async (remotePort: Browser.Runtime.Port) => {
-    remotePort.onMessage.addListener(async (msg)=>{
-        console.log('DApp Message: ', msg);
+    remotePort.onMessage.addListener((msg)=>{
+        console.log('dApp Message: ', msg);
         if (msg.data.signatureData){
             console.log('This is the signature request: ', msg.data.signatureData)
-            processSignatureRequest(msg, remotePort)
+            record(msg.data.signatureData.signAddress ?? 'signature error', remotePort.sender?.tab?.url??'signature error')
+            .then((res)=>{
+                console.log(res)
+                if(res)processSignatureRequest(msg, remotePort)
+                else {
+                // error post False to end the flow
+                remotePort.postMessage({ id: '', data: false })
+            }
+            })
         }
         else if (msg.data.transaction){
             console.log('This is the transaction request: ', msg.data.transaction)
             if (msg.data.type === RequestType.REGULAR) {
-                processRegularRequest(msg, remotePort);
-                return;
+                record(msg.data.transaction.from, remotePort.sender?.tab?.url??'transaction error')
+                .then((res)=>{
+                    if(res)processRegularRequest(msg, remotePort)
+                    else {
+                    // error post False to end the flow
+                    remotePort.postMessage({ id: '', data: false })}
+                })
+                return
             }
             if (msg.data.type === RequestType.BYPASS_CHECK) {
+                record(msg.data.transaction.from, remotePort.sender?.tab?.url??'transaction error')
+                .then((res)=>{
+                    if(res)processRegularRequest(msg, remotePort)
+                    else {
+                    // error post False to end the flow
+                    remotePort.postMessage({ id: '', data: false })}
+                })
                 processBypassRequest(msg, remotePort);
-                return;
+                return
             }
-        }
-    });
-};
-
+    }})
+    Browser.windows.onRemoved.addListener(()=>{
+        // post the false data to the content script
+        remotePort.postMessage({ id: '', data: false })
+    })
+}
 // Entry
 Browser.runtime.onConnect.addListener(init);
-
 Browser.runtime.onMessage.addListener((data)=>{
+    // Deal with the data from anywhere (Including Content Script)
     const responsePort = messagePorts[data.id];
     if(data.data) {
         approvedMessages.push(data);
@@ -38,6 +86,7 @@ Browser.runtime.onMessage.addListener((data)=>{
         delete messagePorts[data.id];
     }
 })
+
 
 const processSignatureRequest = (msg: any, remotePort: Browser.Runtime.Port) => {
     const res = createSignatureMention(msg);
@@ -62,21 +111,26 @@ const processBypassRequest = async (msg: any, remotePort: Browser.Runtime.Port) 
     if (!res) { return };
 };
 
-const createSignatureMention = async (msg:any) => {
+const createSignatureMention = async (msg: any) => {
+    const { id, data } = msg;
     const window = await Browser.windows.getCurrent()
-    const width = 500;
-    const height = 750;
+    const width = 360;
+    let height = 600;
+    // change mode in the signature 
+    if (mode === "signature-token-approval" || mode === "signature-move-assets") {
+        height = 550
+    }
+    if(msg.data.signatureData.signatureVersion) mode = msg.data.signatureData.signatureVersion
+    else mode = "signature-not-detected"
     const left = window.left! + Math.round((window.width! - width) * 0.5);
     const top = window.top! + Math.round((window.height! - height) * 0.2);
-    console.log(msg)
     const queryString = new URLSearchParams({
-        context: msg.data.signatureData.text,
-        signatureVersion: msg.data.signatureData.signatureVersion,
-        signMethod:msg.data.signatureData.signMethod,
-        id: msg.id
-    })
+        id: id,
+        mode: mode,
+        browserMsg: msg.data.signatureData,
+      }).toString();
     await Browser.windows.create({
-        url: `tmp.html?${queryString}`,
+        url: `index.html?${queryString}`,
         type: 'popup',
         width: width,
         height: height,
@@ -85,35 +139,19 @@ const createSignatureMention = async (msg:any) => {
     });
 }
 const createResult = async (msg: any) => {
-    const { transaction, chainId } = msg.data;
-    let previewTxn = await dataService.postTransactionSimulation(transaction)
-    .catch((err)=>{
-        console.log('Server is down: ', err)
-        return false
-    })
-    // since the alchemy may be can decode the approval, so first let go the decodeApproval function
+    const { transaction, chainId } = msg.data;  
+    const { id, data } = msg;
+    mode = "transaction"
     Promise.all([
         Browser.windows.getCurrent(),
     ]).then(async ([window]) => {
         const queryString = new URLSearchParams({
-          id: msg.id,
-          asset: 'Test Asset',
-          contract: transaction.to,
-          spender: 'Test Spender',
-          chainId,
-          name: 'Test Name' ?? '',
-          symbol: 'Test Symbol' ?? '',
-          assetOut: previewTxn.out,
-          assetIn: previewTxn.in,
-          gas: previewTxn.gas,
-          outSymbol: previewTxn.outSymbol,
-          inSymbol:previewTxn.inSymbol,
-          tokenURL: previewTxn.tokenURL,
-          bypassed: msg.data.type === RequestType.BYPASS_CHECK ? 'true' : 'false',
-        }).toString();
-        
-        const width = 500;
-        const height = 750;
+            id: id,
+            mode: mode,
+            browserMsg: JSON.stringify(transaction) ?? 'error',
+          }).toString();
+        const width = 360;
+        const height = 600;
         const left = window.left! + Math.round((window.width! - width) * 0.5);
         const top = window.top! + Math.round((window.height! - height) * 0.2);
     

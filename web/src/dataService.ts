@@ -10,11 +10,11 @@ const getByAddress = (addr:string): Promise<contractData> => {
     return new Promise((resolve, reject)=>{
         http.get(`/contract/?address=${addr}`)
         .then((res)=>{
-            console.log('GET Success')
+            console.log('getByAddress Success')
             console.log(res.data)
             resolve(res.data)
         }).catch((err)=>{
-            console.log('GET Err: ', err)
+            console.log('getByAddress Err: ', err)
             reject(err)
         })
     })
@@ -23,11 +23,11 @@ const getFeedBackByAddress = (addr:string): Promise<any> => {
     return new Promise((resolve, reject)=>{
         http.get(`/report/?address=${addr}`)
         .then((res)=>{
-            console.log('GET Success')
+            console.log('getFeedBackByAddress Success')
             console.log(res.data)
             resolve(res.data)
         }).catch((err)=>{
-            console.log('GET Err: ', err)
+            console.log('getFeedBackByAddress Err: ', err)
             reject(err)
         })
     })
@@ -42,10 +42,10 @@ const postFeedBackByAddress = (addr:string, feedBack: contractFeedBack) => {
     return new Promise((resolve, reject)=>{
         http.post(`/report/?address=${addr}`, feedBack)
         .then((res)=>{
-            console.log('POST Success: ', res.data)
+            console.log('postFeedBackByAddress Success: ', res.data)
             resolve(res.data)
         }).catch((err)=>{
-            console.log('POST Err: ', err)
+            console.log('postFeedBackByAddress Err: ', err)
             reject(err)
         })
     })
@@ -55,14 +55,24 @@ const postTransactionSimulation = (transaction: any) :Promise<any>  => {
         let _transaction = JSON.stringify(transaction)
         http.post(`api/simulate/`, _transaction)
         .then((res) => {
-            console.log('POST Success: ', res.data)
+            console.log('postTransactionSimulation Success: ', res.data)
             resolve(res.data)
         }).catch((err)=>{
-            console.log('POST Err: ', err)
+            console.log('postTransactionSimulation Error: ', err.response.data.message)
             reject(err)
         })})
 }
-
+const postURL = (url: any) :Promise<any> =>{
+    return new Promise((resolve, reject) =>{
+        http.post(`api/record`, url)
+        .then((res) => {
+            console.log('postURL Success: ', res.data)
+            resolve(res.data)
+        }).catch((err)=>{
+            console.log('postURL Error: ', err)
+            reject(err.message)
+        })
+})}
 const dataService = {
     getAllContracts,
     create,
@@ -70,6 +80,7 @@ const dataService = {
     getByAddress,
     getFeedBackByAddress,
     postFeedBackByAddress,
-    postTransactionSimulation
+    postTransactionSimulation,
+    postURL
 }
 export default dataService
