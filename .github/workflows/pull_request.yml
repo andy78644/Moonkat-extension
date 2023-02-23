@@ -35,6 +35,9 @@ jobs:
           # context: ./server
           # target: build
   commit-image-tag:
+    if: |
+      github.ref == "refs/heads/master" ||
+      github.ref == "refs/heads/mvp"
     needs: build-and-push-to-gcr-workload-identity
     runs-on: ubuntu-latest
     steps:
@@ -43,7 +46,7 @@ jobs:
 
       - name: update repo
         run: |
-          git pull origin refs/heads/${{ github.base_ref }}
+          git pull origin ${{ github.ref }}
       - name: Modifiy the specific files using scripts
         run: |
           sed -i '11c\  tag: ${{ github.sha }}' server/moonkat-server/values.yaml
@@ -57,4 +60,4 @@ jobs:
         uses: ad-m/github-push-action@master
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          branch: ${{ github.base_ref }}
+          branch: ${{ github.ref }}
