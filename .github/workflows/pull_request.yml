@@ -35,9 +35,9 @@ jobs:
           # context: ./server
           # target: build
   commit-image-tag:
-    if: |
-      github.ref == "refs/heads/master" ||
-      github.ref == "refs/heads/mvp"
+    if: ${{
+      (github.ref == 'refs/heads/master') ||
+      (github.ref == 'refs/heads/mvp') }}
     needs: build-and-push-to-gcr-workload-identity
     runs-on: ubuntu-latest
     steps:
