@@ -11,6 +11,7 @@ image:
   tag: 0e72de919939ea846b7ebcb509d56366dac6a8cc
 
 
+
 fullnameOverride: "moonkat"
 
 #serviceAccount:

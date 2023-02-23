@@ -43,7 +43,7 @@ jobs:
 
       - name: update repo
         run: |
-          git pull origin ${{ github.base_ref }}
+          git pull origin "refs/heads/${{ github.base_ref }}"
       - name: Modifiy the specific files using scripts
         run: |
           sed -i '11c\  tag: ${{ github.sha }}' server/moonkat-server/values.yaml
