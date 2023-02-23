@@ -1,11 +1,5 @@
-name: Push to GCR GitHub Action
+name: Pull Request to GCR GitHub Action
 on: 
-  push:
-    branches:
-      - web-develop
-      - master
-      - mvp
-      - feat/githubAction
   pull_request:
     branches:
       - web-develop
@@ -49,7 +43,7 @@ jobs:
 
       - name: update repo
         run: |
-          git pull origin ${{ github.ref }}
+          git pull origin ${{ github.base_ref }}
       - name: Modifiy the specific files using scripts
         run: |
           sed -i '11c\  tag: ${{ github.sha }}' server/moonkat-server/values.yaml
@@ -63,4 +57,4 @@ jobs:
         uses: ad-m/github-push-action@master
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          branch: ${{ github.ref }}
+          branch: ${{ github.base_ref }}
