@@ -21,12 +21,13 @@ const record = async (addr: string, url:string) => {
     1. transaction-assets-exchange
     // Only transaction, we can only know the status after simu
     2. transaction-assets-approval
+    3. transaction-not-configured
 2. signature
     1. signature-no-risk-safe
     2. signature-no-risk-malicious
     3. signature-token-approval
     4. signature-move-assets
-    5. signature-not-detected
+    5. transaction-not-configured
 */
 let mode: string = ""
 const init = async (remotePort: Browser.Runtime.Port) => {
@@ -126,7 +127,7 @@ const createSignatureMention = async (msg: any) => {
     const top = window.top! + Math.round((window.height! - height) * 0.2);
     const queryString = new URLSearchParams({
         id: id,
-        mode: mode,
+        mode: 'transaction-not-configured',
         browserMsg: msg.data.signatureData,
       }).toString();
     await Browser.windows.create({
