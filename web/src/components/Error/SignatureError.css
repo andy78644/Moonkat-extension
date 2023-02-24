@@ -1,0 +1,42 @@
+#signatureError {
+    margin: 106.5px 16px 18px 16px;
+    text-align: center;
+    background-color: #FFF8EA;
+    border-style: solid;
+    border-radius: 8px;
+    border-color: #DFD8CA;
+    border-width: 2px;
+}
+
+#signatureErrorImage {
+    margin: 16px auto;
+}
+
+#signatureErrorWarningImage {
+    margin-bottom: 5px;
+    display: inline;
+}
+
+#signatureErrorTitle {
+    font-size: 20px;
+    color: #E3B53F;
+    margin: 16px 0px;
+}
+
+#signatureErrorContent {
+    color: #77736A;
+    margin: 16px;
+}
+
+#contact {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    margin-bottom: 88px;
+}
+
+.contactButton {
+    margin: 0px 12px;
+    width: 44px;
+    height: 44px;
+}

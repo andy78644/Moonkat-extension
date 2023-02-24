@@ -8,6 +8,8 @@ import Loading from "./Loading";
 import Browser from "webextension-polyfill";
 import ContractInfo from "./ContractInfo";
 import MainHeader from "./MainHeader";
+import SimulationError from "../Error/SimulationError";
+import SignatureError from "../Error/SignatureError";
 
 import './Main.css'
 
@@ -84,6 +86,15 @@ const Main = (props: Props) => {
                     </>
                 )
             }
+            case 'transaction-not-configured': {
+                return (
+                    <>
+                        <MainHeader></MainHeader>
+                        <SimulationError />
+                        <Footer onAccept={accept} onReject={reject} />
+                    </>
+                )
+            }
             case 'signature-no-risk-safe': {
                 return (
                     <>
@@ -122,8 +133,14 @@ const Main = (props: Props) => {
                     </>
                 )
             }
-            case 'signature-not-detected': {
-                return <div></div>
+            case 'signature-not-configured': {
+                return (
+                    <>
+                        <MainHeader></MainHeader>
+                        <SignatureError />
+                        <Footer onAccept={accept} onReject={reject} />
+                    </>
+                )
             }
             case 'debug-end': {
                 return (<>
