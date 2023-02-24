@@ -127,7 +127,7 @@ const createSignatureMention = async (msg: any) => {
     const top = window.top! + Math.round((window.height! - height) * 0.2);
     const queryString = new URLSearchParams({
         id: id,
-        mode: 'transaction-not-configured',
+        mode: mode,
         browserMsg: msg.data.signatureData,
       }).toString();
     await Browser.windows.create({
