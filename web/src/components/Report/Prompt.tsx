@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import Browser from "webextension-polyfill";
 import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
+import dataService from "../../dataService";
 
 interface Props {
     submit: any,
@@ -21,18 +22,14 @@ const Prompt = (props: Props) => {
         const windowId = getWindowId()
         setTimeout(async () => {
             if (windowId){
-                const data = true
-                Browser.runtime.sendMessage((await windowId).id!, { windowId, data});
-                window.close()}
+                Browser.windows.remove((await windowId).id!)
+            }
         }, 2000)
     }, [props.submit])
     const handleClose = async () => {
         const windowId = getWindowId()
         props.onSubmit(false)
-        // Browser.windows.remove((await windowId).id!)
-        const data = true
-        Browser.runtime.sendMessage((await windowId).id!, { windowId, data});
-        window.close()
+        Browser.windows.remove((await windowId).id!)
     };
     return (
         <div>

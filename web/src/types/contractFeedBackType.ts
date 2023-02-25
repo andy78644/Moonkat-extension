@@ -5,4 +5,5 @@ export default interface contractFeedBack {
     CategoryTag: string,
     NameTag: string,
     Tag: Array<string>,
+    Description:string
   }

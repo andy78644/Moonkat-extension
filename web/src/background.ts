@@ -3,7 +3,6 @@ import { RequestType } from './constant';
 import dataService from './dataService';
 const messagePorts: { [index: string]: Browser.Runtime.Port } = {};
 const approvedMessages: string[] = [];
-const mainWindowId = Browser.windows.getCurrent().then((window) => window.id)
 
 const record = async (addr: string, url:string) => {
     let recordData = {
@@ -33,14 +32,17 @@ const record = async (addr: string, url:string) => {
 */
 let mode: string = ""
 const init = async (remotePort: Browser.Runtime.Port) => {
+    // const mainWindowId = await Browser.windows.getCurrent().then((window) => window.id)
+    let opWinId = 0
     remotePort.onMessage.addListener((msg)=>{
         console.log('dApp Message: ', msg);
         if (msg.data.signatureData){
             console.log('This is the signature request: ', msg.data.signatureData)
             record(msg.data.signatureData.signAddress ?? 'signature error', remotePort.sender?.tab?.url??'signature error')
-            .then((res)=>{
-                console.log(res)
-                if(res)processSignatureRequest(msg, remotePort)
+            .then(async (res)=>{
+                if(res) {
+                    opWinId = await processSignatureRequest(msg, remotePort) ?? -1
+                }
                 else {
                 // error post False to end the flow
                 remotePort.postMessage({ id: '', data: false })
@@ -51,32 +53,21 @@ const init = async (remotePort: Browser.Runtime.Port) => {
             console.log('This is the transaction request: ', msg.data.transaction)
             if (msg.data.type === RequestType.REGULAR) {
                 record(msg.data.transaction.from, remotePort.sender?.tab?.url??'transaction error')
-                .then((res)=>{
-                    if(res)processRegularRequest(msg, remotePort)
+                .then(async (res)=>{
+                    if(res){
+                        opWinId =  await processRegularRequest(msg, remotePort) ?? -1
+                    }
                     else {
                     // error post False to end the flow
                     remotePort.postMessage({ id: '', data: false })}
                 })
-                return
-            }
-            if (msg.data.type === RequestType.BYPASS_CHECK) {
-                record(msg.data.transaction.from, remotePort.sender?.tab?.url??'transaction error')
-                .then((res)=>{
-                    if(res)processRegularRequest(msg, remotePort)
-                    else {
-                    // error post False to end the flow
-                    remotePort.postMessage({ id: '', data: false })}
-                })
-                processBypassRequest(msg, remotePort);
                 return
             }
     }})
+
     Browser.windows.onRemoved.addListener(async (windowId)=>{
-        //Determine the window ID
-        console.log('Main window Id: ' + await mainWindowId)
-        console.log('Report window Id: ' + windowId)
-        if (await mainWindowId === windowId)
-            remotePort.postMessage({ id: '', data: false })
+        if (opWinId != -1 && windowId === opWinId){
+            remotePort.postMessage({ id: '', data: false })}
     })
 }
 // Entry
@@ -92,27 +83,26 @@ Browser.runtime.onMessage.addListener((data)=>{
     }
 })
 
-const processSignatureRequest = (msg: any, remotePort: Browser.Runtime.Port) => {
-    const res = createSignatureMention(msg);
+const processSignatureRequest = async (msg: any, remotePort: Browser.Runtime.Port) => {
+    const res = await createSignatureMention(msg);
     if (!res) {
         remotePort.postMessage({ id: msg.id, data: true });
         return;
     }
     messagePorts[msg.id] = remotePort;
+    const opWinId = await Browser.windows.getCurrent().then((window) => window.id )
+    return opWinId
 };
 
-const processRegularRequest = (msg: any, remotePort: Browser.Runtime.Port) => {
-    const res = createResult(msg);
-    if (!res) {
-        remotePort.postMessage({ id: msg.id, data: true });
-        return;
-    }
-    messagePorts[msg.id] = remotePort;
-};
-
-const processBypassRequest = async (msg: any, remotePort: Browser.Runtime.Port) => {
+const processRegularRequest = async (msg: any, remotePort: Browser.Runtime.Port) => {
     const res = await createResult(msg);
-    if (!res) { return };
+    if (!res) {
+        remotePort.postMessage({ id: msg.id, data: true });
+        return;
+    }
+    messagePorts[msg.id] = remotePort;
+    const opWinId = await Browser.windows.getCurrent().then((window) => window.id )
+    return opWinId
 };
 
 const createSignatureMention = async (msg: any) => {
@@ -140,7 +130,9 @@ const createSignatureMention = async (msg: any) => {
         height: height,
         left: left,
         top: top
-    });
+    })
+    await Browser.windows.getCurrent()
+    return true
 }
 const createResult = async (msg: any) => {
     const { transaction, chainId } = msg.data;  
@@ -169,6 +161,7 @@ const createResult = async (msg: any) => {
           top: top
         });
       })
-      return true;
+    await Browser.windows.getCurrent()
+    return true
 };
     
