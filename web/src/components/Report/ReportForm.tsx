@@ -9,7 +9,7 @@ interface Props {
 }
 
 const ReportForm = (props: Props) => {
-    const [value, setValue] = useState('');
+    const [textValue, settextValue] = useState('');
     return (
         <Box
             component="form"
@@ -26,8 +26,15 @@ const ReportForm = (props: Props) => {
                     height: props.formHeight
                 }
             }} 
-            label={props.placeholder} 
-            variant="filled" />
+            error={textValue.length === 0}
+            helperText={!textValue.length ? 'Address Name is required' : ''}
+            label={props.placeholder}
+            onChange={(e) => {
+                settextValue(e.target.value);
+            }}
+            variant="filled"
+            value={textValue} />
+        <h3>Your Enter Value is: {textValue} </h3>
         </Box>
     );
 }

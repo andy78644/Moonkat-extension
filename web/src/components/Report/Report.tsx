@@ -39,7 +39,7 @@ const Report = () =>{
     const [addressName, setAddressName] = useState('');
     const [detail, setDetail] = useState('');
     const handleAddressName = async () => {
-
+        console.log('42: ')
     }
     const handleDetailContract = async () => {
         

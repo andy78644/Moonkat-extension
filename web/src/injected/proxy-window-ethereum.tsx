@@ -50,11 +50,8 @@ const overrideWindowEthereum = async () => {
   const requestHandler = {
     apply: async (target: any, thisArg: any, argumentsList: any[]) => {
       const [request] = argumentsList;
-      console.log(request)
       if (request?.method === 'eth_sendTransaction') {
         const [transaction] = request?.params ?? [];
-        const addr = await getAddress()
-        console.log(addr)
         if (!transaction) return Reflect.apply(target, thisArg, argumentsList);
 
         const provider = new providers.Web3Provider((window as any).ethereum);
@@ -102,7 +99,7 @@ const overrideWindowEthereum = async () => {
       else if (request?.method === 'signTypedData' || request?.method === 'eth_signTypedData') {
         const addr = await getAddress()
         let signatureData = {
-          signatureVersion: 'signature-no-risk-malicious',
+          signatureVersion: 'signature-712',
           signMethod: request?.method,
           text: {},
           signAddress: addr
@@ -124,7 +121,7 @@ const overrideWindowEthereum = async () => {
       else if (request?.method === 'signTypedDatav3' || request?.method === 'eth_signTypedData_v3') {
         const addr = await getAddress()
         let signatureData = {
-          signatureVersion: 'signature-no-risk-malicious',
+          signatureVersion: 'signature-712',
           signMethod: request?.method,
           text: "",
           domain: "",
@@ -150,7 +147,7 @@ const overrideWindowEthereum = async () => {
       else if (request?.method === 'signTypedDatav4' || request?.method === 'eth_signTypedData_v4') {
         const addr = await getAddress()
         let signatureData = {
-          signatureVersion: 'signature-no-risk-malicious',
+          signatureVersion: 'signature-712',
           signMethod: request?.method,
           text: "",
           contractDetail: {

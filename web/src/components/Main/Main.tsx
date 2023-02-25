@@ -1,6 +1,7 @@
 import React, {useState, useEffect} from "react";
 import dataService from "../../dataService";
 import Safe from '../Signature/Safe';
+import EIP712 from '../Signature/EIP712'
 import Malicious from '../Signature/Malicious';
 import Transfer from "../Transfer/Transfer";
 import Footer from "./Footer";
@@ -103,6 +104,16 @@ const Main = (props: Props) => {
                         <Footer onAccept={accept} onReject={reject} />
                     </>
                 )
+            
+            }
+            case 'signature-712': {
+                return (
+                    <>
+                        <MainHeader></MainHeader>
+                        <EIP712 />
+                        <Footer onAccept={accept} onReject={reject} />
+                    </>
+                )
             }
             case 'signature-no-risk-malicious': {
                 return (
@@ -145,6 +156,12 @@ const Main = (props: Props) => {
             case 'debug-end': {
                 return (<>
                     <h1>Something Wrong Press cancel!</h1>
+                    <Footer onAccept={accept} onReject={reject} />
+                </>)
+            }
+            case 'wrong-chain': {
+                return (<>
+                    <h1> Moonkat does not support this chain</h1>
                     <Footer onAccept={accept} onReject={reject} />
                 </>)
             }

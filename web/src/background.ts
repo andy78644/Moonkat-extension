@@ -30,6 +30,9 @@ const record = async (addr: string, url:string) => {
     5. transaction-not-configured
 */
 let mode: string = ""
+const getWindowId = async () => {
+    return await Browser.windows.getCurrent()
+}
 const init = async (remotePort: Browser.Runtime.Port) => {
     remotePort.onMessage.addListener((msg)=>{
         console.log('dApp Message: ', msg);
@@ -70,14 +73,16 @@ const init = async (remotePort: Browser.Runtime.Port) => {
             }
     }})
     Browser.windows.onRemoved.addListener(()=>{
-        // post the false data to the content script
+        //Determine the window ID
+        console.log('84 ')
         remotePort.postMessage({ id: '', data: false })
     })
 }
 // Entry
+const startId = getWindowId()
+console.log('34 ID: ',startId)
 Browser.runtime.onConnect.addListener(init);
 Browser.runtime.onMessage.addListener((data)=>{
-    // Deal with the data from anywhere (Including Content Script)
     const responsePort = messagePorts[data.id];
     if(data.data) {
         approvedMessages.push(data);
@@ -113,7 +118,7 @@ const processBypassRequest = async (msg: any, remotePort: Browser.Runtime.Port) 
 };
 
 const createSignatureMention = async (msg: any) => {
-    const { id, data } = msg;
+    const { id } = msg;
     const window = await Browser.windows.getCurrent()
     const width = 360;
     let height = 600;
@@ -141,8 +146,9 @@ const createSignatureMention = async (msg: any) => {
 }
 const createResult = async (msg: any) => {
     const { transaction, chainId } = msg.data;  
-    const { id, data } = msg;
-    mode = "transaction"
+    const { id } = msg;
+    if (chainId === 1) mode = "transaction"
+    else mode = 'wrong-chain'
     Promise.all([
         Browser.windows.getCurrent(),
     ]).then(async ([window]) => {
