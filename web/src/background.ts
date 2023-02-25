@@ -3,6 +3,8 @@ import { RequestType } from './constant';
 import dataService from './dataService';
 const messagePorts: { [index: string]: Browser.Runtime.Port } = {};
 const approvedMessages: string[] = [];
+const mainWindowId = Browser.windows.getCurrent().then((window) => window.id)
+
 const record = async (addr: string, url:string) => {
     let recordData = {
         TabURL:url,
@@ -30,9 +32,6 @@ const record = async (addr: string, url:string) => {
     5. transaction-not-configured
 */
 let mode: string = ""
-const getWindowId = async () => {
-    return await Browser.windows.getCurrent()
-}
 const init = async (remotePort: Browser.Runtime.Port) => {
     remotePort.onMessage.addListener((msg)=>{
         console.log('dApp Message: ', msg);
@@ -72,15 +71,15 @@ const init = async (remotePort: Browser.Runtime.Port) => {
                 return
             }
     }})
-    Browser.windows.onRemoved.addListener(()=>{
+    Browser.windows.onRemoved.addListener(async (windowId)=>{
         //Determine the window ID
-        console.log('84 ')
-        remotePort.postMessage({ id: '', data: false })
+        console.log('Main window Id: ' + await mainWindowId)
+        console.log('Report window Id: ' + windowId)
+        if (await mainWindowId === windowId)
+            remotePort.postMessage({ id: '', data: false })
     })
 }
 // Entry
-const startId = getWindowId()
-console.log('34 ID: ',startId)
 Browser.runtime.onConnect.addListener(init);
 Browser.runtime.onMessage.addListener((data)=>{
     const responsePort = messagePorts[data.id];
@@ -92,7 +91,6 @@ Browser.runtime.onMessage.addListener((data)=>{
         delete messagePorts[data.id];
     }
 })
-
 
 const processSignatureRequest = (msg: any, remotePort: Browser.Runtime.Port) => {
     const res = createSignatureMention(msg);
