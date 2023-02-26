@@ -6,7 +6,7 @@ const Url = {
   "prod": "https://dev.moonkat.app/"
 }
 const type = process.env.WORK_ENV
-let baseUrl = Url.dev
+let baseUrl = Url.prod
 if (type === 'prod'){
    baseUrl = Url.prod;
 }

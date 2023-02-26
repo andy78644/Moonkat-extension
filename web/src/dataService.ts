@@ -40,7 +40,7 @@ const update = (addr:string, data:contractData) => {
 }
 const postFeedBackByAddress = (feedBack: contractFeedBack) => {
     return new Promise((resolve, reject)=>{
-        http.post(`/report/`, feedBack)
+        http.post(`api/report/`, feedBack)
         .then((res)=>{
             console.log('postFeedBackByAddress Success: ', res.data)
             resolve(res.data)
