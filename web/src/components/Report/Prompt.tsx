@@ -3,34 +3,61 @@ import Browser from "webextension-polyfill";
 import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
 import dataService from "../../dataService";
+import contractFeedBack from "../../types/contractFeedBackType";
 
 interface Props {
+    name: string,
+    description: string,
+    contractAddress: string | null,
     submit: any,
     onSubmit: any
 }
-// const handleReturn = async () => {
-//     setOpen(false)
-//     props.onSubmit(false)
-// }
+
 const Prompt = (props: Props) => {
     const getWindowId = async () => {
         return await Browser.windows.getCurrent()
     }
-    // Submitted -> Continue transaction
+    let reportInfo: string = '';
+
     useEffect(() => {
-        // execute it after 2000 ms of the submit -> true
-        const windowId = getWindowId()
-        setTimeout(async () => {
-            if (windowId){
-                Browser.windows.remove((await windowId).id!)
-            }
-        }, 2000)
+        console.log('Prompt Name is: ' + props.name);
+        console.log('Prompt Description is: ' + props.description);
+
+        reportInfo += "{"
+        reportInfo += `"Provider":"0xdac17f958d2ee523a2206206994597c13d831ec7",`
+        reportInfo += `"Address":"${props.contractAddress}",`
+        reportInfo += `"Category":"hi",`
+        reportInfo += `"Name":"${props.name}",`
+        reportInfo += `"Description":"${props.description}",`
+        reportInfo += `"Tag":["a","b","c"]`
+        reportInfo += "}"
+        reportInfo = JSON.parse(reportInfo)
+        console.log(reportInfo)
+
+        const postReport = async (reportInfo: any) => {
+            await dataService.postFeedBackByAddress(reportInfo)
+                .then(res => {
+                    console.log(`Successfully sumbit the report! ${res}`);
+                    const windowId = getWindowId()
+                    setTimeout(async () => {
+                        if (windowId) {
+                            Browser.windows.remove((await windowId).id!)
+                        }
+                    }, 2000)
+                })
+                .catch((err) => {
+                    console.log(`Fail to sumbit the report! ${err}`);
+                })
+        }
+        postReport(reportInfo)
     }, [props.submit])
+
     const handleClose = async () => {
         const windowId = getWindowId()
         props.onSubmit(false)
         Browser.windows.remove((await windowId).id!)
     };
+
     return (
         <div>
             <Dialog
@@ -51,8 +78,8 @@ const Prompt = (props: Props) => {
                     color: '#434343',
                     fontSize: 18,
                 }}
-                id="alert-dialog-title">
-                {"Report Submitted!"}
+                    id="alert-dialog-title">
+                    {"Report Submitted!"}
                 </DialogTitle>
             </Dialog>
         </div>

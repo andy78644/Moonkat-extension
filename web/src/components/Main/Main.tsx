@@ -70,7 +70,7 @@ const Main = (props: Props) => {
             case 'transaction-assets-exchange': {
                 return (
                     <>
-                        <MainHeader></MainHeader>
+                        <MainHeader transaction={previewTxn}></MainHeader>
                         <ContractInfo mode={mode} contractData={transaction.to}/>
                         <Transfer mode={renderMode} transaction={previewTxn}/>
                         <Footer onAccept={accept} onReject={reject} />
@@ -80,7 +80,7 @@ const Main = (props: Props) => {
             case 'transaction-assets-approval': {
                 return (
                     <>
-                        <MainHeader></MainHeader>
+                        <MainHeader transaction={previewTxn}></MainHeader>
                         <ContractInfo mode={mode} contractData={transaction.to}/>
                         <Transfer mode={renderMode} transaction={previewTxn}/>
                         <Footer onAccept={accept} onReject={reject} />
@@ -90,7 +90,7 @@ const Main = (props: Props) => {
             case 'transaction-not-configured': {
                 return (
                     <>
-                        <MainHeader></MainHeader>
+                        <MainHeader transaction={previewTxn}></MainHeader>
                         <SimulationError />
                         <Footer onAccept={accept} onReject={reject} />
                     </>
@@ -99,7 +99,7 @@ const Main = (props: Props) => {
             case 'signature-no-risk-safe': {
                 return (
                     <>
-                        <MainHeader></MainHeader>
+                        <MainHeader transaction={previewTxn}></MainHeader>
                         <Safe />
                         <Footer onAccept={accept} onReject={reject} />
                     </>
@@ -109,7 +109,7 @@ const Main = (props: Props) => {
             case 'signature-712': {
                 return (
                     <>
-                        <MainHeader></MainHeader>
+                        <MainHeader transaction={previewTxn}></MainHeader>
                         <EIP712 />
                         <Footer onAccept={accept} onReject={reject} />
                     </>
@@ -118,7 +118,7 @@ const Main = (props: Props) => {
             case 'signature-no-risk-malicious': {
                 return (
                     <>
-                        <MainHeader></MainHeader>
+                        <MainHeader transaction={previewTxn}></MainHeader>
                         <Malicious />
                         <Footer onAccept={accept} onReject={reject} />
                     </>
@@ -127,7 +127,7 @@ const Main = (props: Props) => {
             case 'signature-token-approval': {
                 return (
                     <>
-                        <MainHeader></MainHeader>
+                        <MainHeader transaction={previewTxn}></MainHeader>
                         <ContractInfo mode={mode} contractData={transaction.to}/>
                         <Transfer mode={mode} transaction={previewTxn}/>
                         <Footer onAccept={accept} onReject={reject} />
@@ -137,7 +137,7 @@ const Main = (props: Props) => {
             case 'signature-move-assets': {
                 return (
                     <>
-                        <MainHeader></MainHeader>
+                        <MainHeader transaction={previewTxn}></MainHeader>
                         <ContractInfo mode={mode} contractData={transaction.to}/>
                         <Transfer mode={mode} transaction={previewTxn}/>
                         <Footer onAccept={accept} onReject={reject} />
@@ -147,7 +147,7 @@ const Main = (props: Props) => {
             case 'signature-not-configured': {
                 return (
                     <>
-                        <MainHeader></MainHeader>
+                        <MainHeader transaction={previewTxn}></MainHeader>
                         <SignatureError />
                         <Footer onAccept={accept} onReject={reject} />
                     </>

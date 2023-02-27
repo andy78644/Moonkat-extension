@@ -11,7 +11,13 @@ import Browser from 'webextension-polyfill';
 import './MainHeader.css';
 import { color } from '@mui/system';
 
-const MainHeader = () => {
+interface Props {
+    transaction: any;
+}
+
+const MainHeader = (props: Props) => {
+
+    const { transaction } = props;
 
     const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null);
 
@@ -29,13 +35,18 @@ const MainHeader = () => {
         Promise.all([
             Browser.windows.getCurrent(),
         ]).then(async ([window]) => {
+            console.log(`In MainHeader: ${JSON.stringify(transaction)}`)
+            console.log(`address: ${transaction.approve.contractAddress}`)
+            const queryString = new URLSearchParams({
+                address: transaction.approve.contractAddress,
+              }).toString();
             const width = 360;
             const height = 600;
             const left = window.left! + Math.round((window.width! - width) * 0.5);
             const top = window.top! + Math.round((window.height! - height) * 0.2);
         
             await Browser.windows.create({
-              url: `report.html`,
+              url: `report.html?${queryString}`,
               type: 'popup',
               width: width,
               height: height,
