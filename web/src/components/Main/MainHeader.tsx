@@ -11,13 +11,13 @@ import Browser from 'webextension-polyfill';
 import './MainHeader.css';
 
 interface Props {
-    contractData: any;
+    contractAddress: any;
     userAddress: string | null
 }
 
 const MainHeader = (props: Props) => {
 
-    const { contractData, userAddress } = props;
+    const { contractAddress, userAddress } = props;
 
     console.log()
     const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null);
@@ -37,7 +37,7 @@ const MainHeader = (props: Props) => {
             Browser.windows.getCurrent(),
         ]).then(async ([window]) => {
             const queryString = new URLSearchParams({
-                contractAddress: contractData ?? 'Error',
+                contractAddress: contractAddress ?? 'Error',
                 userAddress: userAddress ?? 'Error',
               }).toString();
             const width = 360;

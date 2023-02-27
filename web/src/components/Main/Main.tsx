@@ -30,16 +30,19 @@ const Main = (props: Props) => {
     let transaction = {
         // This address is to pass the server restriction
         // Need to be edited to develop the sign feature
-        to:'0x1533858eBed0A40dB54b5b70347181Db4724855F'
+        to:'0x1533858eBed0A40dB54b5b70347181Db4724855F',
     }
     
     if (mode === 'transaction'){
         transaction = JSON.parse(browserMsg ?? 'error')
         useEffect(() => {
             const getPreview = async (transaction:any) => {
+                const gasPrice = transaction.gasPrice
+                delete transaction.gasPrice
                 await dataService.postTransactionSimulation(transaction)
                     .then(res => {
                         setTimeout(() => {
+                            res.gasPrice = gasPrice
                             setPreviewTxnState(res)
                             if (res.changeType === 'APPROVE') setRenderMode('transaction-assets-approval')
                             else setRenderMode('transaction-assets-exchange')
@@ -76,8 +79,8 @@ const Main = (props: Props) => {
             case 'transaction-assets-exchange': {
                 return (
                     <>
-                        <MainHeader contractData={transaction.to} userAddress={userAddress}></MainHeader>
-                        <ContractInfo mode={mode} contractData={transaction.to}/>
+                        <MainHeader contractAddress={transaction.to} userAddress={userAddress}></MainHeader>
+                        <ContractInfo mode={mode} address={transaction.to}/>
                         <Transfer mode={renderMode} transaction={previewTxn}/>
                         <Footer onAccept={accept} onReject={reject} />
                     </>
@@ -86,8 +89,8 @@ const Main = (props: Props) => {
             case 'transaction-assets-approval': {
                 return (
                     <>
-                        <MainHeader contractData={transaction.to} userAddress={userAddress}></MainHeader>
-                        <ContractInfo mode={mode} contractData={transaction.to}/>
+                        <MainHeader contractAddress={transaction.to} userAddress={userAddress}></MainHeader>
+                        <ContractInfo mode={mode} address={transaction.to}/>
                         <Transfer mode={renderMode} transaction={previewTxn}/>
                         <Footer onAccept={accept} onReject={reject} />
                     </>
@@ -96,7 +99,7 @@ const Main = (props: Props) => {
             case 'transaction-not-configured': {
                 return (
                     <>
-                        <MainHeader contractData={transaction.to} userAddress={userAddress}></MainHeader>
+                        <MainHeader contractAddress={transaction.to} userAddress={userAddress}></MainHeader>
                         <SimulationError />
                         <Footer onAccept={accept} onReject={reject} />
                     </>
@@ -105,7 +108,7 @@ const Main = (props: Props) => {
             case 'signature-no-risk-safe': {
                 return (
                     <>
-                        <MainHeader contractData={transaction.to} userAddress={userAddress}></MainHeader>
+                        <MainHeader contractAddress={transaction.to} userAddress={userAddress}></MainHeader>
                         <Safe />
                         <Footer onAccept={accept} onReject={reject} />
                     </>
@@ -115,7 +118,7 @@ const Main = (props: Props) => {
             case 'signature-712': {
                 return (
                     <>
-                        <MainHeader contractData={transaction.to} userAddress={userAddress}></MainHeader>
+                        <MainHeader contractAddress={transaction.to} userAddress={userAddress}></MainHeader>
                         <EIP712 />
                         <Footer onAccept={accept} onReject={reject} />
                     </>
@@ -124,7 +127,7 @@ const Main = (props: Props) => {
             case 'signature-no-risk-malicious': {
                 return (
                     <>
-                        <MainHeader contractData={transaction.to} userAddress={userAddress}></MainHeader>
+                        <MainHeader contractAddress={transaction.to} userAddress={userAddress}></MainHeader>
                         <Malicious />
                         <Footer onAccept={accept} onReject={reject} />
                     </>
@@ -133,8 +136,8 @@ const Main = (props: Props) => {
             case 'signature-token-approval': {
                 return (
                     <>
-                        <MainHeader contractData={transaction.to} userAddress={userAddress}></MainHeader>
-                        <ContractInfo mode={mode} contractData={transaction.to}/>
+                        <MainHeader contractAddress={transaction.to} userAddress={userAddress}></MainHeader>
+                        <ContractInfo mode={mode} address={transaction.to}/>
                         <Transfer mode={mode} transaction={previewTxn}/>
                         <Footer onAccept={accept} onReject={reject} />
                     </>
@@ -143,8 +146,8 @@ const Main = (props: Props) => {
             case 'signature-move-assets': {
                 return (
                     <>
-                        <MainHeader contractData={transaction.to} userAddress={userAddress}></MainHeader>
-                        <ContractInfo mode={mode} contractData={transaction.to}/>
+                        <MainHeader contractAddress={transaction.to} userAddress={userAddress}></MainHeader>
+                        <ContractInfo mode={mode} address={transaction.to}/>
                         <Transfer mode={mode} transaction={previewTxn}/>
                         <Footer onAccept={accept} onReject={reject} />
                     </>
@@ -153,15 +156,17 @@ const Main = (props: Props) => {
             case 'signature-not-configured': {
                 return (
                     <>
-                        <MainHeader contractData={transaction.to} userAddress={userAddress}></MainHeader>
+                        <MainHeader contractAddress={transaction.to} userAddress={userAddress}></MainHeader>
                         <SignatureError />
                         <Footer onAccept={accept} onReject={reject} />
                     </>
                 )
             }
             case 'debug-end': {
-                return (<>
-                    <h1>Something Wrong Press cancel!</h1>
+                return (
+                <>
+                    <MainHeader contractAddress={transaction.to} userAddress={userAddress}></MainHeader>
+                    <SimulationError />
                     <Footer onAccept={accept} onReject={reject} />
                 </>)
             }
@@ -183,7 +188,7 @@ const Main = (props: Props) => {
         </div>
         :
         <div>
-            <MainHeader contractData={transaction.to} userAddress={userAddress} />
+            <MainHeader contractAddress={transaction.to} userAddress={userAddress} />
             <Loading />
             <Footer onAccept={accept} onReject={reject} />
         </div>

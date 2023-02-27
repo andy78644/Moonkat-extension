@@ -1,6 +1,6 @@
 import { WindowPostMessageStream } from '@metamask/post-message-stream';
 import { ethErrors } from 'eth-rpc-errors';
-import { providers } from 'ethers';
+import { providers, utils } from 'ethers';
 import { Identifier } from '../constant';
 import { sendAndAwaitResponseFromStream } from '../utils';
 
@@ -57,6 +57,11 @@ const overrideWindowEthereum = async () => {
 
         const provider = new providers.Web3Provider((window as any).ethereum);
         const { chainId } = await provider.getNetwork();
+        await provider.getFeeData()
+        .then((feeData)=>{
+          const price = feeData.gasPrice ?? 0
+          transaction.gasPrice = utils.formatUnits(price, "gwei")
+        })
 
         let _val = 'value' in transaction
         if (!_val) transaction.value = '0x0'

@@ -1,11 +1,10 @@
-import React, { useState } from "react";
+import React from "react";
 import List from '@mui/material/List';
 import ListItem from "@mui/material/ListItem";
 import ListItemText from '@mui/material/ListItemText';
 import ListItemButton from '@mui/material/ListItemButton';
-import assetOut from "../../types/assetOutType";
 import ETHIcon from '../../assets/ETH.png'
-import gasFee from '../../assets/gasfee.png'
+import gasFeeIcon from '../../assets/gasfee.png'
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 
 import './AssetsOut.css';
@@ -14,22 +13,24 @@ interface Props {
     contractType: string;
     sendTokens: Array<any>;
     NFTCategoryName: string | null;
-    gas: any;
+    gas: string;
+    gasPrice: string
 }
 
 const AssetsOut = (props: Props) => {
-    const {contractType, sendTokens, NFTCategoryName, gas} = props
+    const {sendTokens, gas, gasPrice} = props
+    const gasFee = parseInt(gas, 16) * parseInt(gasPrice) * 10**(-9)
     const [open, setOpen] = React.useState(false);
     const handleClick = () => {
         setOpen(!open);
     };
     const renderList = () => {
-        console.log(sendTokens)
-        return sendTokens.map((token:any) =>{
+        console.log("Token List: ", sendTokens)
+        return sendTokens.map((token:any, index: number) =>{
                 if(token){
-                return <ListItem key={token.symbol} sx={{
+                return <ListItem key={index} sx={{
                 }}>
-                    <img src={token.tokenURL ?? ETHIcon} alt="Free Mint" />
+                    <img src={token.tokenURL ?? ETHIcon} height="48px" width="48px" alt="Free Mint" />
                     <ListItemText 
                         sx={{
                             fontSize: '20px',
@@ -49,8 +50,7 @@ const AssetsOut = (props: Props) => {
                 }
         });
     }
-  
-//   
+
     return (
         <div id="assetsOut">
             <List sx={{ 
@@ -80,8 +80,9 @@ const AssetsOut = (props: Props) => {
                 </ListItemButton>
                 <hr></hr>
                 {renderList()}
+
                 <ListItem>
-                    <img src={gasFee} alt="gasFee" />
+                    <img src={gasFeeIcon} alt="gasFee" />
                     <ListItemText
                         sx={{
                             fontSize: '20px',
@@ -95,7 +96,7 @@ const AssetsOut = (props: Props) => {
                             textAlign: 'right',
                             color: '#B8463D'
                         }}
-                        primary={parseInt(gas, 16)}
+                        primary={gasFee.toFixed(4)}
                     />
                 </ListItem>
             </List>

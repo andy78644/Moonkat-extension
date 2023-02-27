@@ -116,7 +116,7 @@ const createSignatureMention = async (msg: any) => {
         height = 550
     }
     if(msg.data.signatureData.signatureVersion) mode = msg.data.signatureData.signatureVersion
-    else mode = "signature-not-detected"
+    else mode = "signature-not-configured"
     const left = window.left! + Math.round((window.width! - width) * 0.5);
     const top = window.top! + Math.round((window.height! - height) * 0.2);
     const queryString = new URLSearchParams({

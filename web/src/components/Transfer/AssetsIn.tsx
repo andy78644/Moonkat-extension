@@ -5,7 +5,6 @@ import ListItemText from '@mui/material/ListItemText';
 import ListItemButton from '@mui/material/ListItemButton';
 import ExpandLess from '@mui/icons-material/ExpandLess';
 import ExpandMore from '@mui/icons-material/ExpandMore';
-import monkey1 from '../../assets/monkey1.png'
 import nft from '../../assets/icons8-nft-64.png'
 import Collapse from '@mui/material/Collapse';
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
@@ -27,14 +26,14 @@ const AssetsIn = (props: Props) => {
     };
     const renderList = () => {
         console.log(sendTokens)
-        return sendTokens.map((token:any) =>{
+        return sendTokens.map((token:any, index: number) =>{
                 if(token){
-                return <ListItem key={token.symbol} sx={{
+                return <ListItem key={index} sx={{
                             display: 'flex',
                             justifyContent: 'space-between'
                             }}>
                         <ListItem>
-                        <img src={token.tokenURL ?? monkey1}alt="Free Mint" /></ListItem>
+                        <img src={token.tokenURL ?? nft} height="48px" width="48px" alt="Asset In" /></ListItem>
                         <ListItem>
                         <ListItemText 
                             sx={{
@@ -90,7 +89,7 @@ const AssetsIn = (props: Props) => {
                         justifyContent: 'flex-end'
                     }}>
                         <ListItem>
-                        <img src={sendTokens[0].tokenURL ?? nft} height ="80%" alt="Tokens" /></ListItem>
+                        <img src={sendTokens[0].tokenURL ?? nft} height ="48px" width="48px"alt="Tokens" /></ListItem>
                         <ListItem>
                             {
                                 sendTokens.length === 1 ?<ListItemText 

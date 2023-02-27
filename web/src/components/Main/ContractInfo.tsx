@@ -6,17 +6,17 @@ import './ContractInfo.css'
 
 interface Props {
     mode: string | null,
-    contractData: any
+    address: any
 };
 
 const ContractInfo = (props: Props) => {
-    const { mode, contractData} = props;
+    const { mode, address } = props;
 
     // mock getBasicInfo API response
     const contractInfo = {
         contractName: 'Smart Contract ',
-        contractAddress: contractData ?? 'Error',
-        contractLink: `https://etherscan.io/address/${contractData}`,
+        contractAddress: address ?? 'Error',
+        contractLink: `https://etherscan.io/address/${address}`,
         contractVerification: true
     }
     const { contractName, contractAddress, contractLink, contractVerification} = contractInfo;
