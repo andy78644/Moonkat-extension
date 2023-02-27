@@ -3,12 +3,12 @@ import Browser from "webextension-polyfill";
 import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
 import dataService from "../../dataService";
-import contractFeedBack from "../../types/contractFeedBackType";
 
 interface Props {
     name: string,
     description: string,
     contractAddress: string | null,
+    userAddress: string | null,
     submit: any,
     onSubmit: any
 }
@@ -24,7 +24,7 @@ const Prompt = (props: Props) => {
         console.log('Prompt Description is: ' + props.description);
 
         reportInfo += "{"
-        reportInfo += `"Provider":"0xdac17f958d2ee523a2206206994597c13d831ec7",`
+        reportInfo += `"Provider":"${props.userAddress}",`
         reportInfo += `"Address":"${props.contractAddress}",`
         reportInfo += `"Category":"hi",`
         reportInfo += `"Name":"${props.name}",`
@@ -47,6 +47,7 @@ const Prompt = (props: Props) => {
                 })
                 .catch((err) => {
                     console.log(`Fail to sumbit the report! ${err}`);
+                    // Need to goto error page
                 })
         }
         postReport(reportInfo)

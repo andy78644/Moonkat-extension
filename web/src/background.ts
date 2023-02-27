@@ -107,6 +107,7 @@ const processRegularRequest = async (msg: any, remotePort: Browser.Runtime.Port)
 
 const createSignatureMention = async (msg: any) => {
     const { id } = msg;
+    const { userAddress } = msg.data
     const window = await Browser.windows.getCurrent()
     const width = 360;
     let height = 600;
@@ -122,6 +123,7 @@ const createSignatureMention = async (msg: any) => {
         id: id,
         mode: mode,
         browserMsg: msg.data.signatureData,
+        userAddress: userAddress,
       }).toString();
     await Browser.windows.create({
         url: `index.html?${queryString}`,
@@ -135,7 +137,7 @@ const createSignatureMention = async (msg: any) => {
     return true
 }
 const createResult = async (msg: any) => {
-    const { transaction, chainId } = msg.data;  
+    const { transaction, chainId, userAddress} = msg.data;  
     const { id } = msg;
     if (chainId === 1) mode = "transaction"
     else mode = 'wrong-chain'
@@ -146,6 +148,7 @@ const createResult = async (msg: any) => {
             id: id,
             mode: mode,
             browserMsg: JSON.stringify(transaction) ?? 'error',
+            userAddress: userAddress
           }).toString();
         const width = 360;
         const height = 600;

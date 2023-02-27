@@ -9,16 +9,17 @@ import Button from '@mui/material/Button';
 import Browser from 'webextension-polyfill';
 
 import './MainHeader.css';
-import { color } from '@mui/system';
 
 interface Props {
-    transaction: any;
+    contractData: any;
+    userAddress: string | null
 }
 
 const MainHeader = (props: Props) => {
 
-    const { transaction } = props;
+    const { contractData, userAddress } = props;
 
+    console.log()
     const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null);
 
     const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -35,10 +36,9 @@ const MainHeader = (props: Props) => {
         Promise.all([
             Browser.windows.getCurrent(),
         ]).then(async ([window]) => {
-            console.log(`In MainHeader: ${JSON.stringify(transaction)}`)
-            console.log(`address: ${transaction.approve.contractAddress}`)
             const queryString = new URLSearchParams({
-                address: transaction.approve.contractAddress,
+                contractAddress: contractData ?? 'Error',
+                userAddress: userAddress ?? 'Error',
               }).toString();
             const width = 360;
             const height = 600;

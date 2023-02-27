@@ -35,16 +35,15 @@ const tagExample1: any[] = [
 
 const Report = () => {
 
-    const contractAddress = params.get('address');
-    console.log("contract" + contractAddress)
+    const contractAddress = params.get('contractAddress');
+    const userAddress = params.get('userAddress');
+    console.log("contractAddress: " + contractAddress)
+    console.log("userAddress: " + userAddress)
 
     const [reportFlow, setReportFlow] = useState(0);
     const [isPrompt, setPrompt] = useState(false);
     const [reportName, setReportName] = useState('')
     const [reportDescription, setReportDescription] = useState('')
-    const handleAddressName = async () => {
-        console.log('42: ')
-    }
     const handleSubmit = async () => {
         setPrompt(true)
     }
@@ -61,6 +60,7 @@ const Report = () => {
                     <Prompt 
                         name={reportName}
                         contractAddress={contractAddress}
+                        userAddress={userAddress}
                         description={reportDescription}
                         submit={isPrompt} 
                         onSubmit={setPrompt} 
@@ -73,7 +73,7 @@ const Report = () => {
             <ReportForm onTextValue={handleReportName} placeholder="What's the address Name?" formHeight={50} />
             <div id="reportMalicious">
                 <CampaignIcon id="reportCampaignIcon" /> &nbsp;
-                <div id="reportMaliciousContent">This is a malicious contract.</div>
+                <div id="reportMaliciousContent">Is this a malicious contract ?</div>
             </div>
             <Stack sx={{ marginLeft: 0.5, marginRight: 0.5 }} spacing={3} direction="row">
                 <Button sx={{

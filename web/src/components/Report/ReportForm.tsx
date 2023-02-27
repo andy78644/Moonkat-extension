@@ -35,7 +35,6 @@ const ReportForm = (props: Props) => {
             }}
             variant="filled"
             value={textValue} />
-        <h3>Your Enter Value is: {textValue} </h3>
         </Box>
     );
 }

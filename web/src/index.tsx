@@ -15,5 +15,6 @@ root.render(
         id={params.get("id")}
         mode={params.get("mode")??''}
         browserMsg={params.get("browserMsg")}
+        userAddress={params.get("userAddress")}
     />
 );
