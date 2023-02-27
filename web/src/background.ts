@@ -109,8 +109,8 @@ const createSignatureMention = async (msg: any) => {
     const { id } = msg;
     const { userAddress } = msg.data
     const window = await Browser.windows.getCurrent()
-    const width = 360;
-    let height = 600;
+    const width = 400;
+    let height = 700;
     // change mode in the signature 
     if (mode === "signature-token-approval" || mode === "signature-move-assets") {
         height = 550
@@ -150,8 +150,8 @@ const createResult = async (msg: any) => {
             browserMsg: JSON.stringify(transaction) ?? 'error',
             userAddress: userAddress
           }).toString();
-        const width = 360;
-        const height = 600;
+        const width = 400;
+        const height = 700;
         const left = window.left! + Math.round((window.width! - width) * 0.5);
         const top = window.top! + Math.round((window.height! - height) * 0.2);
     

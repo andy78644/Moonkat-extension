@@ -39,16 +39,19 @@ const Main = (props: Props) => {
             const getPreview = async (transaction:any) => {
                 await dataService.postTransactionSimulation(transaction)
                     .then(res => {
-                        setPreviewTxnState(res)
-                        if (res.changeType === 'APPROVE') setRenderMode('transaction-assets-approval')
-                        else setRenderMode('transaction-assets-exchange')
-                        setHasLoaded(true)
+                        setTimeout(() => {
+                            setPreviewTxnState(res)
+                            if (res.changeType === 'APPROVE') setRenderMode('transaction-assets-approval')
+                            else setRenderMode('transaction-assets-exchange')
+                            setHasLoaded(true)
+                        }, 3000)
                     })
                     .catch((err)=>{
-                        //setRenderMode('Server Down Page')
-                        setRenderMode("debug-end")
-                        setHasLoaded(true)
-                        console.log('Server is down: ', err.message)
+                        setTimeout(() => {
+                            setRenderMode("debug-end")
+                            setHasLoaded(true)
+                            console.log('Server is down: ', err.message)
+                        }, 3000)
                     })
             }
             getPreview(transaction)
@@ -174,12 +177,16 @@ const Main = (props: Props) => {
     return (
     <div>
         {
-        hasLoaded?
+        hasLoaded ?
         <div>
             {renderCurrentSelection(renderMode)}
         </div>
         :
-        <Loading />
+        <div>
+            <MainHeader />
+            <Loading />
+            <Footer onAccept={accept} onReject={reject} />
+        </div>
         }
     </div>)
 }

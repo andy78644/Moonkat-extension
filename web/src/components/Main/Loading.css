@@ -1,0 +1,31 @@
+#loading {
+    height: 100%
+}
+
+#loadingFrame {
+    font-family: 'Lato';
+    font-weight: 700;
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 178px;
+    margin-bottom: 178px;
+    padding-top: 16px;
+    background-color: #FFF8EA;
+    font-size: 20px;
+    width: 80%;
+    height: 30%;
+    border: 2px solid #DFD8CA;
+    border-radius: 8px;
+}
+
+#simulating {
+    padding: 16px 0px;
+}
+
+#loadingSloth {
+    margin-left: auto;
+    margin-right: auto;
+    width: 246px;
+    height: 113px;
+}
