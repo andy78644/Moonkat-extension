@@ -183,7 +183,7 @@ const Main = (props: Props) => {
         </div>
         :
         <div>
-            <MainHeader />
+            <MainHeader contractData={transaction.to} userAddress={userAddress} />
             <Loading />
             <Footer onAccept={accept} onReject={reject} />
         </div>

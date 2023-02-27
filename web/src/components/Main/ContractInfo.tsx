@@ -14,7 +14,7 @@ const ContractInfo = (props: Props) => {
 
     // mock getBasicInfo API response
     const contractInfo = {
-        contractName: 'BAYC',
+        contractName: 'Smart Contract ',
         contractAddress: contractData ?? 'Error',
         contractLink: `https://etherscan.io/address/${contractData}`,
         contractVerification: true

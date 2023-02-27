@@ -11,7 +11,7 @@ const Malicious = () => {
             <div id="maliciousTitle"> 
                 <img id="maliciousCheckImage" src={maliciousErrorImage} alt="maliciousErrorImage" />
                 &nbsp; 
-                EIP712
+                Need Notice !
                 May Involve Asset Transfer
             </div>
             <div id="maliciousContent">

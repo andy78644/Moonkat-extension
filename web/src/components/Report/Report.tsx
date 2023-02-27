@@ -86,7 +86,7 @@ const Report = () => {
                     backgroundColor: "#DFD8C9",
                     fontWeight: "500",
                     width: '50%'
-                }} variant="text">Yes</Button>
+                }} onClick={() => { setReportFlow(1) }} variant="text">Yes</Button>
                 <Button sx={{
                     color: '#434343',
                     '&:hover, &:focus': {
@@ -103,7 +103,7 @@ const Report = () => {
             {
                 reportFlow == 1 &&
                 <div>
-                    <div id="reportMoreTags">
+                    {/* <div id="reportMoreTags">
                         <LocalOfferIcon id="reportLocalOfferIcon" /> &nbsp;
                         <div id="reportMoreTagsContent"> More related tags about the contract </div>
                     </div>
@@ -123,7 +123,7 @@ const Report = () => {
                     }}
                         startIcon={<AddIcon />}
                         variant="text">ADD TAGS</Button>
-                    <TagBar tags={tagExample1} tagDisable={false} />
+                    <TagBar tags={tagExample1} tagDisable={false} /> */}
                     <div id="reportMoreDetails">
                         <FeedbackIcon id="reportFeedbackIcon" /> &nbsp;
                         <div id="reportMoreDetailsContent"> More detail about the contract </div>
