@@ -15,9 +15,11 @@ const Footer = (props: Props) => {
         <div>
             <Stack sx={{
                 width: '100%',
-                backgroundColor: '#FFF8EA',
-                marginTop: '16px',
-                padding: '16px'
+                backgroundColor: '#DFD8CA',
+                padding: '16px',
+                position: 'fixed',
+                left: 0,
+                bottom: 0
             }}
                 direction="row"
                 spacing='8px'
@@ -29,7 +31,8 @@ const Footer = (props: Props) => {
                     borderWidth: '2px',
                     color: '#77736A',
                     outlineColor: '#77736A',
-                    padding: '6px',
+                    py: '3px',
+                    marginRight: '8px'
                 }}
                     onClick={onReject}
                     >
@@ -40,7 +43,8 @@ const Footer = (props: Props) => {
                     borderRadius: '48px',
                     color: '#DFD8C9',
                     backgroundColor: '#77736A',
-                    padding: '6px',
+                    py: '3px',
+                    marginLeft: '8px'
                 }}
                     onClick={onAccept}
                 >

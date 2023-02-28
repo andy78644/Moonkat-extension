@@ -3,3 +3,10 @@
     border-radius: 8px;
     background-color: #FFF8EA;
 }
+
+#assetsApproveTitle {
+    font-family: Lato, sans-serif;
+    font-size: 20px;
+    padding-top: 4px;
+    padding-bottom: 10px;
+}

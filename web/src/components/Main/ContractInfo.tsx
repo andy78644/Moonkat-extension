@@ -1,6 +1,7 @@
 import React from "react";
 import IconButton from "@mui/material/IconButton";
 import LinkIcon from '@mui/icons-material/OpenInNew';
+import VerifiedIcon from '@mui/icons-material/Verified';
 
 import './ContractInfo.css'
 
@@ -19,20 +20,32 @@ const ContractInfo = (props: Props) => {
         contractLink: `https://etherscan.io/address/${address}`,
         contractVerification: true
     }
-    const { contractName, contractAddress, contractLink } = contractInfo;
+    const { contractName, contractAddress, contractLink, contractVerification } = contractInfo;
 
     const truncatedAddress = contractAddress.slice(0, 6) + '....' + contractAddress.slice(-4);
-    
+
+    const isVerified = (contractVerification === true) ? "primary" : undefined;
+
     return (
         <div id="contractInfo">
             {
                 mode === 'asset exchange' ?
-                <div id="infoText"> Interacting with <u>{contractName}</u> </div> :
-                <div id="infoText"> Giving approval to <u>{contractName}</u> </div>
+                    <div id="infoText">
+                        Interacting with <u>{contractName}</u>
+                        <IconButton href={contractLink} target="_blank">
+                            <VerifiedIcon color={isVerified} sx={{ fontSize: 25, paddingBottom: 0.5 }} />
+                        </IconButton>
+                    </div> :
+                    <div id="infoText">
+                        Giving approval to <u>{contractName}</u>
+                        <IconButton href={contractLink} target="_blank">
+                            <VerifiedIcon color={isVerified} sx={{ fontSize: 25, paddingBottom: 0.5 }} />
+                        </IconButton>
+                    </div>
             }
             <div id="contractText"> Contract &nbsp; ({truncatedAddress})
                 <IconButton href={contractLink} target="_blank">
-                    <LinkIcon sx={{ fontSize: 16, paddingBottom: 0.3 }}/> 
+                    <LinkIcon sx={{ fontSize: 18, paddingBottom: 0.3 }} />
                 </IconButton>
             </div>
         </div>
