@@ -14,7 +14,7 @@ root.render(
     <Main
         id={params.get("id")}
         mode={params.get("mode")??''}
-        browserMsg={params.get("browserMsg")}
+        browserMsg={params.get("browserMsg")??''}
         userAddress={params.get("userAddress")}
     />
 );

@@ -3,8 +3,8 @@ import List from '@mui/material/List';
 import ListItem from "@mui/material/ListItem";
 import ListItemText from '@mui/material/ListItemText';
 import ListItemButton from '@mui/material/ListItemButton';
-import ETHIcon from '../../assets/ETH.png'
 import gasFeeIcon from '../../assets/gasfee.png'
+import nft from '../../assets/icons8-nft-64.png'
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 
 import './AssetsOut.css';
@@ -26,11 +26,11 @@ const AssetsOut = (props: Props) => {
     };
     const renderList = () => {
         console.log("Token List: ", sendTokens)
-        return sendTokens.map((token:any, index: number) =>{
+        return sendTokens.map((token:any) =>{
                 if(token){
-                return <ListItem key={index} sx={{
+                return <ListItem key={token} sx={{
                 }}>
-                    <img src={token.tokenURL ?? ETHIcon} height="48px" width="48px" alt="Free Mint" />
+                    <img src={token.tokenURL ?? nft} height="48px" width="48px" alt="Free Mint" />
                     <ListItemText 
                         sx={{
                             fontSize: '20px',

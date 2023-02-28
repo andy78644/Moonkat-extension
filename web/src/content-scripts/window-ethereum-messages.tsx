@@ -21,7 +21,4 @@ dataStream.on('data', (data) => {
         }
         dataStream.write({ id: data.id, data: response });
     })
-    .catch((err) => {
-        dataStream.off
-    })
 });

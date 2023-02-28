@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React from 'react'
 import maliciousImage from '../../assets/maliciousImage.png'
 import maliciousErrorImage from '../../assets/maliciousErrorImage.png'
 

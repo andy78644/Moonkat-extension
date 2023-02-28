@@ -32,7 +32,6 @@ const record = async (addr: string, url:string) => {
 */
 let mode: string = ""
 const init = async (remotePort: Browser.Runtime.Port) => {
-    // const mainWindowId = await Browser.windows.getCurrent().then((window) => window.id)
     let opWinId = 0
     remotePort.onMessage.addListener((msg)=>{
         console.log('dApp Message: ', msg);
@@ -122,7 +121,7 @@ const createSignatureMention = async (msg: any) => {
     const queryString = new URLSearchParams({
         id: id,
         mode: mode,
-        browserMsg: msg.data.signatureData,
+        browserMsg: msg.data.signatureData ?? '',
         userAddress: userAddress,
       }).toString();
     await Browser.windows.create({
@@ -147,7 +146,7 @@ const createResult = async (msg: any) => {
         const queryString = new URLSearchParams({
             id: id,
             mode: mode,
-            browserMsg: JSON.stringify(transaction) ?? 'error',
+            browserMsg: JSON.stringify(transaction) ?? '',
             userAddress: userAddress
           }).toString();
         const width = 400;

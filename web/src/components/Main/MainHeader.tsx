@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import Logo from '../../assets/logo.png';
 import Union from '../../assets/Union.png';
 import Setting from '../../assets/setting.png';

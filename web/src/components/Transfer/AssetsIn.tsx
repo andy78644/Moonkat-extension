@@ -19,7 +19,7 @@ interface Props {
 }
 
 const AssetsIn = (props: Props) => {
-    const {contractType, sendTokens, NFTCategoryName} = props
+    const { sendTokens } = props
     const [open, setOpen] = React.useState(false);
     const handleClick = () => {
         setOpen(!open);
@@ -28,7 +28,7 @@ const AssetsIn = (props: Props) => {
         console.log(sendTokens)
         return sendTokens.map((token:any, index: number) =>{
                 if(token){
-                return <ListItem key={index} sx={{
+                return <ListItem key={token} sx={{
                             display: 'flex',
                             justifyContent: 'space-between'
                             }}>

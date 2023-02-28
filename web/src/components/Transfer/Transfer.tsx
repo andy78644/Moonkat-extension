@@ -1,4 +1,4 @@
-import React,{useState, useEffect} from 'react';
+import React,{useState} from 'react';
 import TransferHeader from './TransferHeader';
 import AssetsIn from './AssetsIn';
 import AssetsOut from './AssetsOut';

@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React from 'react';
 import List from '@mui/material/List';
 import ListItem from "@mui/material/ListItem";
 import ListItemText from '@mui/material/ListItemText';
@@ -15,7 +15,7 @@ interface Props {
 }
 
 const AssetsApprove = (props: Props) => {
-    const {contractType, sendTokens, NFTCategoryName} = props
+    const { sendTokens } = props
     const [open, setOpen] = React.useState(false);
     const handleClick = () => {
         setOpen(!open);

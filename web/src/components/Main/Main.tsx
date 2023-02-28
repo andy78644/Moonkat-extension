@@ -16,8 +16,8 @@ import './Main.css'
 
 interface Props {
     id: string | null;
-    mode: string | 'Error';
-    browserMsg: string | null;
+    mode: string | '';
+    browserMsg: string | '';
     userAddress: string | null;
 };
 
@@ -32,13 +32,18 @@ const Main = (props: Props) => {
         // Need to be edited to develop the sign feature
         to:'0x1533858eBed0A40dB54b5b70347181Db4724855F',
     }
-    
-    if (mode === 'transaction'){
-        transaction = JSON.parse(browserMsg ?? 'error')
-        useEffect(() => {
+    useEffect(()=>{
+        if (mode === 'transaction'){
+            if(!transaction) {
+                setRenderMode("debug-end")
+                setHasLoaded(true)
+            }
+            transaction = JSON.parse(browserMsg)
             const getPreview = async (transaction:any) => {
                 const gasPrice = transaction.gasPrice
                 delete transaction.gasPrice
+                transaction.maxFeePerGas = '0x0'
+                transaction.maxPriorityFeePerGas = '0x0'
                 await dataService.postTransactionSimulation(transaction)
                     .then(res => {
                         setTimeout(() => {
@@ -53,19 +58,18 @@ const Main = (props: Props) => {
                         setTimeout(() => {
                             setRenderMode("debug-end")
                             setHasLoaded(true)
-                            console.log('Server is down: ', err.message)
+                            console.log('Simulation Failed: ', err.message)
                         }, 3000)
                     })
             }
             getPreview(transaction)
-        }, [])
-        console.log('PreviewTxn: ', JSON.stringify(previewTxn))
-    }
-    else{
-        useEffect(() => {
-        setRenderMode(mode)
-        setHasLoaded(true)})
-    }  
+            console.log('PreviewTxn: ', JSON.stringify(previewTxn))
+        }
+        else{
+            setRenderMode(mode)
+            setHasLoaded(true)
+        }  
+    })
     // Close extension
     const extensionResponse = async (data: boolean) => {
         await Browser.runtime.sendMessage(undefined, { id, data });
@@ -76,106 +80,106 @@ const Main = (props: Props) => {
 
     const renderCurrentSelection = (renderMode: string | null) => {
         switch (renderMode) {
-            case 'transaction-assets-exchange': {
-                return (
-                    <>
-                        <MainHeader contractAddress={transaction.to} userAddress={userAddress}></MainHeader>
-                        <ContractInfo mode={mode} address={transaction.to}/>
-                        <Transfer mode={renderMode} transaction={previewTxn}/>
-                        <Footer onAccept={accept} onReject={reject} />
-                    </>
-                )
-            }
-            case 'transaction-assets-approval': {
-                return (
-                    <>
-                        <MainHeader contractAddress={transaction.to} userAddress={userAddress}></MainHeader>
-                        <ContractInfo mode={mode} address={transaction.to}/>
-                        <Transfer mode={renderMode} transaction={previewTxn}/>
-                        <Footer onAccept={accept} onReject={reject} />
-                    </>
-                )
-            }
-            case 'transaction-not-configured': {
-                return (
+                case 'transaction-assets-exchange': {
+                    return (
+                        <>
+                            <MainHeader contractAddress={transaction.to} userAddress={userAddress}></MainHeader>
+                            <ContractInfo mode={mode} address={transaction.to}/>
+                            <Transfer mode={renderMode} transaction={previewTxn}/>
+                            <Footer onAccept={accept} onReject={reject} />
+                        </>
+                    )
+                }
+                case 'transaction-assets-approval': {
+                    return (
+                        <>
+                            <MainHeader contractAddress={transaction.to} userAddress={userAddress}></MainHeader>
+                            <ContractInfo mode={mode} address={transaction.to}/>
+                            <Transfer mode={renderMode} transaction={previewTxn}/>
+                            <Footer onAccept={accept} onReject={reject} />
+                        </>
+                    )
+                }
+                case 'transaction-not-configured': {
+                    return (
+                        <>
+                            <MainHeader contractAddress={transaction.to} userAddress={userAddress}></MainHeader>
+                            <SimulationError />
+                            <Footer onAccept={accept} onReject={reject} />
+                        </>
+                    )
+                }
+                case 'signature-no-risk-safe': {
+                    return (
+                        <>
+                            <MainHeader contractAddress={transaction.to} userAddress={userAddress}></MainHeader>
+                            <Safe />
+                            <Footer onAccept={accept} onReject={reject} />
+                        </>
+                    )
+
+                }
+                case 'signature-712': {
+                    return (
+                        <>
+                            <MainHeader contractAddress={transaction.to} userAddress={userAddress}></MainHeader>
+                            <EIP712 />
+                            <Footer onAccept={accept} onReject={reject} />
+                        </>
+                    )
+                }
+                case 'signature-no-risk-malicious': {
+                    return (
+                        <>
+                            <MainHeader contractAddress={transaction.to} userAddress={userAddress}></MainHeader>
+                            <Malicious />
+                            <Footer onAccept={accept} onReject={reject} />
+                        </>
+                    )
+                }
+                case 'signature-token-approval': {
+                    return (
+                        <>
+                            <MainHeader contractAddress={transaction.to} userAddress={userAddress}></MainHeader>
+                            <ContractInfo mode={mode} address={transaction.to}/>
+                            <Transfer mode={mode} transaction={previewTxn}/>
+                            <Footer onAccept={accept} onReject={reject} />
+                        </>
+                    )
+                }
+                case 'signature-move-assets': {
+                    return (
+                        <>
+                            <MainHeader contractAddress={transaction.to} userAddress={userAddress}></MainHeader>
+                            <ContractInfo mode={mode} address={transaction.to}/>
+                            <Transfer mode={mode} transaction={previewTxn}/>
+                            <Footer onAccept={accept} onReject={reject} />
+                        </>
+                    )
+                }
+                case 'signature-not-configured': {
+                    return (
+                        <>
+                            <MainHeader contractAddress={transaction.to} userAddress={userAddress}></MainHeader>
+                            <SignatureError />
+                            <Footer onAccept={accept} onReject={reject} />
+                        </>
+                    )
+                }
+                case 'debug-end': {
+                    return (
                     <>
                         <MainHeader contractAddress={transaction.to} userAddress={userAddress}></MainHeader>
                         <SimulationError />
                         <Footer onAccept={accept} onReject={reject} />
-                    </>
-                )
-            }
-            case 'signature-no-risk-safe': {
-                return (
-                    <>
-                        <MainHeader contractAddress={transaction.to} userAddress={userAddress}></MainHeader>
-                        <Safe />
+                    </>)
+                }
+                case 'wrong-chain': {
+                    return (<>
+                        <h1> Moonkat does not support this chain</h1>
                         <Footer onAccept={accept} onReject={reject} />
-                    </>
-                )
-            
-            }
-            case 'signature-712': {
-                return (
-                    <>
-                        <MainHeader contractAddress={transaction.to} userAddress={userAddress}></MainHeader>
-                        <EIP712 />
-                        <Footer onAccept={accept} onReject={reject} />
-                    </>
-                )
-            }
-            case 'signature-no-risk-malicious': {
-                return (
-                    <>
-                        <MainHeader contractAddress={transaction.to} userAddress={userAddress}></MainHeader>
-                        <Malicious />
-                        <Footer onAccept={accept} onReject={reject} />
-                    </>
-                )
-            }
-            case 'signature-token-approval': {
-                return (
-                    <>
-                        <MainHeader contractAddress={transaction.to} userAddress={userAddress}></MainHeader>
-                        <ContractInfo mode={mode} address={transaction.to}/>
-                        <Transfer mode={mode} transaction={previewTxn}/>
-                        <Footer onAccept={accept} onReject={reject} />
-                    </>
-                )
-            }
-            case 'signature-move-assets': {
-                return (
-                    <>
-                        <MainHeader contractAddress={transaction.to} userAddress={userAddress}></MainHeader>
-                        <ContractInfo mode={mode} address={transaction.to}/>
-                        <Transfer mode={mode} transaction={previewTxn}/>
-                        <Footer onAccept={accept} onReject={reject} />
-                    </>
-                )
-            }
-            case 'signature-not-configured': {
-                return (
-                    <>
-                        <MainHeader contractAddress={transaction.to} userAddress={userAddress}></MainHeader>
-                        <SignatureError />
-                        <Footer onAccept={accept} onReject={reject} />
-                    </>
-                )
-            }
-            case 'debug-end': {
-                return (
-                <>
-                    <MainHeader contractAddress={transaction.to} userAddress={userAddress}></MainHeader>
-                    <SimulationError />
-                    <Footer onAccept={accept} onReject={reject} />
-                </>)
-            }
-            case 'wrong-chain': {
-                return (<>
-                    <h1> Moonkat does not support this chain</h1>
-                    <Footer onAccept={accept} onReject={reject} />
-                </>)
-            }
+                    </>)
+                }
             }
     }
     

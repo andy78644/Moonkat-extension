@@ -19,7 +19,7 @@ const ContractInfo = (props: Props) => {
         contractLink: `https://etherscan.io/address/${address}`,
         contractVerification: true
     }
-    const { contractName, contractAddress, contractLink, contractVerification} = contractInfo;
+    const { contractName, contractAddress, contractLink } = contractInfo;
 
     const truncatedAddress = contractAddress.slice(0, 6) + '....' + contractAddress.slice(-4);
     
