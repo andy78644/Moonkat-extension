@@ -1,11 +1,41 @@
 #safe {
-    margin: 106.5px 16px 106.5px 16px;
+    margin: 150px 16px 20px 16px;
     text-align: center;
     background-color: #FFF8EA;
     border-style: solid;
     border-radius: 8px;
     border-color: #DFD8CA;
     border-width: 2px;
+}
+
+@media (max-width: 500px) {
+    #safe {
+        margin-top: 220px;
+    }
+}
+
+@media (max-width: 450px) {
+    #safe {
+        margin-top: 170px;
+    }
+}
+
+@media (max-width: 400px) {
+    #safe {
+        margin-top: 150px;
+    }
+}
+
+@media (max-width: 364px) {
+    #safe {
+        margin-top: 110px;
+    }
+}
+
+@media (max-width: 320px) {
+    #safe {
+        margin-top: 60px;
+    }
 }
 
 #safeImage {
