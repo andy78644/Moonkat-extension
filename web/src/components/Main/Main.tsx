@@ -18,12 +18,13 @@ interface Props {
     id: string | null;
     mode: string | '';
     browserMsg: string | '';
+    gasPrice: string | '';
     userAddress: string | null;
 };
 
 
 const Main = (props: Props) => {
-    const { id, mode, browserMsg, userAddress } = props;
+    const { id, mode, browserMsg, userAddress, gasPrice} = props;
     // This address is to pass the server restriction
     // Need to be edited to develop the sign feature
     const [previewTxn, setPreviewTxnState] = useState({to:'0x1533858eBed0A40dB54b5b70347181Db4724855F'})
@@ -37,18 +38,21 @@ const Main = (props: Props) => {
                 setHasLoaded(true)
             }
             const getPreview = async (transaction: any) => {
-                const gasPrice = transaction.gasPrice
-                delete transaction.gasPrice
-                transaction.maxFeePerGas = '0x0'
-                transaction.maxPriorityFeePerGas = '0x0'
+                // const gasPrice = 0
+                // const tmpFPG = transaction.maxFeePerGas
+                // const tmpPFPG = transaction.maxPriorityFeePerGas
+                // delete transaction.gasPrice
+                // transaction.maxFeePerGas = '0x0'
+                // transaction.maxPriorityFeePerGas = '0x0'
                 await dataService.postTransactionSimulation(transaction)
                     .then(res => {
                         res.gasPrice = gasPrice
                         res.to = transaction.to
+                        // res.maxFeePerGa  s = tmpFPG
+                        // res.maxPriorityFeePerGas = tmpPFPG
                         setPreviewTxnState(res)
                         if (res.changeType === 'APPROVE') setRenderMode('transaction-assets-approval')
                         else setRenderMode('transaction-assets-exchange')
-                        console.log('PreviewTxn: ', JSON.stringify(previewTxn))
                         setHasLoaded(true)
                     })
                     .catch((err) => {
@@ -56,6 +60,8 @@ const Main = (props: Props) => {
                             setHasLoaded(true)
                             console.log('Simulation Failed: ', err.message)
                     })
+                delete transaction.maxFeePerGas
+                delete transaction.maxPriorityFeePerGas
             }
             getPreview(transaction)
         }

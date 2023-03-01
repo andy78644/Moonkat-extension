@@ -136,7 +136,7 @@ const createSignatureMention = async (msg: any) => {
     return true
 }
 const createResult = async (msg: any) => {
-    const { transaction, chainId, userAddress} = msg.data;  
+    const { transaction, chainId, userAddress, gasPrice} = msg.data;  
     const { id } = msg;
     if (chainId === 1) mode = "transaction"
     else mode = 'wrong-chain'
@@ -147,7 +147,8 @@ const createResult = async (msg: any) => {
             id: id,
             mode: mode,
             browserMsg: JSON.stringify(transaction) ?? '',
-            userAddress: userAddress
+            userAddress: userAddress,
+            gasPrice: gasPrice ?? ''
           }).toString();
         const width = 400;
         const height = 700;

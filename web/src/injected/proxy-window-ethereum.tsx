@@ -57,15 +57,16 @@ const overrideWindowEthereum = async () => {
 
         const provider = new providers.Web3Provider((window as any).ethereum);
         const { chainId } = await provider.getNetwork();
+        let gasPrice
         await provider.getFeeData()
         .then((feeData)=>{
           const price = feeData.gasPrice ?? 0
-          transaction.gasPrice = utils.formatUnits(price, "gwei")
+          gasPrice = utils.formatUnits(price, "gwei")
         })
 
         let _val = 'value' in transaction
         if (!_val) transaction.value = '0x0'
-        const isOk = await sendAndAwaitResponseFromStream(stream, { transaction, chainId, userAddress});
+        const isOk = await sendAndAwaitResponseFromStream(stream, { transaction, chainId, userAddress, gasPrice});
 
         if (!isOk) {
           throw ethErrors.provider.userRejectedRequest('Moonkat: User denied transaction.');
