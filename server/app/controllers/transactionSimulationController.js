@@ -1,9 +1,14 @@
 require('dotenv').config()
 
+const sleep = (ms) => {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
 const getAssetData = async (change, txn) => {
   if (txn.assetType === 'ERC20' || txn.assetType === 'NATIVE'){
     change.amount = Number(txn.amount).toFixed(4);
     change.tokenURL = txn.logo
+    change.name = txn.name
   }
   else{
     await fetch(`https://eth-mainnet.g.alchemy.com/v2/${process.env.ALCHEMY_API_KEY}\n
@@ -52,7 +57,8 @@ const transferHandler = async (txn) => {
     symbol:"",
     tokenURL:"",
     osVerified:"",
-    tokenId:null
+    tokenId:null,
+    name:""
   }
   asset.type = txn.assetType
   asset.symbol = txn.symbol
@@ -62,7 +68,6 @@ const transferHandler = async (txn) => {
 }
 
 exports.sendTransaction = async (req, res) => {
-    //todo: define the user address
     const from = req.body.from
     let transactionInfo = {
       changeType:"",
@@ -84,11 +89,13 @@ exports.sendTransaction = async (req, res) => {
           ]
         })
     };
+
     await fetch(`https://eth-mainnet.g.alchemy.com/v2/${process.env.ALCHEMY_API_KEY}`, options)
     .then((response) => 
         response.json()
     )
     .then(async response => {
+        await sleep(3000)
         console.log('Simulation Response: ', response)
         if(response.error){
           res.status(500).send({
@@ -98,7 +105,7 @@ exports.sendTransaction = async (req, res) => {
         }
         const result = response.result
         transactionInfo.gas = result.gasUsed
-        new Promise (async (resolve, reject)=>{
+        let r = new Promise (async (resolve, reject)=>{
           for ( let changeObj of result.changes){
             if(changeObj.from === from){
               if (changeObj.changeType === 'APPROVE'){

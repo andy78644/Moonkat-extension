@@ -24,17 +24,16 @@ const AssetsIn = (props: Props) => {
     const handleClick = () => {
         setOpen(!open);
     };
+    console.log("In Tokens: ", sendTokens)
     const renderList = () => {
-        console.log(sendTokens)
-        return sendTokens.map((token:any, index: number) =>{
-                if(token){
+        return sendTokens.map((token:any) =>{
+                if(token){  
                 return <ListItem key={token} sx={{
                             display: 'flex',
                             justifyContent: 'space-between'
                             }}>
                         <ListItem>
-                        <img src={token.tokenURL ?? nft} height="48px" width="48px" alt="Asset In" /></ListItem>
-                        <ListItem>
+                        <img src={token.tokenURL ?? nft} height="48px" width="48px" alt="Asset In" />
                         <ListItemText 
                             sx={{
                                 fontSize: '20px',
@@ -83,37 +82,48 @@ const AssetsIn = (props: Props) => {
                         primary={sendTokens[0].name}
                     />
                 </ListItem>
-                <Collapse in={!open} timeout="auto" unmountOnExit>
+                { sendTokens.length === 1 ? 
+                    <ListItem>
+                    <img src={sendTokens[0].tokenURL ?? nft} height ="48px" width="48px"alt="Tokens" />
+                    <ListItemText 
+                        sx={{
+                            fontSize: '20px',
+                            textAlign: 'right',
+                            color: '#509A57'
+                        }}
+                        primary={`${sendTokens[0].amount}${sendTokens[0].symbol}`}
+                    />
+                    </ListItem>
+                    :
                     <ListItem sx={{
+                        width: '100%',
+                        display: 'flex',
+                    }}>
+                        <Collapse in={!open} timeout="auto" unmountOnExit sx={{
+                        width: '100%',
                         display: 'flex',
                         justifyContent: 'flex-end'
                     }}>
-                        <ListItem>
-                        <img src={sendTokens[0].tokenURL ?? nft} height ="48px" width="48px"alt="Tokens" /></ListItem>
-                        <ListItem>
-                            {
-                                sendTokens.length === 1 ?<ListItemText 
-                                sx={{
-                                    fontSize: '20px',
-                                    textAlign: 'right',
-                                    color: '#509A57'
-                                }}
-                                primary={`${sendTokens[0].amount}${sendTokens[0].symbol}`}
-                            /> : <ListItemText 
-                                sx={{
-                                    fontSize: '20px',
-                                    textAlign: 'right',
-                                    color: '#509A57'
-                                }}
-                                primary={`${sendTokens.length}${sendTokens[0].symbol}`}
-                            />
-                            }
-                        </ListItem>
+                                <ListItem >
+                                <img src={sendTokens[0].tokenURL ?? nft} height ="48px" width="48px"alt="Tokens" />
+                                <ListItemText 
+                                    sx={{
+                                        fontSize: '20px',
+                                        textAlign: 'right',
+                                        color: '#509A57'
+                                    }}
+                                    primary={`${sendTokens.length}${sendTokens[0].symbol}`}
+                                /></ListItem>
+                        </Collapse>
+                        <Collapse in={open} timeout="auto" unmountOnExit sx={{
+                        width: '100%',
+                        display: 'flex',
+                        justifyContent: 'flex-end'
+                    }}>
+                            {renderList()}
+                        </Collapse>
                     </ListItem>
-                </Collapse>
-                <Collapse in={open} timeout="auto" unmountOnExit>
-                    {renderList()}
-                </Collapse>
+                }
             </List>
         </div>
     );
