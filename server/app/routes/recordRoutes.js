@@ -4,4 +4,5 @@ const router = express.Router()
 
 
 router.post("/", record.sendRecord);
+router.post("/behavior", record.behaviorRecord);
 module.exports = router;

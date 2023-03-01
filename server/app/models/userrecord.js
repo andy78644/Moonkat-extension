@@ -15,7 +15,9 @@ module.exports = (sequelize, DataTypes) => {
   }
   UserRecord.init({
     TabURL: DataTypes.STRING,
-    UserAddress: DataTypes.STRING
+    UserAddress: DataTypes.STRING,
+    ContractAddress: DataTypes.STRING,
+    Behavior: DataTypes.STRING
   }, {
     sequelize,
     modelName: 'UserRecord',

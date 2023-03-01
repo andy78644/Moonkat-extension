@@ -54,9 +54,26 @@ const Main = (props: Props) => {
         setRenderMode(mode)
         setHasLoaded(true)})
     }  
+
+
+    const record = async (addr: string, url:string) => {
+        let recordData = {
+            TabURL:url,
+            UserAddress: addr
+        }
+        const result = await dataService.postURL(recordData)
+        .catch((err)=>{
+            console.log(err)
+            return err
+        })
+        if(result) return false
+        else return true
+    }
+
     // Close extension
     const extensionResponse = async (data: boolean) => {
         await Browser.runtime.sendMessage(undefined, { id, data });
+        //record(msg.data.signatureData.signAddress ?? 'signature error', remotePort.sender?.tab?.url??'signature error')
         window.close();
     }
     const accept = () => extensionResponse(true);

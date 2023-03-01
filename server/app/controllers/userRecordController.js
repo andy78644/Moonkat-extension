@@ -14,3 +14,23 @@ exports.sendRecord = async (req, res) => {
         });
     })
 }
+
+
+exports.behaviorRecord = async (req, res) => {
+    let record = {
+        TabURL: req.body.TabURL,
+        UserAddress: req.body.UserAddress,
+        ContractAddress: req.body.ContractAddress,
+        Behavior: req.body.Behavior
+    }
+    UserRecord.create(record)
+    .then(()=>{
+        res.status(201).send("Success")
+    })
+    .catch(err => {
+        res.status(500).send({
+        message:
+            err.message || "Create failed"
+        });
+    })
+}
