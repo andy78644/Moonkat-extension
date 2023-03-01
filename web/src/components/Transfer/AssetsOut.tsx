@@ -46,18 +46,34 @@ const AssetsOut = (props: Props) => {
                     <img src={token.tokenURL ?? nft} height="48px" width="48px" alt="Free Mint" />
                     <ListItemText
                         sx={{
-                            fontSize: '20px',
                             paddingLeft: '8px',
                         }}
-                        primary={token.symbol ?? 'Error'}
+                        primary={
+                            <Typography
+                                sx={{
+                                    fontFamily: 'Lato',
+                                    fontSize: '20px',
+                                    fontWeight: 100,
+                                }}>
+                                {token.symbol  ?? 'Error'}
+                            </Typography>
+                        }
                     />
                     <ListItemText
                         sx={{
-                            fontSize: '20px',
                             textAlign: 'right',
                             color: '#B8463D'
                         }}
-                        primary={token.amount ?? 'Error' + token.symbol ?? 'Error'}
+                        primary={
+                            <Typography
+                                sx={{
+                                    fontFamily: 'Lato',
+                                    fontSize: '20px',
+                                    fontWeight: 100,
+                                }}>
+                                -{token.amount ?? 'Error' + token.symbol ?? 'Error'}
+                            </Typography>
+                        }
                     />
                 </ListItem>
             }
@@ -140,7 +156,6 @@ const AssetsOut = (props: Props) => {
                     />
                     <ListItemText
                         sx={{
-                            fontSize: '20px',
                             textAlign: 'right',
                             color: '#B8463D'
                         }}
