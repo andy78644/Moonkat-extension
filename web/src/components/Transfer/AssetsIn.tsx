@@ -79,7 +79,7 @@ const AssetsIn = (props: Props) => {
                         sx={{
                             fontSize: '20px',
                         }}
-                        primary={sendTokens[0].name}
+                        primary={sendTokens[0].name ?? ''}
                     />
                 </ListItem>
                 { sendTokens.length === 1 ? 
@@ -91,7 +91,7 @@ const AssetsIn = (props: Props) => {
                             textAlign: 'right',
                             color: '#509A57'
                         }}
-                        primary={`${sendTokens[0].amount}${sendTokens[0].symbol}`}
+                        primary={`${sendTokens[0].amount ?? '-'}${sendTokens[0].symbol ?? ''}`}
                     />
                     </ListItem>
                     :
@@ -112,7 +112,7 @@ const AssetsIn = (props: Props) => {
                                         textAlign: 'right',
                                         color: '#509A57'
                                     }}
-                                    primary={`${sendTokens.length}${sendTokens[0].symbol}`}
+                                    primary={`${sendTokens.length ?? '-'}${sendTokens[0].symbol ?? ''}`}
                                 /></ListItem>
                         </Collapse>
                         <Collapse in={open} timeout="auto" unmountOnExit sx={{

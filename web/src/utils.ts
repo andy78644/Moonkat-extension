@@ -17,7 +17,7 @@ export const sendAndAwaitResponseFromPort = (stream: Browser.Runtime.Port, data:
               resolve('close');
             }
         };
-        // Trace the message and execute callback function
+        // Listen the extension response
         stream.onMessage.addListener(callback);
     });
 }

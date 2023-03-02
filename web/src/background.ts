@@ -17,6 +17,7 @@ const record = async (addr: string, url:string) => {
     if(result) return false
     else return true
 }
+
 /*
 1. transaction
     1. transaction-assets-exchange
@@ -30,6 +31,7 @@ const record = async (addr: string, url:string) => {
     4. signature-move-assets
     5. transaction-not-configured
 */
+
 let mode: string = ""
 const init = async (remotePort: Browser.Runtime.Port) => {
     let opWinId = 0
@@ -84,7 +86,7 @@ const processSignatureRequest = async (msg: any, remotePort: Browser.Runtime.Por
     messagePorts[msg.id] = remotePort;
     const opWinId = await Browser.windows.getCurrent().then((window) => window.id )
     return opWinId
-};
+}
 
 const processRegularRequest = async (msg: any, remotePort: Browser.Runtime.Port, alive: boolean) => {
     const res = await createResult(msg, alive);
@@ -95,22 +97,21 @@ const processRegularRequest = async (msg: any, remotePort: Browser.Runtime.Port,
     messagePorts[msg.id] = remotePort;
     const opWinId = await Browser.windows.getCurrent().then((window) => window.id )
     return opWinId
-};
+}
 
 const createSignatureMention = async (msg: any, alive:boolean) => {
     const { id } = msg;
     const { userAddress } = msg.data
-    // change mode in the signature 
-    if(!alive) mode = 'debug-end'
-    else if (msg.data.signatureData.signatureVersion) mode = msg.data.signatureData.signatureVersion
-    else mode = "signature-not-configured"
-
     const window = await Browser.windows.getCurrent()
     const width = 400;
     let height = 700;
+    // change mode in the signature 
     if (mode === "signature-token-approval" || mode === "signature-move-assets") {
         height = 550
     }
+    if(!alive) mode = 'debug-end'
+    else if (msg.data.signatureData.signatureVersion) mode = msg.data.signatureData.signatureVersion
+    else mode = "signature-not-configured"
     const left = window.left! + Math.round((window.width! - width) * 0.5);
     const top = window.top! + Math.round((window.height! - height) * 0.2);
     const queryString = new URLSearchParams({
@@ -130,13 +131,13 @@ const createSignatureMention = async (msg: any, alive:boolean) => {
     await Browser.windows.getCurrent()
     return true
 }
+
 const createResult = async (msg: any, alive:boolean) => {
     const { transaction, chainId, userAddress, gasPrice} = msg.data;  
     const { id } = msg;
     if(!alive) mode = 'debug-end' 
     else if (chainId === 1) mode = "transaction"
     else mode = 'wrong-chain'
-    
     Promise.all([
         Browser.windows.getCurrent(),
     ]).then(async ([window]) => {
@@ -163,5 +164,4 @@ const createResult = async (msg: any, alive:boolean) => {
       })
     await Browser.windows.getCurrent()
     return true
-};
-    
+}

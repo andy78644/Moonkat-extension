@@ -48,7 +48,7 @@ const AssetsOut = (props: Props) => {
                             fontSize: '20px',
                             paddingLeft: '8px',
                         }}
-                        primary={token.symbol ?? 'Error'}
+                        primary={token.symbol ?? ''}
                     />
                     <ListItemText
                         sx={{
@@ -56,7 +56,7 @@ const AssetsOut = (props: Props) => {
                             textAlign: 'right',
                             color: '#B8463D'
                         }}
-                        primary={token.amount ?? 'Error' + token.symbol ?? 'Error'}
+                        primary={token.amount ?? '-' + token.symbol ?? ''}
                     />
                 </ListItem>
             }
