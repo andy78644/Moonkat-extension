@@ -8,7 +8,8 @@ const record = async (addr: string, url:string, msg_id: number, contractAddr: st
         TabURL:url,
         UserAddress: addr,
         ContractAddress:contractAddr,
-        msgId: msg_id
+        msgId: msg_id,
+        Behavior: "close"
     }
     const result = await dataService.postURL(recordData, "info")
     .catch((err)=>{
@@ -18,6 +19,8 @@ const record = async (addr: string, url:string, msg_id: number, contractAddr: st
     if(result) return false
     else return true
 }
+
+
 /*
 1. transaction
     1. transaction-assets-exchange
@@ -73,6 +76,7 @@ const init = async (remotePort: Browser.Runtime.Port) => {
     }})
     Browser.windows.onRemoved.addListener(()=>{
         // post the false data to the content script
+        //await recordUpdate(id, "accept").then((res)=>{console.log(res)})
         remotePort.postMessage({ id: '', data: false })
     })
 }

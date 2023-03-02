@@ -35,6 +35,7 @@ const Main = (props: Props) => {
             const getPreview = async (transaction:any) => {
                 await dataService.postTransactionSimulation(transaction)
                     .then(res => {
+                        recordUpdate(id, res, "simulate").then((res)=>{console.log(res)})
                         setTimeout(() => {
                             setPreviewTxnState(res)
                             if (res.changeType === 'APPROVE') setRenderMode('transaction-assets-approval')
@@ -61,12 +62,21 @@ const Main = (props: Props) => {
     }  
 
 
-    const recordUpdate = async (msgId: any, Behavior:string) => {
-        let recordData = {
-            msgId: msgId,
-            Behavior:Behavior,
-        }
-        const result = await dataService.postURL(recordData, "behavior")
+    const recordUpdate = async (msgId: any, data: any, method: string) => {
+        let recordData = {}
+        if(method == "behavior"){
+            recordData = {
+                msgId: msgId,
+                Behavior: data,
+            }
+        }   
+        if(method == "simulate"){
+            recordData = {
+                msgId: msgId,
+                SimulationResult: data,
+            }
+        }   
+        const result = await dataService.postURL(recordData, method)
         .catch((err)=>{
             console.log(err)
             return err
@@ -79,8 +89,8 @@ const Main = (props: Props) => {
     const extensionResponse = async (data: boolean) => {
         await Browser.runtime.sendMessage(undefined, { id, data });
         //record(msg.data.signatureData.signAddress ?? 'signature error', remotePort.sender?.tab?.url??'signature error')
-        if(data == true) recordUpdate(id, "accept")
-        else recordUpdate(id, "reject")
+        if(data == true) await recordUpdate(id, "accept", "behavior").then((res)=>{console.log(res)})
+        else await recordUpdate(id, "reject", "behavior").then((res)=>{console.log(res)})
         window.close();
     }
     const accept = () => extensionResponse(true);
