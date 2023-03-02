@@ -14,10 +14,15 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   UserRecord.init({
+    msgId: {
+      type: DataTypes.STRING,
+      primaryKey: true,
+    },
     TabURL: DataTypes.STRING,
     UserAddress: DataTypes.STRING,
     ContractAddress: DataTypes.STRING,
-    Behavior: DataTypes.STRING
+    Behavior: DataTypes.STRING,
+    SimulationResult: DataTypes.JSON
   }, {
     sequelize,
     modelName: 'UserRecord',

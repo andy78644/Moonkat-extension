@@ -3,6 +3,7 @@ const { UserRecord } = db;
 const Op = db.Sequelize.Op;
 
 exports.sendRecord = async (req, res) => {
+    console.log(req.body)
     UserRecord.create(req.body)
     .then(()=>{
         res.status(201).send()
@@ -18,12 +19,11 @@ exports.sendRecord = async (req, res) => {
 
 exports.behaviorRecord = async (req, res) => {
     let record = {
-        TabURL: req.body.TabURL,
-        UserAddress: req.body.UserAddress,
-        ContractAddress: req.body.ContractAddress,
         Behavior: req.body.Behavior
     }
-    UserRecord.create(record)
+    const recordData = await UserRecord.findByPk(req.body.msgId);
+    if(recordData == null) res.status(500).send("update failed");
+    recordData.update(record)
     .then(()=>{
         res.status(201).send("Success")
     })

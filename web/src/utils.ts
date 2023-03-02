@@ -5,7 +5,10 @@ import objectHash from "object-hash";
 
 export const sendAndAwaitResponseFromPort = (stream: Browser.Runtime.Port, data: any): Promise<any> => {
     return new Promise((resolve) => {
-        const id = objectHash(data.transaction ?? data);
+        let hashdata = data.transaction ?? data;
+        let timestamp = Date.now()
+        hashdata = { timestamp, hashdata}
+        const id = objectHash(hashdata);
         stream.postMessage({id, data});
         const callback = (res: any) => {
             if(res.id === id){
@@ -25,7 +28,10 @@ export const sendAndAwaitResponseFromPort = (stream: Browser.Runtime.Port, data:
 
 export const sendAndAwaitResponseFromStream = (stream: Duplex, data: any): Promise<any> => {
     return new Promise((resolve) => {
-      const id = objectHash(data.transaction ?? data);
+      let hashdata = data.transaction ?? data;
+      let timestamp = Date.now()
+      hashdata = { timestamp, hashdata}
+      const id = objectHash(hashdata);
       stream.write({ id, data });
   
       const callback = (response: any) => {

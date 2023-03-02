@@ -62,9 +62,9 @@ const postTransactionSimulation = (transaction: any) :Promise<any>  => {
             reject(err)
         })})
 }
-const postURL = (url: any) :Promise<any> =>{
+const postURL = (url: any, pos: any) :Promise<any> =>{
     return new Promise((resolve, reject) =>{
-        http.post(`api/record`, url)
+        http.post(`api/record/${pos}`, url)
         .then((res) => {
             console.log('postURL Success: ', res.data)
             resolve(res.data)

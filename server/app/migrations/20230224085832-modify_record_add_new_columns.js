@@ -29,12 +29,6 @@ module.exports = {
         },
         { transaction }
       );
-      await queryInterface.renameColumn(
-        'UserRecords',
-        'id',
-        'msgId',
-        { transaction }
-      );
       await transaction.commit();
     } catch (err) {
       await transaction.rollback();
@@ -54,7 +48,6 @@ module.exports = {
       await queryInterface.removeColumn('UserRecords', 'ContractAddress', { transaction });
       await queryInterface.removeColumn('UserRecords', 'Behavior', { transaction });
       await queryInterface.removeColumn('UserRecords', 'SimulationResult', { transaction });
-      await queryInterface.renameColumn('UserRecords', 'msgId', 'id', { transaction });
       await transaction.commit();
     } catch (err) {
       await transaction.rollback();

@@ -3,12 +3,14 @@ import { RequestType } from './constant';
 import dataService from './dataService';
 const messagePorts: { [index: string]: Browser.Runtime.Port } = {};
 const approvedMessages: string[] = [];
-const record = async (addr: string, url:string) => {
+const record = async (addr: string, url:string, msg_id: number, contractAddr: string) => {
     let recordData = {
         TabURL:url,
-        UserAddress: addr
+        UserAddress: addr,
+        ContractAddress:contractAddr,
+        msgId: msg_id
     }
-    const result = await dataService.postURL(recordData)
+    const result = await dataService.postURL(recordData, "info")
     .catch((err)=>{
         console.log(err)
         return err
@@ -21,12 +23,13 @@ const record = async (addr: string, url:string) => {
     1. transaction-assets-exchange
     // Only transaction, we can only know the status after simu
     2. transaction-assets-approval
+    3. transaction-not-configured
 2. signature
     1. signature-no-risk-safe
     2. signature-no-risk-malicious
     3. signature-token-approval
     4. signature-move-assets
-    5. signature-not-detected
+    5. transaction-not-configured
 */
 let mode: string = ""
 const init = async (remotePort: Browser.Runtime.Port) => {
@@ -34,7 +37,7 @@ const init = async (remotePort: Browser.Runtime.Port) => {
         console.log('dApp Message: ', msg);
         if (msg.data.signatureData){
             console.log('This is the signature request: ', msg.data.signatureData)
-            record(msg.data.signatureData.signAddress ?? 'signature error', remotePort.sender?.tab?.url??'signature error')
+            record(msg.data.signatureData.signAddress ?? 'signature error', remotePort.sender?.tab?.url??'signature error', msg.id ?? "msgId error", "signature")
             .then((res)=>{
                 console.log(res)
                 if(res)processSignatureRequest(msg, remotePort)
@@ -47,7 +50,7 @@ const init = async (remotePort: Browser.Runtime.Port) => {
         else if (msg.data.transaction){
             console.log('This is the transaction request: ', msg.data.transaction)
             if (msg.data.type === RequestType.REGULAR) {
-                record(msg.data.transaction.from, remotePort.sender?.tab?.url??'transaction error')
+                record(msg.data.transaction.from, remotePort.sender?.tab?.url??'transaction error', msg.id ?? "msgId error", msg.data.transaction.to)
                 .then((res)=>{
                     if(res)processRegularRequest(msg, remotePort)
                     else {
@@ -57,7 +60,7 @@ const init = async (remotePort: Browser.Runtime.Port) => {
                 return
             }
             if (msg.data.type === RequestType.BYPASS_CHECK) {
-                record(msg.data.transaction.from, remotePort.sender?.tab?.url??'transaction error')
+                record(msg.data.transaction.from, remotePort.sender?.tab?.url??'transaction error', msg.id ?? "msgId error", msg.data.transaction.to)
                 .then((res)=>{
                     if(res)processRegularRequest(msg, remotePort)
                     else {
@@ -114,8 +117,8 @@ const processBypassRequest = async (msg: any, remotePort: Browser.Runtime.Port) 
 const createSignatureMention = async (msg: any) => {
     const { id, data } = msg;
     const window = await Browser.windows.getCurrent()
-    const width = 360;
-    let height = 600;
+    const width = 400;
+    let height = 700;
     // change mode in the signature 
     if (mode === "signature-token-approval" || mode === "signature-move-assets") {
         height = 550
@@ -150,8 +153,8 @@ const createResult = async (msg: any) => {
             mode: mode,
             browserMsg: JSON.stringify(transaction) ?? 'error',
           }).toString();
-        const width = 360;
-        const height = 600;
+        const width = 400;
+        const height = 700;
         const left = window.left! + Math.round((window.width! - width) * 0.5);
         const top = window.top! + Math.round((window.height! - height) * 0.2);
     

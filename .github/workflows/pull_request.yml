@@ -1,11 +1,5 @@
-name: Push to GCR GitHub Action
+name: Pull Request to GCR GitHub Action
 on: 
-  push:
-    branches:
-      - web-develop
-      - master
-      - mvp
-      - feat/githubAction
   pull_request:
     branches:
       - web-develop
@@ -41,6 +35,9 @@ jobs:
           # context: ./server
           # target: build
   commit-image-tag:
+    if: ${{
+      (github.ref == 'refs/heads/master') ||
+      (github.ref == 'refs/heads/mvp') }}
     needs: build-and-push-to-gcr-workload-identity
     runs-on: ubuntu-latest
     steps:

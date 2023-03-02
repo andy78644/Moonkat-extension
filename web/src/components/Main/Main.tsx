@@ -8,6 +8,8 @@ import Loading from "./Loading";
 import Browser from "webextension-polyfill";
 import ContractInfo from "./ContractInfo";
 import MainHeader from "./MainHeader";
+import SimulationError from "../Error/SimulationError";
+import SignatureError from "../Error/SignatureError";
 
 import './Main.css'
 
@@ -33,16 +35,19 @@ const Main = (props: Props) => {
             const getPreview = async (transaction:any) => {
                 await dataService.postTransactionSimulation(transaction)
                     .then(res => {
-                        setPreviewTxnState(res)
-                        if (res.changeType === 'APPROVE') setRenderMode('transaction-assets-approval')
-                        else setRenderMode('transaction-assets-exchange')
-                        setHasLoaded(true)
+                        setTimeout(() => {
+                            setPreviewTxnState(res)
+                            if (res.changeType === 'APPROVE') setRenderMode('transaction-assets-approval')
+                            else setRenderMode('transaction-assets-exchange')
+                            setHasLoaded(true)
+                        }, 3000)
                     })
                     .catch((err)=>{
-                        //setRenderMode('Server Down Page')
-                        setRenderMode("debug-end")
-                        setHasLoaded(true)
-                        console.log('Server is down: ', err.message)
+                        setTimeout(() => {
+                            setRenderMode("debug-end")
+                            setHasLoaded(true)
+                            console.log('Server is down: ', err.message)
+                        }, 3000)
                     })
             }
             getPreview(transaction)
@@ -56,12 +61,12 @@ const Main = (props: Props) => {
     }  
 
 
-    const record = async (addr: string, url:string) => {
+    const recordUpdate = async (msgId: any, Behavior:string) => {
         let recordData = {
-            TabURL:url,
-            UserAddress: addr
+            msgId: msgId,
+            Behavior:Behavior,
         }
-        const result = await dataService.postURL(recordData)
+        const result = await dataService.postURL(recordData, "behavior")
         .catch((err)=>{
             console.log(err)
             return err
@@ -74,6 +79,8 @@ const Main = (props: Props) => {
     const extensionResponse = async (data: boolean) => {
         await Browser.runtime.sendMessage(undefined, { id, data });
         //record(msg.data.signatureData.signAddress ?? 'signature error', remotePort.sender?.tab?.url??'signature error')
+        if(data == true) recordUpdate(id, "accept")
+        else recordUpdate(id, "reject")
         window.close();
     }
     const accept = () => extensionResponse(true);
@@ -97,6 +104,15 @@ const Main = (props: Props) => {
                         <MainHeader></MainHeader>
                         <ContractInfo mode={mode} contractData={transaction.to}/>
                         <Transfer mode={renderMode} transaction={previewTxn}/>
+                        <Footer onAccept={accept} onReject={reject} />
+                    </>
+                )
+            }
+            case 'transaction-not-configured': {
+                return (
+                    <>
+                        <MainHeader></MainHeader>
+                        <SimulationError />
                         <Footer onAccept={accept} onReject={reject} />
                     </>
                 )
@@ -139,8 +155,14 @@ const Main = (props: Props) => {
                     </>
                 )
             }
-            case 'signature-not-detected': {
-                return <div></div>
+            case 'signature-not-configured': {
+                return (
+                    <>
+                        <MainHeader></MainHeader>
+                        <SignatureError />
+                        <Footer onAccept={accept} onReject={reject} />
+                    </>
+                )
             }
             case 'debug-end': {
                 return (<>
@@ -154,12 +176,16 @@ const Main = (props: Props) => {
     return (
     <div>
         {
-        hasLoaded?
+        hasLoaded ?
         <div>
             {renderCurrentSelection(renderMode)}
         </div>
         :
-        <Loading />
+        <div>
+            <MainHeader />
+            <Loading />
+            <Footer onAccept={accept} onReject={reject} />
+        </div>
         }
     </div>)
 }
