@@ -38,18 +38,10 @@ const Main = (props: Props) => {
                 setHasLoaded(true)
             }
             const getPreview = async (transaction: any) => {
-                // const gasPrice = 0
-                // const tmpFPG = transaction.maxFeePerGas
-                // const tmpPFPG = transaction.maxPriorityFeePerGas
-                // delete transaction.gasPrice
-                // transaction.maxFeePerGas = '0x0'
-                // transaction.maxPriorityFeePerGas = '0x0'
                 await dataService.postTransactionSimulation(transaction)
                     .then(res => {
                         res.gasPrice = gasPrice
                         res.to = transaction.to
-                        // res.maxFeePerGa  s = tmpFPG
-                        // res.maxPriorityFeePerGas = tmpPFPG
                         setPreviewTxnState(res)
                         if (res.changeType === 'APPROVE') setRenderMode('transaction-assets-approval')
                         else setRenderMode('transaction-assets-exchange')
