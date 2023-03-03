@@ -45,18 +45,34 @@ const AssetsOut = (props: Props) => {
                     <img src={token.tokenURL ?? nft} height="48px" width="48px" alt="Free Mint" />
                     <ListItemText
                         sx={{
-                            fontSize: '20px',
                             paddingLeft: '8px',
                         }}
-                        primary={token.symbol ?? ''}
+                        primary={
+                            <Typography
+                                sx={{
+                                    fontFamily: 'Lato',
+                                    fontSize: '20px',
+                                    fontWeight: 100,
+                                }}>
+                                {token.symbol  ?? ''}
+                            </Typography>
+                        }
                     />
                     <ListItemText
                         sx={{
-                            fontSize: '20px',
                             textAlign: 'right',
                             color: '#B8463D'
                         }}
-                        primary={token.amount ?? '-' + token.symbol ?? ''}
+                        primary={
+                            <Typography
+                                sx={{
+                                    fontFamily: 'Lato',
+                                    fontSize: '20px',
+                                    fontWeight: 100,
+                                }}>
+                                -{token.amount ?? '-' + token.symbol ?? ''}
+                            </Typography>
+                        }
                     />
                 </ListItem>
             }
@@ -139,7 +155,6 @@ const AssetsOut = (props: Props) => {
                     />
                     <ListItemText
                         sx={{
-                            fontSize: '20px',
                             textAlign: 'right',
                             color: '#B8463D'
                         }}

@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import List from '@mui/material/List';
 import ListItem from "@mui/material/ListItem";
 import ListItemText from '@mui/material/ListItemText';
@@ -113,7 +113,10 @@ const AssetsApprove = (props: Props) => {
                             }
                         />
                         <IconButton>
-                            <VerifiedIcon color="primary" sx={{ fontSize: 22, marginBottom: '8px' }} />
+                            <VerifiedIcon
+                                color={sendTokens.osVerified === true ? "primary" : undefined}
+                                sx={{ fontSize: 22, marginBottom: '8px' }}
+                            />
                         </IconButton>
                     </div>
                 </ListItem>
