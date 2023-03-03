@@ -13,7 +13,6 @@ interface Props {
 const Transfer =  (props: Props) => {
     const {mode, transaction} = props;
     console.log('transaction: ',transaction)
-    const [renderMode, setRenderMode] = useState('')
     const getAssetsSendInfo = {
         contractType: 'ERC-20',
         //todo: multiple asset
@@ -74,29 +73,6 @@ const Transfer =  (props: Props) => {
                         <TransferHeader mode={mode}></TransferHeader>
                         <AssetsOut {...getAssetsSendInfo} />
                         <AssetsApprove {...getAssetsApproveInfo} />
-                    </>
-                )
-            }
-            case 'signature-token-approval': {
-                return (
-                    <>
-                        <TransferHeader mode={mode}></TransferHeader>
-                        <AssetsApprove {...getAssetsApproveInfo} />
-                    </>
-                )
-            }
-            case 'signature-move-assets': {
-                return (
-                    <>
-                        <TransferHeader mode={mode}></TransferHeader>
-                        <AssetsOut {...getAssetsSendInfo} />
-                    </>
-                )
-            }
-            case 'signature-not-detected': {
-                return (
-                    <>
-                        Not designed.
                     </>
                 )
             }
