@@ -38,9 +38,9 @@ const create = (data:contractData) => {
 const update = (addr:string, data:contractData) => {
     return http.put<contractData>(`/contracts/${addr}`, data)
 }
-const postFeedBackByAddress = (addr:string, feedBack: contractFeedBack) => {
+const postFeedBackByAddress = (feedBack: contractFeedBack) => {
     return new Promise((resolve, reject)=>{
-        http.post(`/report/?address=${addr}`, feedBack)
+        http.post(`api/report/`, feedBack)
         .then((res)=>{
             console.log('postFeedBackByAddress Success: ', res.data)
             resolve(res.data)

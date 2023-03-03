@@ -20,7 +20,6 @@ const record = async (addr: string, url:string, msg_id: number, contractAddr: st
     else return true
 }
 
-
 /*
 1. transaction
     1. transaction-assets-exchange
@@ -34,56 +33,42 @@ const record = async (addr: string, url:string, msg_id: number, contractAddr: st
     4. signature-move-assets
     5. transaction-not-configured
 */
+
 let mode: string = ""
 const init = async (remotePort: Browser.Runtime.Port) => {
+    let opWinId = 0
     remotePort.onMessage.addListener((msg)=>{
         console.log('dApp Message: ', msg);
         if (msg.data.signatureData){
             console.log('This is the signature request: ', msg.data.signatureData)
             record(msg.data.signatureData.signAddress ?? 'signature error', remotePort.sender?.tab?.url??'signature error', msg.id ?? "msgId error", "signature")
-            .then((res)=>{
-                console.log(res)
-                if(res)processSignatureRequest(msg, remotePort)
-                else {
-                // error post False to end the flow
-                remotePort.postMessage({ id: '', data: false })
+            .then(async (res)=>{
+                if(res) {
+                    opWinId = await processSignatureRequest(msg, remotePort, true) ?? -1
+                }else opWinId =  await processSignatureRequest(msg, remotePort, false) ?? -1
             }
-            })
+            )
         }
         else if (msg.data.transaction){
             console.log('This is the transaction request: ', msg.data.transaction)
             if (msg.data.type === RequestType.REGULAR) {
                 record(msg.data.transaction.from, remotePort.sender?.tab?.url??'transaction error', msg.id ?? "msgId error", msg.data.transaction.to)
-                .then((res)=>{
-                    if(res)processRegularRequest(msg, remotePort)
-                    else {
-                    // error post False to end the flow
-                    remotePort.postMessage({ id: '', data: false })}
+                .then(async (res)=>{
+                    if(res){
+                        opWinId =  await processRegularRequest(msg, remotePort, true) ?? -1
+                    } else opWinId =  await processRegularRequest(msg, remotePort, false) ?? -1
                 })
-                return
-            }
-            if (msg.data.type === RequestType.BYPASS_CHECK) {
-                record(msg.data.transaction.from, remotePort.sender?.tab?.url??'transaction error', msg.id ?? "msgId error", msg.data.transaction.to)
-                .then((res)=>{
-                    if(res)processRegularRequest(msg, remotePort)
-                    else {
-                    // error post False to end the flow
-                    remotePort.postMessage({ id: '', data: false })}
-                })
-                processBypassRequest(msg, remotePort);
                 return
             }
     }})
-    Browser.windows.onRemoved.addListener(()=>{
-        // post the false data to the content script
-        //await recordUpdate(id, "accept").then((res)=>{console.log(res)})
-        remotePort.postMessage({ id: '', data: false })
+    Browser.windows.onRemoved.addListener(async (windowId)=>{
+        if (opWinId != -1 && windowId === opWinId){
+            remotePort.postMessage({ id: '', data: false })}
     })
 }
 // Entry
 Browser.runtime.onConnect.addListener(init);
 Browser.runtime.onMessage.addListener((data)=>{
-    // Deal with the data from anywhere (Including Content Script)
     const responsePort = messagePorts[data.id];
     if(data.data) {
         approvedMessages.push(data);
@@ -94,32 +79,31 @@ Browser.runtime.onMessage.addListener((data)=>{
     }
 })
 
-
-const processSignatureRequest = (msg: any, remotePort: Browser.Runtime.Port) => {
-    const res = createSignatureMention(msg);
+const processSignatureRequest = async (msg: any, remotePort: Browser.Runtime.Port, alive: boolean) => {
+    const res = await createSignatureMention(msg, alive);
     if (!res) {
         remotePort.postMessage({ id: msg.id, data: true });
         return;
     }
     messagePorts[msg.id] = remotePort;
-};
+    const opWinId = await Browser.windows.getCurrent().then((window) => window.id )
+    return opWinId
+}
 
-const processRegularRequest = (msg: any, remotePort: Browser.Runtime.Port) => {
-    const res = createResult(msg);
+const processRegularRequest = async (msg: any, remotePort: Browser.Runtime.Port, alive: boolean) => {
+    const res = await createResult(msg, alive);
     if (!res) {
         remotePort.postMessage({ id: msg.id, data: true });
         return;
     }
     messagePorts[msg.id] = remotePort;
-};
+    const opWinId = await Browser.windows.getCurrent().then((window) => window.id )
+    return opWinId
+}
 
-const processBypassRequest = async (msg: any, remotePort: Browser.Runtime.Port) => {
-    const res = await createResult(msg);
-    if (!res) { return };
-};
-
-const createSignatureMention = async (msg: any) => {
-    const { id, data } = msg;
+const createSignatureMention = async (msg: any, alive:boolean) => {
+    const { id } = msg;
+    const { userAddress } = msg.data
     const window = await Browser.windows.getCurrent()
     const width = 400;
     let height = 700;
@@ -127,14 +111,16 @@ const createSignatureMention = async (msg: any) => {
     if (mode === "signature-token-approval" || mode === "signature-move-assets") {
         height = 550
     }
-    if(msg.data.signatureData.signatureVersion) mode = msg.data.signatureData.signatureVersion
-    else mode = "signature-not-detected"
+    if(!alive) mode = 'debug-end'
+    else if (msg.data.signatureData.signatureVersion) mode = msg.data.signatureData.signatureVersion
+    else mode = "signature-not-configured"
     const left = window.left! + Math.round((window.width! - width) * 0.5);
     const top = window.top! + Math.round((window.height! - height) * 0.2);
     const queryString = new URLSearchParams({
         id: id,
         mode: mode,
-        browserMsg: msg.data.signatureData,
+        browserMsg: msg.data.signatureData ?? '',
+        userAddress: userAddress,
       }).toString();
     await Browser.windows.create({
         url: `index.html?${queryString}`,
@@ -143,19 +129,26 @@ const createSignatureMention = async (msg: any) => {
         height: height,
         left: left,
         top: top
-    });
+    })
+    await Browser.windows.getCurrent()
+    return true
 }
-const createResult = async (msg: any) => {
-    const { transaction, chainId } = msg.data;  
-    const { id, data } = msg;
-    mode = "transaction"
+
+const createResult = async (msg: any, alive:boolean) => {
+    const { transaction, chainId, userAddress, gasPrice} = msg.data;  
+    const { id } = msg;
+    if(!alive) mode = 'debug-end' 
+    else if (chainId === 1) mode = "transaction"
+    else mode = 'wrong-chain'
     Promise.all([
         Browser.windows.getCurrent(),
     ]).then(async ([window]) => {
         const queryString = new URLSearchParams({
             id: id,
             mode: mode,
-            browserMsg: JSON.stringify(transaction) ?? 'error',
+            browserMsg: JSON.stringify(transaction) ?? '',
+            userAddress: userAddress,
+            gasPrice: gasPrice ?? ''
           }).toString();
         const width = 400;
         const height = 700;
@@ -171,6 +164,6 @@ const createResult = async (msg: any) => {
           top: top
         });
       })
-      return true;
-};
-    
+    await Browser.windows.getCurrent()
+    return true
+}

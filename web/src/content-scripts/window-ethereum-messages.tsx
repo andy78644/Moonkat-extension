@@ -9,10 +9,12 @@ const dataStream = new WindowPostMessageStream({
     target: Identifier.INPAGE,
 });
 
+// Get the website data
 dataStream.on('data', (data) => {
     const extensionPort = Browser.runtime.connect({
         name: Identifier.CONTENT_SCRIPT,
     });
+    // Send the website to the extension
     sendAndAwaitResponseFromPort(extensionPort, { ...data.data, type: RequestType.REGULAR})
     .then((response) => {
         // Here is send the content script response to front window
@@ -20,8 +22,5 @@ dataStream.on('data', (data) => {
             dataStream.write({ id: data.id, data: false });
         }
         dataStream.write({ id: data.id, data: response });
-    })
-    .catch((err) => {
-        dataStream.off
     })
 });

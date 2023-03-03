@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React from 'react'
 import safeImage from '../../assets/safe.png'
 import safeCheckImage from '../../assets/safeCheckImage.png'
 

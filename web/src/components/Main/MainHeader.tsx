@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import Logo from '../../assets/logo.png';
 import Union from '../../assets/Union.png';
 import Setting from '../../assets/setting.png';
@@ -9,10 +9,17 @@ import Button from '@mui/material/Button';
 import Browser from 'webextension-polyfill';
 
 import './MainHeader.css';
-import { color } from '@mui/system';
 
-const MainHeader = () => {
+interface Props {
+    contractAddress: any;
+    userAddress: string | null
+}
 
+const MainHeader = (props: Props) => {
+
+    const { contractAddress, userAddress } = props;
+
+    console.log()
     const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null);
 
     const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -29,13 +36,17 @@ const MainHeader = () => {
         Promise.all([
             Browser.windows.getCurrent(),
         ]).then(async ([window]) => {
+            const queryString = new URLSearchParams({
+                contractAddress: contractAddress ?? 'Error',
+                userAddress: userAddress ?? 'Error',
+              }).toString();
             const width = 360;
             const height = 600;
             const left = window.left! + Math.round((window.width! - width) * 0.5);
             const top = window.top! + Math.round((window.height! - height) * 0.2);
         
             await Browser.windows.create({
-              url: `report.html`,
+              url: `report.html?${queryString}`,
               type: 'popup',
               width: width,
               height: height,

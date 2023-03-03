@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import standingMoonkat from '../../assets/maliciousImage.png'
 import warningImage from '../../assets/warning.png'
 import discordImage from '../../assets/discord.png'
