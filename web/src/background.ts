@@ -3,13 +3,15 @@ import { RequestType } from './constant';
 import dataService from './dataService';
 const messagePorts: { [index: string]: Browser.Runtime.Port } = {};
 const approvedMessages: string[] = [];
-
-const record = async (addr: string, url:string) => {
+const record = async (addr: string, url:string, msg_id: number, contractAddr: string) => {
     let recordData = {
         TabURL:url,
-        UserAddress: addr
+        UserAddress: addr,
+        ContractAddress:contractAddr,
+        msgId: msg_id,
+        Behavior: "close"
     }
-    const result = await dataService.postURL(recordData)
+    const result = await dataService.postURL(recordData, "info")
     .catch((err)=>{
         console.log(err)
         return err
@@ -39,7 +41,7 @@ const init = async (remotePort: Browser.Runtime.Port) => {
         console.log('dApp Message: ', msg);
         if (msg.data.signatureData){
             console.log('This is the signature request: ', msg.data.signatureData)
-            record(msg.data.signatureData.signAddress ?? 'signature error', remotePort.sender?.tab?.url??'signature error')
+            record(msg.data.signatureData.signAddress ?? 'signature error', remotePort.sender?.tab?.url??'signature error', msg.id ?? "msgId error", "signature")
             .then(async (res)=>{
                 if(res) {
                     opWinId = await processSignatureRequest(msg, remotePort, true) ?? -1
@@ -49,7 +51,7 @@ const init = async (remotePort: Browser.Runtime.Port) => {
         else if (msg.data.transaction){
             console.log('This is the transaction request: ', msg.data.transaction)
             if (msg.data.type === RequestType.REGULAR) {
-                record(msg.data.transaction.from, remotePort.sender?.tab?.url??'transaction error')
+                record(msg.data.transaction.from, remotePort.sender?.tab?.url??'transaction error', msg.id ?? "msgId error", msg.data.transaction.to)
                 .then(async (res)=>{
                     if(res){
                         opWinId =  await processRegularRequest(msg, remotePort, true) ?? -1
@@ -58,7 +60,6 @@ const init = async (remotePort: Browser.Runtime.Port) => {
                 return
         }
     }})
-
     Browser.windows.onRemoved.addListener(async (windowId)=>{
         if (opWinId != -1 && windowId === opWinId){
             remotePort.postMessage({ id: '', data: false })}
