@@ -45,9 +45,8 @@ const init = async (remotePort: Browser.Runtime.Port) => {
             .then(async (res)=>{
                 if(res) {
                     opWinId = await processSignatureRequest(msg, remotePort, true) ?? -1
-                }else opWinId =  await processSignatureRequest(msg, remotePort, false) ?? -1
-            }
-            )
+                } else opWinId =  await processSignatureRequest(msg, remotePort, false) ?? -1
+            })
         }
         else if (msg.data.transaction){
             console.log('This is the transaction request: ', msg.data.transaction)
@@ -59,7 +58,7 @@ const init = async (remotePort: Browser.Runtime.Port) => {
                     } else opWinId =  await processRegularRequest(msg, remotePort, false) ?? -1
                 })
                 return
-            }
+        }
     }})
     Browser.windows.onRemoved.addListener(async (windowId)=>{
         if (opWinId != -1 && windowId === opWinId){

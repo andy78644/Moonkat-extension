@@ -9,8 +9,9 @@ const dataStream = new WindowPostMessageStream({
     target: Identifier.INPAGE,
 });
 
-// Get the website data
+// Get the website data and build the connection
 dataStream.on('data', (data) => {
+    // Connect with content script(website) and the extension
     const extensionPort = Browser.runtime.connect({
         name: Identifier.CONTENT_SCRIPT,
     });
