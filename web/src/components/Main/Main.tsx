@@ -67,13 +67,13 @@ const Main = (props: Props) => {
 
     const recordUpdate = async (msgId: any, data: any, method: string) => {
         let recordData = {}
-        if(method == "behavior"){
+        if(method === "behavior"){
             recordData = {
                 msgId: msgId,
                 Behavior: data,
             }
         }   
-        if(method == "simulate"){
+        if(method === "simulate"){
             recordData = {
                 msgId: msgId,
                 SimulationResult: data,
@@ -92,7 +92,7 @@ const Main = (props: Props) => {
     const extensionResponse = async (data: boolean) => {
         await Browser.runtime.sendMessage(undefined, { id, data });
         //record(msg.data.signatureData.signAddress ?? 'signature error', remotePort.sender?.tab?.url??'signature error')
-        if(data == true) await recordUpdate(id, "accept", "behavior").then((res)=>{console.log(res)})
+        if(data) await recordUpdate(id, "accept", "behavior").then((res)=>{console.log(res)})
         else await recordUpdate(id, "reject", "behavior").then((res)=>{console.log(res)})
         window.close();
     }

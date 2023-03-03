@@ -21,7 +21,7 @@ exports.behaviorRecord = async (req, res) => {
         Behavior: req.body.Behavior
     }
     const recordData = await UserRecord.findByPk(req.body.msgId);
-    if(recordData == null) res.status(500).send("update failed");
+    if(recordData === null) res.status(500).send("update failed");
     recordData.update(record)
     .then(()=>{
         res.status(201).send("Success")
@@ -39,7 +39,7 @@ exports.simulationRecord = async (req, res) => {
         SimulationResult: req.body.SimulationResult
     }
     const recordData = await UserRecord.findByPk(req.body.msgId);
-    if(recordData == null) res.status(500).send("update failed");
+    if(recordData === null) res.status(500).send("update failed");
     recordData.update(record)
     .then(()=>{
         res.status(201).send("Success")
