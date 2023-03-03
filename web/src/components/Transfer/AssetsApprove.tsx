@@ -38,21 +38,11 @@ const AssetsApprove = (props: Props) => {
 
     return (
         <div id="assetsApprove">
-            <List sx={{
-                width: '100%',
-                bgcolor: '#FFF8EA',
-                borderRadius: 8
-            }}
+            <List sx={{ width: '100%', bgcolor: '#FFF8EA', borderRadius: 8 }}
                 component="nav"
                 aria-labelledby="nested-list-subheader"
             >
-                <ListItemButton
-                    sx={{
-                        width: '100%',
-                        "&:hover, &.Mui-focusVisible": {
-                            backgroundColor: '#FFF8EA'
-                        }
-                    }}
+                <ListItemButton sx={{ width: '100%', "&:hover, &.Mui-focusVisible": { backgroundColor: '#FFF8EA' } }}
                     component="div"
                     id="assetsApproveTitle"
                     onClick={handleClick}
@@ -69,19 +59,11 @@ const AssetsApprove = (props: Props) => {
                     </Typography>
                     <Popover
                         id="mouse-over-popover"
-                        sx={{
-                            pointerEvents: 'none',
-                        }}
+                        sx={{ pointerEvents: 'none' }}
                         open={hover}
                         anchorEl={anchorEl}
-                        anchorOrigin={{
-                            vertical: 'bottom',
-                            horizontal: 'left',
-                        }}
-                        transformOrigin={{
-                            vertical: 'top',
-                            horizontal: 'left',
-                        }}
+                        anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
+                        transformOrigin={{ vertical: 'top', horizontal: 'left' }}
                         onClose={handlePopoverClose}
                         disableRestoreFocus
                     >
@@ -91,23 +73,14 @@ const AssetsApprove = (props: Props) => {
                 </ListItemButton>
                 <hr></hr>
                 <ListItem
-                    sx={{
-                        padding: "4px 16px",
-                    }}
+                    sx={{ padding: "4px 16px" }}
                 >
                     <div>
                         <ListItemText
-                            sx={{
-                                display: 'inline-block',
-                                fontSize: '20px',
-                            }}
+                            sx={{ display: 'inline-block', fontSize: '20px' }}
                             primary={
                                 <Typography
-                                    sx={{
-                                        fontFamily: 'Lato',
-                                        fontSize: '20px',
-                                        fontWeight: 100,
-                                    }}>
+                                    sx={{ fontFamily: 'Lato', fontSize: '20px', fontWeight: 100 }}>
                                     {sendTokens.name}
                                 </Typography>
                             }
@@ -128,28 +101,15 @@ const AssetsApprove = (props: Props) => {
                 >
                     <img src={sendTokens.tokenURL ?? nft} alt="nft" width="48px" height="48px" />
                     <ListItemText
-                        sx={{
-                            fontSize: '20px',
-                            textAlign: 'right',
-                        }}
+                        sx={{ fontSize: '20px', textAlign: 'right' }}
                         primary={
                             <div>
                                 <Typography
-                                    sx={{
-                                        display: 'inline-block',
-                                        fontFamily: 'Lato-thin',
-                                        fontSize: '20px',
-                                        fontWeight: 100,
-                                    }}>
+                                    sx={{ display: 'inline-block', fontFamily: 'Lato-thin', fontSize: '20px', fontWeight: 100 }}>
                                     Can withdraw &nbsp;
                                 </Typography>
                                 <Typography
-                                    sx={{
-                                        display: 'inline-block',
-                                        fontFamily: 'Lato',
-                                        fontSize: '20px',
-                                        fontWeight: 900,
-                                    }}>
+                                    sx={{ display: 'inline-block', fontFamily: 'Lato', fontSize: '20px', fontWeight: 900 }}>
                                     all {sendTokens.symbol}s
                                 </Typography>
                             </div>
