@@ -12,7 +12,7 @@
     flex-direction: row;
     height: 66px;
     align-items: flex-start;
-    background: rgba(255, 248, 234, 0.5);
+    background: rgba(255, 248, 234, 0.6);
 }
 
 #logo {
@@ -20,7 +20,7 @@
 }
 
 #brandName {
-    font-family: 'Kiona';
+    font-family: Kiona, sans-serif;
     font-size: 24px;
     padding: 15px 0px 15px 16px;
 }

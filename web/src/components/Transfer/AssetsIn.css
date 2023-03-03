@@ -1,11 +1,12 @@
 #assetsIn {
-    margin: 16px 16px 0px 16px;
+    margin: 16px;
     border-radius: 8px;
     background-color: #FFF8EA;
 }
 
 #assetsInTitle {
-    font-family: 'Lato';
+    font-family: Lato, sans-serif;
     font-size: 20px;
-    padding: 16px;
+    padding-top: 4px;
+    padding-bottom: 10px;
 }

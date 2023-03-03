@@ -1,6 +1,6 @@
 import { WindowPostMessageStream } from '@metamask/post-message-stream';
 import { ethErrors } from 'eth-rpc-errors';
-import { providers } from 'ethers';
+import { providers, utils } from 'ethers';
 import { Identifier } from '../constant';
 import { sendAndAwaitResponseFromStream } from '../utils';
 
@@ -50,62 +50,66 @@ const overrideWindowEthereum = async () => {
   const requestHandler = {
     apply: async (target: any, thisArg: any, argumentsList: any[]) => {
       const [request] = argumentsList;
-      console.log(request)
       if (request?.method === 'eth_sendTransaction') {
+        const userAddress = await getAddress()
         const [transaction] = request?.params ?? [];
-        const addr = await getAddress()
-        console.log(addr)
         if (!transaction) return Reflect.apply(target, thisArg, argumentsList);
 
         const provider = new providers.Web3Provider((window as any).ethereum);
         const { chainId } = await provider.getNetwork();
+        let gasPrice
+        await provider.getFeeData()
+        .then((feeData)=>{
+          const price = feeData.gasPrice ?? 0
+          gasPrice = utils.formatUnits(price, "gwei")
+        })
 
         let _val = 'value' in transaction
         if (!_val) transaction.value = '0x0'
-        const isOk = await sendAndAwaitResponseFromStream(stream, { transaction, chainId });
+        const isOk = await sendAndAwaitResponseFromStream(stream, { transaction, chainId, userAddress, gasPrice});
 
         if (!isOk) {
           throw ethErrors.provider.userRejectedRequest('Moonkat: User denied transaction.');
         }
       }
       else if (request?.method === 'eth_sign') {
-        const addr = await getAddress()
+        const userAddress = await getAddress()
         console.log('eth_sign WebSite Request: ', request)
         let signatureData = {
           signatureVersion: 'signature-no-risk-malicious',
           signMethod: request?.method,
           text: "",
-          signAddress: addr
+          signAddress: userAddress
         }
         signatureData.text = request.params[1]
-        let isOk = await sendAndAwaitResponseFromStream(stream, { signatureData });
+        let isOk = await sendAndAwaitResponseFromStream(stream, { signatureData, userAddress});
         if (!isOk) {
           throw ethErrors.provider.userRejectedRequest('Moonkat: User denied Signature.');
         }
       }
       else if (request?.method === 'personal_sign') {
-        const addr = await getAddress()
+        const userAddress = await getAddress()
         let signatureData = {
           signatureVersion: 'signature-no-risk-safe',
           signMethod: request?.method,
           text: "",
-          signAddress: addr
+          signAddress: userAddress
         }
         console.log('personal_sign WebSite Request: ', request)
         signatureData.text = hex_to_ascii(request.params[0])
         console.log('Decoded Data: ', signatureData)
-        const isOk = await sendAndAwaitResponseFromStream(stream, { signatureData });
+        const isOk = await sendAndAwaitResponseFromStream(stream, { signatureData, userAddress});
         if (!isOk) {
           throw ethErrors.provider.userRejectedRequest('Moonkat: User denied Signature.');
         }
       }
       else if (request?.method === 'signTypedData' || request?.method === 'eth_signTypedData') {
-        const addr = await getAddress()
+        const userAddress = await getAddress()
         let signatureData = {
-          signatureVersion: 'signature-no-risk-malicious',
+          signatureVersion: 'signature-712',
           signMethod: request?.method,
           text: {},
-          signAddress: addr
+          signAddress: userAddress
         }
         console.log('signTypedData Website Request: ', request)
         let signMsg = {
@@ -116,22 +120,22 @@ const overrideWindowEthereum = async () => {
         }
         signatureData.text = JSON.stringify(signMsg)
         console.log('NeededData:', signatureData)
-        const isOk = await sendAndAwaitResponseFromStream(stream, { signatureData });
+        const isOk = await sendAndAwaitResponseFromStream(stream, { signatureData, userAddress});
         if (!isOk) {
           throw ethErrors.provider.userRejectedRequest('Moonkat: User denied Signature.');
         }
       }
       else if (request?.method === 'signTypedDatav3' || request?.method === 'eth_signTypedData_v3') {
-        const addr = await getAddress()
+        const userAddress = await getAddress()
         let signatureData = {
-          signatureVersion: 'signature-no-risk-malicious',
+          signatureVersion: 'signature-712',
           signMethod: request?.method,
           text: "",
           domain: "",
           message: "",
           primaryType: "",
           types: "",
-          signAddress:addr
+          signAddress:userAddress
         }
         console.log('signTypedDatav3 Website Request: ', request)
         let payLoad = JSON.parse(request.params[1])
@@ -142,22 +146,22 @@ const overrideWindowEthereum = async () => {
         signatureData.types = payLoad.types
         signatureData.text = JSON.stringify(payLoad.message)
         console.log('NeededData: ', signatureData)
-        const isOk = await sendAndAwaitResponseFromStream(stream, { signatureData });
+        const isOk = await sendAndAwaitResponseFromStream(stream, { signatureData, userAddress});
         if (!isOk) {
           throw ethErrors.provider.userRejectedRequest('Moonkat: User denied Signature.');
         }
       }
       else if (request?.method === 'signTypedDatav4' || request?.method === 'eth_signTypedData_v4') {
-        const addr = await getAddress()
+        const userAddress = await getAddress()
         let signatureData = {
-          signatureVersion: 'signature-no-risk-malicious',
+          signatureVersion: 'signature-712',
           signMethod: request?.method,
           text: "",
           contractDetail: {
             chainId: '',
             address: ''
           },
-          signAddress: addr
+          signAddress: userAddress
         }
         console.log('signTypedDatav4 Website Request: ', request)
         let payLoad = JSON.parse(request.params[1])
@@ -166,7 +170,7 @@ const overrideWindowEthereum = async () => {
         signatureData.contractDetail.address = payLoad.domain.verifyingContract
         signatureData.text = JSON.stringify(payLoad.message)
         console.log('NeededData: ', signatureData)
-        const isOk = await sendAndAwaitResponseFromStream(stream, { signatureData });
+        const isOk = await sendAndAwaitResponseFromStream(stream, { signatureData, userAddress});
         if (!isOk) {
           throw ethErrors.provider.userRejectedRequest('Moonkat: User denied Signature.');
         }

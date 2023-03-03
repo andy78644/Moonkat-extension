@@ -1,4 +1,4 @@
-import React,{useState, useEffect} from 'react';
+import React,{useState} from 'react';
 import TransferHeader from './TransferHeader';
 import AssetsIn from './AssetsIn';
 import AssetsOut from './AssetsOut';
@@ -29,6 +29,7 @@ const Transfer =  (props: Props) => {
             transaction.out,
         NFTCategoryName: '',
         gas: transaction.gas,
+        gasPrice: transaction.gasPrice
     }
 
     const getAssetsReceiveInfo = {
@@ -45,6 +46,7 @@ const Transfer =  (props: Props) => {
             transaction.in,
         NFTCategoryName: "",
         gas: 0,
+        gasPrice: transaction.gasPrice
     }
 
     const getAssetsApproveInfo = {
@@ -52,6 +54,7 @@ const Transfer =  (props: Props) => {
         sendTokens: transaction.approve,
         NFTCategoryName: "",
         gas: 0,
+        gasPrice: transaction.gasPrice
     }
 
     const renderCurrentSelection = (mode: string | null) => {

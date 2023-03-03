@@ -3,13 +3,13 @@ import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 
 interface Props {
-    operation: any,
     placeholder: any,
     formHeight: any,
+    onTextValue: any,
 }
 
 const ReportForm = (props: Props) => {
-    const [value, setValue] = useState('');
+    const [textValue, settextValue] = useState('');
     return (
         <Box
             component="form"
@@ -26,8 +26,15 @@ const ReportForm = (props: Props) => {
                     height: props.formHeight
                 }
             }} 
-            label={props.placeholder} 
-            variant="filled" />
+            error={textValue.length === 0}
+            helperText={!textValue.length ? 'Address Name is required' : ''}
+            label={props.placeholder}
+            onChange={(e) => {
+                settextValue(e.target.value);
+                props.onTextValue(e.target.value);
+            }}
+            variant="filled"
+            value={textValue} />
         </Box>
     );
 }

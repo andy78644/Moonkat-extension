@@ -96,7 +96,7 @@ async function query(address){
     .catch(err => {
       console.log(err);
     });
-    //const balance = web3.utils.fromWei( data.result, "ether");;
+
     await apiData.Balance.then( data => {
       data.result = data.result?data.result:0;
       set_up_contract.Balance = data.result;

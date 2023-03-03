@@ -11,11 +11,11 @@ const Malicious = () => {
             <div id="maliciousTitle"> 
                 <img id="maliciousCheckImage" src={maliciousErrorImage} alt="maliciousErrorImage" />
                 &nbsp; 
-                Malicious Signature 
+                Need Notice !
+                May Involve Asset Transfer
             </div>
             <div id="maliciousContent">
                 The signature may move your assets.
-                It's reported by our community.
             </div>
         </div>
     )

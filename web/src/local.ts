@@ -6,9 +6,9 @@ const Url = {
   "prod": "https://dev.moonkat.app/"
 }
 const type = process.env.WORK_ENV
-let baseUrl = Url.dev
-if (type === 'prod'){
-   baseUrl = Url.prod;
+let baseUrl = Url.prod
+if (type === 'dev'){
+   baseUrl = Url.dev;
 }
 
 export default axios.create({
