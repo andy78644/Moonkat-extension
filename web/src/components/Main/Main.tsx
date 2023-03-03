@@ -18,59 +18,51 @@ interface Props {
     id: string | null;
     mode: string | '';
     browserMsg: string | '';
+    gasPrice: string | '';
     userAddress: string | null;
 };
 
 
 const Main = (props: Props) => {
-    const { id, mode, browserMsg, userAddress } = props;
-    const [previewTxn, setPreviewTxnState] = useState({})
+    const { id, mode, browserMsg, userAddress, gasPrice} = props;
+    // This address is to pass the server restriction
+    // Need to be edited to develop the sign feature
+    const [previewTxn, setPreviewTxnState] = useState({to:'0x1533858eBed0A40dB54b5b70347181Db4724855F'})
     const [renderMode, setRenderMode] = useState('')
     const [hasLoaded, setHasLoaded] = useState(false);
-    let transaction = {
-        // This address is to pass the server restriction
-        // Need to be edited to develop the sign feature
-        to: '0x1533858eBed0A40dB54b5b70347181Db4724855F',
-    }
     useEffect(() => {
         if (mode === 'transaction') {
+            const transaction = JSON.parse(browserMsg)
             if (!transaction) {
                 setRenderMode("debug-end")
                 setHasLoaded(true)
             }
-            transaction = JSON.parse(browserMsg)
             const getPreview = async (transaction: any) => {
-                const gasPrice = transaction.gasPrice
-                delete transaction.gasPrice
-                transaction.maxFeePerGas = '0x0'
-                transaction.maxPriorityFeePerGas = '0x0'
                 await dataService.postTransactionSimulation(transaction)
                     .then(res => {
-                        setTimeout(() => {
-                            res.gasPrice = gasPrice
-                            setPreviewTxnState(res)
-                            if (res.changeType === 'APPROVE') setRenderMode('transaction-assets-approval')
-                            else setRenderMode('transaction-assets-exchange')
-                            setHasLoaded(true)
-                        }, 3000)
+                        res.gasPrice = gasPrice
+                        res.to = transaction.to
+                        setPreviewTxnState(res)
+                        if (res.changeType === 'APPROVE') setRenderMode('transaction-assets-approval')
+                        else setRenderMode('transaction-assets-exchange')
+                        setHasLoaded(true)
                     })
                     .catch((err) => {
-                        setTimeout(() => {
                             setRenderMode("debug-end")
                             setHasLoaded(true)
                             console.log('Simulation Failed: ', err.message)
-                        }, 3000)
                     })
+                delete transaction.maxFeePerGas
+                delete transaction.maxPriorityFeePerGas
             }
             getPreview(transaction)
-            console.log('PreviewTxn: ', JSON.stringify(previewTxn))
         }
         else {
             setRenderMode(mode)
             setHasLoaded(true)
         }
-    })
-    // Close extension
+    }, [mode])
+
     const extensionResponse = async (data: boolean) => {
         await Browser.runtime.sendMessage(undefined, { id, data });
         window.close();
@@ -83,8 +75,8 @@ const Main = (props: Props) => {
             case 'transaction-assets-exchange': {
                 return (
                     <div className="fullScreenSetup">
-                        <MainHeader contractAddress={transaction.to} userAddress={userAddress}></MainHeader>
-                        <ContractInfo mode={mode} address={transaction.to} />
+                        <MainHeader contractAddress={previewTxn.to} userAddress={userAddress}></MainHeader>
+                        <ContractInfo mode={mode} address={previewTxn.to} />
                         <Transfer mode={renderMode} transaction={previewTxn} />
                         <Footer onAccept={accept} onReject={reject} />
                     </div>
@@ -93,8 +85,8 @@ const Main = (props: Props) => {
             case 'transaction-assets-approval': {
                 return (
                     <div className="fullScreenSetup">
-                        <MainHeader contractAddress={transaction.to} userAddress={userAddress}></MainHeader>
-                        <ContractInfo mode={mode} address={transaction.to} />
+                        <MainHeader contractAddress={previewTxn.to} userAddress={userAddress}></MainHeader>
+                        <ContractInfo mode={mode} address={previewTxn.to} />
                         <Transfer mode={renderMode} transaction={previewTxn} />
                         <Footer onAccept={accept} onReject={reject} />
                     </div>
@@ -103,7 +95,7 @@ const Main = (props: Props) => {
             case 'transaction-not-configured': {
                 return (
                     <div className="fullScreenSetup">
-                        <MainHeader contractAddress={transaction.to} userAddress={userAddress}></MainHeader>
+                        <MainHeader contractAddress={previewTxn.to} userAddress={userAddress}></MainHeader>
                         <SimulationError />
                         <Footer onAccept={accept} onReject={reject} />
                     </div>
@@ -112,7 +104,7 @@ const Main = (props: Props) => {
             case 'signature-no-risk-safe': {
                 return (
                     <div className="fullScreenSetup">
-                        <MainHeader contractAddress={transaction.to} userAddress={userAddress}></MainHeader>
+                        <MainHeader contractAddress={previewTxn.to} userAddress={userAddress}></MainHeader>
                         <Safe />
                         <Footer onAccept={accept} onReject={reject} />
                     </div>
@@ -122,7 +114,7 @@ const Main = (props: Props) => {
             case 'signature-712': {
                 return (
                     <div className="fullScreenSetup">
-                        <MainHeader contractAddress={transaction.to} userAddress={userAddress}></MainHeader>
+                        <MainHeader contractAddress={previewTxn.to} userAddress={userAddress}></MainHeader>
                         <EIP712 />
                         <Footer onAccept={accept} onReject={reject} />
                     </div>
@@ -131,7 +123,7 @@ const Main = (props: Props) => {
             case 'signature-no-risk-malicious': {
                 return (
                     <div className="fullScreenSetup">
-                        <MainHeader contractAddress={transaction.to} userAddress={userAddress}></MainHeader>
+                        <MainHeader contractAddress={previewTxn.to} userAddress={userAddress}></MainHeader>
                         <Malicious />
                         <Footer onAccept={accept} onReject={reject} />
                     </div>
@@ -140,8 +132,8 @@ const Main = (props: Props) => {
             case 'signature-token-approval': {
                 return (
                     <div className="fullScreenSetup">
-                        <MainHeader contractAddress={transaction.to} userAddress={userAddress}></MainHeader>
-                        <ContractInfo mode={mode} address={transaction.to} />
+                        <MainHeader contractAddress={previewTxn.to} userAddress={userAddress}></MainHeader>
+                        <ContractInfo mode={mode} address={previewTxn.to} />
                         <Transfer mode={mode} transaction={previewTxn} />
                         <Footer onAccept={accept} onReject={reject} />
                     </div>
@@ -150,8 +142,8 @@ const Main = (props: Props) => {
             case 'signature-move-assets': {
                 return (
                     <div className="fullScreenSetup">
-                        <MainHeader contractAddress={transaction.to} userAddress={userAddress}></MainHeader>
-                        <ContractInfo mode={mode} address={transaction.to} />
+                        <MainHeader contractAddress={previewTxn.to} userAddress={userAddress}></MainHeader>
+                        <ContractInfo mode={mode} address={previewTxn.to} />
                         <Transfer mode={mode} transaction={previewTxn} />
                         <Footer onAccept={accept} onReject={reject} />
                     </div>
@@ -160,7 +152,7 @@ const Main = (props: Props) => {
             case 'signature-not-configured': {
                 return (
                     <div className="fullScreenSetup">
-                        <MainHeader contractAddress={transaction.to} userAddress={userAddress}></MainHeader>
+                        <MainHeader contractAddress={previewTxn.to} userAddress={userAddress}></MainHeader>
                         <SignatureError />
                         <Footer onAccept={accept} onReject={reject} />
                     </div>
@@ -169,7 +161,7 @@ const Main = (props: Props) => {
             case 'debug-end': {
                 return (
                     <div className="fullScreenSetup">
-                        <MainHeader contractAddress={transaction.to} userAddress={userAddress}></MainHeader>
+                        <MainHeader contractAddress={previewTxn.to} userAddress={userAddress}></MainHeader>
                         <SimulationError />
                         <Footer onAccept={accept} onReject={reject} />
                     </div>
@@ -195,7 +187,7 @@ const Main = (props: Props) => {
                     </div>
                     :
                     <div>
-                        <MainHeader contractAddress={transaction.to} userAddress={userAddress} />
+                        <MainHeader contractAddress={previewTxn.to} userAddress={userAddress} />
                         <Loading />
                         <Footer onAccept={accept} onReject={reject} />
                     </div>

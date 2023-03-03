@@ -161,8 +161,25 @@ const AssetsIn = (props: Props) => {
                         </IconButton>
                     </div>
                 </ListItem>
-                <Collapse in={!open} timeout="auto" unmountOnExit>
+                { sendTokens.length === 1 ? 
+                    <ListItem>
+                    <img src={sendTokens[0].tokenURL ?? nft} height ="48px" width="48px"alt="Tokens" />
+                    <ListItemText 
+                        sx={{
+                            fontSize: '20px',
+                            textAlign: 'right',
+                            color: '#509A57'
+                        }}
+                        primary={`${sendTokens[0].amount ?? '-'}${sendTokens[0].symbol ?? ''}`}
+                    />
+                    </ListItem>
+                    :
                     <ListItem sx={{
+                        width: '100%',
+                        display: 'flex',
+                    }}>
+                        <Collapse in={!open} timeout="auto" unmountOnExit sx={{
+                        width: '100%',
                         display: 'flex',
                         justifyContent: 'flex-end'
                     }}>
@@ -202,17 +219,14 @@ const AssetsIn = (props: Props) => {
                                                 fontSize: '20px',
                                                 fontWeight: 100,
                                             }}>
-                                            +{sendTokens.length} {sendTokens[0].symbol}
+                                            +${sendTokens.length ?? '-'}${sendTokens[0].symbol ?? ''}
                                         </Typography>
                                     }
                                 />
                             }
                         </ListItem>
                     </ListItem>
-                </Collapse>
-                <Collapse in={open} timeout="auto" unmountOnExit>
-                    {renderList()}
-                </Collapse>
+                }
             </List>
         </div>
     );

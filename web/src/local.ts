@@ -7,8 +7,8 @@ const Url = {
 }
 const type = process.env.WORK_ENV
 let baseUrl = Url.prod
-if (type === 'prod'){
-   baseUrl = Url.prod;
+if (type === 'dev'){
+   baseUrl = Url.dev;
 }
 
 export default axios.create({

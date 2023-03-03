@@ -35,10 +35,9 @@ const AssetsOut = (props: Props) => {
     const handlePopoverClose = () => {
         setAnchorEl(null);
     };
-
+    console.log("Out Token: ", sendTokens)
     const hover = Boolean(anchorEl);
     const renderList = () => {
-        console.log("Token List: ", sendTokens)
         return sendTokens.map((token: any) => {
             if (token) {
                 return <ListItem key={token} sx={{
@@ -55,7 +54,7 @@ const AssetsOut = (props: Props) => {
                                     fontSize: '20px',
                                     fontWeight: 100,
                                 }}>
-                                {token.symbol  ?? 'Error'}
+                                {token.symbol  ?? ''}
                             </Typography>
                         }
                     />
@@ -71,7 +70,7 @@ const AssetsOut = (props: Props) => {
                                     fontSize: '20px',
                                     fontWeight: 100,
                                 }}>
-                                -{token.amount ?? 'Error' + token.symbol ?? 'Error'}
+                                -{token.amount ?? '-' + token.symbol ?? ''}
                             </Typography>
                         }
                     />

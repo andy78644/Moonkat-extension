@@ -27,13 +27,13 @@
 }
 
 #loadingFrame {
+    padding: 16px;
     padding-bottom: 100px;
     font-family: Lato, sans-serif;
     font-weight: 700;
     text-align: center;
     background-color: #FFF8EA;
     font-size: 20px;
-    padding: 16px;
     width: 80%;
     height: 30%;
     border: 2px solid #DFD8CA;
