@@ -39,7 +39,6 @@ const AssetsIn = (props: Props) => {
     };
     const hover = Boolean(anchorEl);
     const renderList = () => {
-        console.log(sendTokens)
         return sendTokens.map((token: any, index: number) => {
             if (token) {
                 return <ListItem key={token} sx={{
@@ -135,7 +134,8 @@ const AssetsIn = (props: Props) => {
                 <ListItem
                     sx={{
                         padding: "4px 16px",
-                    }}>
+                    }}
+                >
                     <div>
                         <ListItemText
                             sx={{
@@ -161,71 +161,36 @@ const AssetsIn = (props: Props) => {
                         </IconButton>
                     </div>
                 </ListItem>
-                { sendTokens.length === 1 ? 
-                    <ListItem>
-                    <img src={sendTokens[0].tokenURL ?? nft} height ="48px" width="48px"alt="Tokens" />
-                    <ListItemText 
-                        sx={{
-                            fontSize: '20px',
-                            textAlign: 'right',
-                            color: '#509A57'
-                        }}
-                        primary={`${sendTokens[0].amount ?? '-'}${sendTokens[0].symbol ?? ''}`}
-                    />
-                    </ListItem>
-                    :
-                    <ListItem sx={{
-                        width: '100%',
-                        display: 'flex',
-                    }}>
-                        <Collapse in={!open} timeout="auto" unmountOnExit sx={{
-                        width: '100%',
-                        display: 'flex',
-                        justifyContent: 'flex-end'
-                    }}>
-                        <ListItem
-                            sx={{
-                                paddingBottom: "2px",
-                                paddingTop: "0px",
-                            }}
-                        >
-                            <img src={sendTokens[0].tokenURL ?? nft} height="48px" width="48px" alt="Tokens" /></ListItem>
+                {
+                    sendTokens.length === 1 ?
                         <ListItem>
-                            {
-                                sendTokens.length === 1 ? <ListItemText
-                                    sx={{
-                                        textAlign: 'right',
-                                        color: '#509A57'
-                                    }}
-                                    primary={
-                                        <Typography
-                                            sx={{
-                                                fontFamily: 'Lato',
-                                                fontSize: '20px',
-                                                fontWeight: 100,
-                                            }}>
-                                            +{sendTokens[0].amount} {sendTokens[0].symbol}
-                                        </Typography>
-                                    }
-                                /> : <ListItemText
-                                    sx={{
-                                        textAlign: 'right',
-                                        color: '#509A57'
-                                    }}
-                                    primary={
-                                        <Typography
-                                            sx={{
-                                                fontFamily: 'Lato',
-                                                fontSize: '20px',
-                                                fontWeight: 100,
-                                            }}>
-                                            +${sendTokens.length ?? '-'}${sendTokens[0].symbol ?? ''}
-                                        </Typography>
-                                    }
-                                />
-                            }
+                            <img src={sendTokens[0].tokenURL ?? nft} height="48px" width="48px" alt="Tokens" />
+                            <ListItemText
+                                sx={{
+                                    fontSize: '20px',
+                                    textAlign: 'right',
+                                    color: '#509A57'
+                                }}
+                                primary={
+                                    <Typography
+                                        sx={{
+                                            fontFamily: 'Lato',
+                                            fontSize: '20px',
+                                            fontWeight: 100,
+                                        }}>
+                                        {sendTokens[0].amount ?? '-'} {sendTokens[0].symbol ?? ''}
+                                    </Typography>
+                                }
+                            />
                         </ListItem>
-                    </ListItem>
+                        :
+                        <Collapse in={!open} timeout="auto" unmountOnExit sx={{
+                            width: '100%',
+                            display: 'flex',
+                            justifyContent: 'flex-end'
+                        }}>
+                            {renderList()}
+                        </Collapse>
                 }
             </List>
         </div>
