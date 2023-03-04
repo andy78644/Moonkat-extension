@@ -1,25 +1,24 @@
 #loading {
-    height: 100%;
-}
-
-#loadingFrame {
+    /* height: 30%; */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     padding: 16px;
-    font-family: Lato, sans-serif;
-    font-weight: 700;
     text-align: center;
     background-color: #FFF8EA;
     font-size: 20px;
     width: 80%;
-    height: 25%;
-    border: 2px solid #DFD8CA;
-    border-radius: 8px;
+    height: 23%;
     position: absolute;
 	top: 0;
 	left: 0;
 	bottom: 0;
 	right: 0;
 	margin: auto;
-    border: 2px #DFDBCA solid;
+    border: 2px solid #DFD8CA;
+    border-radius: 8px;
+    font-family: Lato, sans-serif;
+    font-weight: 700;
 }
 
 #simulating {
@@ -27,8 +26,6 @@
 }
 
 #loadingSloth {
-    margin-left: auto;
-    margin-right: auto;
-    width: 246px;
-    height: 113px;
+    width: 60%;
+    height: 60%;
 }

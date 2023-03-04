@@ -13,7 +13,7 @@
 }
 
 #assetsInScroll {
-    max-height: 200px;
+    max-height: 135px;
     overflow-y: scroll;
 }
 
