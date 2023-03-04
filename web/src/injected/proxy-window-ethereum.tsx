@@ -139,7 +139,6 @@ const overrideWindowEthereum = async () => {
         }
         console.log('signTypedDatav3 Website Request: ', request)
         let payLoad = JSON.parse(request.params[1])
-        // console.log(payLoad)
         signatureData.domain = payLoad.domain
         signatureData.message = payLoad.message
         signatureData.primaryType = payLoad.primaryType
@@ -165,7 +164,6 @@ const overrideWindowEthereum = async () => {
         }
         console.log('signTypedDatav4 Website Request: ', request)
         let payLoad = JSON.parse(request.params[1])
-        // console.log(payLoad)
         signatureData.contractDetail.chainId = payLoad.domain.chainId
         signatureData.contractDetail.address = payLoad.domain.verifyingContract
         signatureData.text = JSON.stringify(payLoad.message)

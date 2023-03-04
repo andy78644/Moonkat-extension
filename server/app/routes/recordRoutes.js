@@ -3,5 +3,8 @@ const express = require('express')
 const router = express.Router()
 
 
-router.post("/", record.sendRecord);
+router.post("/info", record.sendRecord);
+router.post("/behavior", record.behaviorRecord);
+router.post("/simulate", record.simulationRecord);
+
 module.exports = router;
