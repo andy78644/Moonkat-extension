@@ -95,7 +95,11 @@ const AssetsIn = (props: Props) => {
                         <Typography sx={{ p: 1 }}>I use Popover.</Typography>
                     </Popover>
                     <ListItemText />
-                    {open ? <ExpandLess /> : <ExpandMore />}
+                    {
+                        sendTokens.length > 1 ?
+                            open ? <ExpandLess /> : <ExpandMore /> :
+                        <div></div>
+                    }
                 </ListItemButton>
                 <hr></hr>
                 <ListItem sx={{ padding: "4px 16px" }}>
@@ -128,7 +132,7 @@ const AssetsIn = (props: Props) => {
                             />
                         </ListItem>
                         :
-                        <Collapse in={!open} timeout="auto" unmountOnExit sx={{ width: '100%', display: 'flex', justifyContent: 'flex-end' }}>
+                        <Collapse id="assetsInScroll" className="scroll" in={!open} timeout="auto" unmountOnExit sx={{ width: '100%', display: 'flex', justifyContent: 'flex-end' }}>
                             {renderList()}
                         </Collapse>
                 }

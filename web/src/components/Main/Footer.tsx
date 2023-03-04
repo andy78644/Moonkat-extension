@@ -13,7 +13,7 @@ const Footer = (props: Props) => {
     const { onAccept, onReject } = props;
     return (
         <div>
-            <Stack sx={{ width: '100%', backgroundColor: '#DFD8CA', padding: '16px', position: 'fixed', left: 0, bottom: 0 }}
+            <Stack sx={{ width: '100%', backgroundColor: "rgba(255, 248, 234, 0.5)", padding: '16px', position: 'fixed', left: 0, bottom: 0 }}
                 direction="row"
                 spacing='8px'
             >
@@ -22,7 +22,7 @@ const Footer = (props: Props) => {
                 >
                     Cancel
                 </Button>
-                <Button sx={{ width: '50%', borderRadius: '48px', color: '#DFD8C9', backgroundColor: '#77736A', py: '3px', marginLeft: '8px' }}
+                <Button sx={{ "&:hover": { backgroundColor: "#77736A", opacity: 0.75 }, width: '50%', borderRadius: '48px', color: '#DFD8C9', backgroundColor: '#77736A', py: '3px', marginLeft: '8px' }}
                     onClick={onAccept}
                 >
                     Continue
