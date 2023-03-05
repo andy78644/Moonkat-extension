@@ -37,13 +37,11 @@ const Report = () => {
 
     const contractAddress = params.get('contractAddress');
     const userAddress = params.get('userAddress');
-    console.log("contractAddress: " + contractAddress)
-    console.log("userAddress: " + userAddress)
 
     const [reportFlow, setReportFlow] = useState(0);
     const [isPrompt, setPrompt] = useState(false);
-    const [reportName, setReportName] = useState('')
-    const [reportDescription, setReportDescription] = useState('')
+    const [reportName, setReportName] = useState('DefaultName')
+    const [reportDescription, setReportDescription] = useState('DefaultDescription')
     const handleSubmit = async () => {
         setPrompt(true)
     }

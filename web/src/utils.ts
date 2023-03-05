@@ -33,14 +33,13 @@ export const sendAndAwaitResponseFromStream = (stream: Duplex, data: any): Promi
       hashdata = { timestamp, hashdata}
       const id = objectHash(hashdata);
       stream.write({ id, data });
-  
       const callback = (response: any) => {
         if (response.id === id) {
           stream.off('data', callback);
           resolve(response.data);
         }
       };
-  
+      // Response to requestHandler
       stream.on('data', callback);
     });
 }

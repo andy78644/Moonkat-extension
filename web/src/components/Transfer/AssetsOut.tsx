@@ -35,7 +35,6 @@ const AssetsOut = (props: Props) => {
     const handlePopoverClose = () => {
         setAnchorEl(null);
     };
-    console.log("Out Token: ", sendTokens)
     const hover = Boolean(anchorEl);
     const renderList = () => {
         return sendTokens.map((token: any) => {
@@ -48,13 +47,8 @@ const AssetsOut = (props: Props) => {
                             paddingLeft: '8px',
                         }}
                         primary={
-                            <Typography
-                                sx={{
-                                    fontFamily: 'Lato',
-                                    fontSize: '20px',
-                                    fontWeight: 100,
-                                }}>
-                                {token.symbol  ?? ''}
+                            <Typography sx={{ fontFamily: 'Lato', fontSize: '20px', fontWeight: 100 }}>
+                                {token.symbol ?? ''}
                             </Typography>
                         }
                     />
@@ -65,12 +59,8 @@ const AssetsOut = (props: Props) => {
                         }}
                         primary={
                             <Typography
-                                sx={{
-                                    fontFamily: 'Lato',
-                                    fontSize: '20px',
-                                    fontWeight: 100,
-                                }}>
-                                -{token.amount ?? '-' + token.symbol ?? ''}
+                                sx={{ fontFamily: 'Lato', fontSize: '20px', fontWeight: 100 }}>
+                                -{token.amount  + ' ETH' ?? '-' + token.symbol ?? ''}
                             </Typography>
                         }
                     />
@@ -160,12 +150,8 @@ const AssetsOut = (props: Props) => {
                         }}
                         primary={
                             <Typography
-                                sx={{
-                                    fontFamily: 'Lato',
-                                    fontSize: '20px',
-                                    fontWeight: 100,
-                                }}>
-                                -{gasFee.toFixed(4)}
+                                sx={{ fontFamily: 'Lato', fontSize: '20px', fontWeight: 100 }}>
+                                -{gasFee.toFixed(4) + ' ETH' }
                             </Typography>
                         }
                     />

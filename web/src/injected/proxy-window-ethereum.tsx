@@ -4,6 +4,7 @@ import { providers, utils } from 'ethers';
 import { Identifier } from '../constant';
 import { sendAndAwaitResponseFromStream } from '../utils';
 
+// Send data from website to content_script
 const stream = new WindowPostMessageStream({
   name: Identifier.INPAGE,
   target: Identifier.CONTENT_SCRIPT,

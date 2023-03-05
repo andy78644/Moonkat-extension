@@ -39,7 +39,7 @@ const AssetsIn = (props: Props) => {
     };
     const hover = Boolean(anchorEl);
     const renderList = () => {
-        return sendTokens.map((token: any, index: number) => {
+        return sendTokens.map((token: any) => {
             if (token) {
                 return <ListItem key={token} sx={{
                     display: 'flex',
@@ -143,13 +143,8 @@ const AssetsIn = (props: Props) => {
                                 fontSize: '20px',
                             }}
                             primary={
-                                <Typography
-                                    sx={{
-                                        fontFamily: 'Lato',
-                                        fontSize: '20px',
-                                        fontWeight: 100,
-                                    }}>
-                                    {sendTokens[0].name ?? 'Error'}
+                                <Typography sx={{ fontFamily: 'Lato', fontSize: '20px', fontWeight: 100 }}>
+                                    {sendTokens[0].name ?? ''}
                                 </Typography>
                             }
                         />
@@ -172,23 +167,23 @@ const AssetsIn = (props: Props) => {
                                     color: '#509A57'
                                 }}
                                 primary={
-                                    <Typography
-                                        sx={{
-                                            fontFamily: 'Lato',
-                                            fontSize: '20px',
-                                            fontWeight: 100,
-                                        }}>
-                                        {sendTokens[0].amount ?? '-'} {sendTokens[0].symbol ?? ''}
+                                    <Typography sx={{ fontFamily: 'Lato', fontSize: '20px', fontWeight: 100 }}>
+                                        +{sendTokens[0].amount ?? '-'} {sendTokens[0].symbol ?? ''}
                                     </Typography>
                                 }
                             />
-                        </ListItem>
-                        :
-                        <Collapse in={!open} timeout="auto" unmountOnExit sx={{
-                            width: '100%',
-                            display: 'flex',
-                            justifyContent: 'flex-end'
-                        }}>
+                        </ListItem> :
+                        open ?
+                        <ListItem>
+                            <img src={sendTokens[0].tokenURL ?? nft} height="48px" width="48px" alt="Tokens" />
+                            <ListItemText sx={{ fontSize: '20px', textAlign: 'right', color: '#509A57' }}
+                                primary={
+                                    <Typography sx={{ fontFamily: 'Lato', fontSize: '20px', fontWeight: 100 }}>
+                                        +{sendTokens.length ?? '-'} {sendTokens[0].symbol ?? ''}
+                                    </Typography>
+                                }/>
+                        </ListItem> :
+                        <Collapse id="assetsInScroll" className="scroll" in={!open} timeout="auto" unmountOnExit sx={{ width: '100%', display: 'flex', justifyContent: 'flex-end' }}>
                             {renderList()}
                         </Collapse>
                 }
