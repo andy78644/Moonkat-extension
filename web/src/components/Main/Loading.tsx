@@ -9,10 +9,8 @@ interface Props {
 const Loading = (props: Props) => {
     return (
         <div id="loading">
-            <div id="loadingFrame">
-                <img id="loadingSloth" src={require("../../assets/loading.gif").default} alt="loading"/>
-                <p id="simulating">Simulating...</p>
-            </div>
+            <img id="loadingSloth" src={require("../../assets/loading.gif").default} alt="loading" />
+            <p id="simulating">Simulating...</p>
         </div>
     )
 }

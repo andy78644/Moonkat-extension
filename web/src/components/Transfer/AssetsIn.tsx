@@ -41,55 +41,33 @@ const AssetsIn = (props: Props) => {
     const renderList = () => {
         return sendTokens.map((token: any, index: number) => {
             if (token) {
-                return <ListItem key={token} sx={{
-                    display: 'flex',
-                    justifyContent: 'space-between'
-                }}>
-                    <ListItem
-                        sx={{
-                            paddingBottom: "2px",
-                            paddingTop: "0px",
-                        }}
-                    >
-                        <img src={token.tokenURL ?? nft} height="48px" width="48px" alt="Asset In" /></ListItem>
-                    <ListItem>
-                        <ListItemText
-                            sx={{
-                                textAlign: 'right',
-                                color: '#509A57',
-                            }}
-                            primary={
-                                <Typography
-                                    sx={{
-                                        fontFamily: 'Lato',
-                                        fontSize: '20px',
-                                        fontWeight: 100,
-                                    }}>
-                                    +{token.amount} {token.symbol}
-                                </Typography>
-                            }
-                        /></ListItem>
-                </ListItem>
+                return (
+                    <ListItem key={token} sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                        <ListItem sx={{ paddingBottom: "2px", paddingTop: "0px" }}>
+                            <img src={ token.tokenURL ?? nft } height="48px" width="48px" alt="Asset In" /></ListItem>
+                        <ListItem>
+                            <ListItemText sx={{ textAlign: 'right', color: '#509A57' }}
+                                primary={
+                                    <Typography sx={{ fontFamily: 'Lato', fontSize: '20px', fontWeight: 100 }}>
+                                        +{token.amount} {token.symbol}
+                                    </Typography>
+                                }
+                            />
+                        </ListItem>
+                    </ListItem>
+                )
             }
         });
     }
     return (
         <div id="assetsIn">
-            <List sx={{
-                width: '100%',
-                bgcolor: '#FFF8EA',
-                borderRadius: 8
-            }}
+            <List
+                sx={{ width: '100%', bgcolor: '#FFF8EA', borderRadius: 8 }}
                 component="nav"
                 aria-labelledby="nested-list-subheader"
             >
                 <ListItemButton
-                    sx={{
-                        width: '100%',
-                        "&:hover, &.Mui-focusVisible": {
-                            backgroundColor: '#FFF8EA'
-                        }
-                    }}
+                    sx={{ width: '100%', "&:hover, &.Mui-focusVisible": { backgroundColor: '#FFF8EA' } }}
                     component="div"
                     id="assetsOutTitle"
                     onClick={handleClick}
@@ -106,49 +84,29 @@ const AssetsIn = (props: Props) => {
                     </Typography>
                     <Popover
                         id="mouse-over-popover"
-                        sx={{
-                            pointerEvents: 'none',
-                        }}
+                        sx={{ pointerEvents: 'none' }}
                         open={hover}
                         anchorEl={anchorEl}
-                        anchorOrigin={{
-                            vertical: 'bottom',
-                            horizontal: 'left',
-                        }}
-                        transformOrigin={{
-                            vertical: 'top',
-                            horizontal: 'left',
-                        }}
+                        anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
+                        transformOrigin={{ vertical: 'top', horizontal: 'left' }}
                         onClose={handlePopoverClose}
                         disableRestoreFocus
                     >
                         <Typography sx={{ p: 1 }}>I use Popover.</Typography>
                     </Popover>
                     <ListItemText />
-                    {open ?
-                        <ExpandLess /> :
-                        <ExpandMore />
+                    {
+                        sendTokens.length > 1 ?
+                            open ? <ExpandLess /> : <ExpandMore /> :
+                        <div></div>
                     }
                 </ListItemButton>
                 <hr></hr>
-                <ListItem
-                    sx={{
-                        padding: "4px 16px",
-                    }}
-                >
+                <ListItem sx={{ padding: "4px 16px" }}>
                     <div>
-                        <ListItemText
-                            sx={{
-                                display: 'inline-block',
-                                fontSize: '20px',
-                            }}
+                        <ListItemText sx={{ display: 'inline-block', fontSize: '20px' }}
                             primary={
-                                <Typography
-                                    sx={{
-                                        fontFamily: 'Lato',
-                                        fontSize: '20px',
-                                        fontWeight: 100,
-                                    }}>
+                                <Typography sx={{ fontFamily: 'Lato', fontSize: '20px', fontWeight: 100 }}>
                                     {sendTokens[0].name ?? 'Error'}
                                 </Typography>
                             }
@@ -165,30 +123,16 @@ const AssetsIn = (props: Props) => {
                     sendTokens.length === 1 ?
                         <ListItem>
                             <img src={sendTokens[0].tokenURL ?? nft} height="48px" width="48px" alt="Tokens" />
-                            <ListItemText
-                                sx={{
-                                    fontSize: '20px',
-                                    textAlign: 'right',
-                                    color: '#509A57'
-                                }}
+                            <ListItemText sx={{ fontSize: '20px', textAlign: 'right', color: '#509A57' }}
                                 primary={
-                                    <Typography
-                                        sx={{
-                                            fontFamily: 'Lato',
-                                            fontSize: '20px',
-                                            fontWeight: 100,
-                                        }}>
+                                    <Typography sx={{ fontFamily: 'Lato', fontSize: '20px', fontWeight: 100 }}>
                                         {sendTokens[0].amount ?? '-'} {sendTokens[0].symbol ?? ''}
                                     </Typography>
                                 }
                             />
                         </ListItem>
                         :
-                        <Collapse in={!open} timeout="auto" unmountOnExit sx={{
-                            width: '100%',
-                            display: 'flex',
-                            justifyContent: 'flex-end'
-                        }}>
+                        <Collapse id="assetsInScroll" className="scroll" in={!open} timeout="auto" unmountOnExit sx={{ width: '100%', display: 'flex', justifyContent: 'flex-end' }}>
                             {renderList()}
                         </Collapse>
                 }

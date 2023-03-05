@@ -40,36 +40,19 @@ const AssetsOut = (props: Props) => {
     const renderList = () => {
         return sendTokens.map((token: any) => {
             if (token) {
-                return <ListItem key={token} sx={{
-                }}>
+                return <ListItem key={token} sx={{}}>
                     <img src={token.tokenURL ?? nft} height="48px" width="48px" alt="Free Mint" />
-                    <ListItemText
-                        sx={{
-                            paddingLeft: '8px',
-                        }}
+                    <ListItemText sx={{ paddingLeft: '8px' }}
                         primary={
-                            <Typography
-                                sx={{
-                                    fontFamily: 'Lato',
-                                    fontSize: '20px',
-                                    fontWeight: 100,
-                                }}>
+                            <Typography sx={{ fontFamily: 'Lato', fontSize: '20px', fontWeight: 100 }}>
                                 {token.symbol  ?? ''}
                             </Typography>
                         }
                     />
-                    <ListItemText
-                        sx={{
-                            textAlign: 'right',
-                            color: '#B8463D'
-                        }}
+                    <ListItemText sx={{ textAlign: 'right', color: '#B8463D' }}
                         primary={
                             <Typography
-                                sx={{
-                                    fontFamily: 'Lato',
-                                    fontSize: '20px',
-                                    fontWeight: 100,
-                                }}>
+                                sx={{ fontFamily: 'Lato', fontSize: '20px', fontWeight: 100 }}>
                                 -{token.amount ?? '-' + token.symbol ?? ''}
                             </Typography>
                         }
@@ -81,22 +64,12 @@ const AssetsOut = (props: Props) => {
 
     return (
         <div id="assetsOut">
-            <List sx={{
-                width: '100%',
-                bgcolor: '#FFF8EA',
-                borderRadius: 8
-            }}
+            <List sx={{ width: '100%', bgcolor: '#FFF8EA', borderRadius: 8 }}
                 component="nav"
                 aria-labelledby="nested-list-subheader"
             >
                 <ListItemButton
-                    sx={{
-                        width: '100%',
-                        bgcolor: '#FFF8EA',
-                        "&:hover, &.Mui-focusVisible": {
-                            backgroundColor: '#FFF8EA'
-                        }
-                    }}
+                    sx={{ width: '100%', bgcolor: '#FFF8EA', "&:hover, &.Mui-focusVisible": { backgroundColor: '#FFF8EA' } }}
                     component="div"
                     id="assetsOutTitle"
                     onClick={handleClick}
@@ -113,19 +86,11 @@ const AssetsOut = (props: Props) => {
                     </Typography>
                     <Popover
                         id="mouse-over-popover"
-                        sx={{
-                            pointerEvents: 'none',
-                        }}
+                        sx={{ pointerEvents: 'none' }}
                         open={hover}
                         anchorEl={anchorEl}
-                        anchorOrigin={{
-                            vertical: 'bottom',
-                            horizontal: 'left',
-                        }}
-                        transformOrigin={{
-                            vertical: 'top',
-                            horizontal: 'left',
-                        }}
+                        anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
+                        transformOrigin={{ vertical: 'top', horizontal: 'left' }}
                         onClose={handlePopoverClose}
                         disableRestoreFocus
                     >
@@ -139,32 +104,19 @@ const AssetsOut = (props: Props) => {
                 <ListItem>
                     <img src={gasFeeIcon} alt="gasFee" />
                     <ListItemText
-                        sx={{
-                            paddingLeft: '8px',
-                        }}
+                        sx={{ paddingLeft: '8px' }}
                         primary={
                             <Typography
-                                sx={{
-                                    fontFamily: 'Lato',
-                                    fontSize: '20px',
-                                    fontWeight: 100,
-                                }}>
+                                sx={{ fontFamily: 'Lato', fontSize: '20px', fontWeight: 100 }}>
                                 GasFee
                             </Typography>
                         }
                     />
                     <ListItemText
-                        sx={{
-                            textAlign: 'right',
-                            color: '#B8463D'
-                        }}
+                        sx={{ textAlign: 'right', color: '#B8463D' }}
                         primary={
                             <Typography
-                                sx={{
-                                    fontFamily: 'Lato',
-                                    fontSize: '20px',
-                                    fontWeight: 100,
-                                }}>
+                                sx={{ fontFamily: 'Lato', fontSize: '20px', fontWeight: 100 }}>
                                 -{gasFee.toFixed(4)}
                             </Typography>
                         }

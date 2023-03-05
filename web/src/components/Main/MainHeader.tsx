@@ -70,38 +70,20 @@ const MainHeader = (props: Props) => {
                     anchorEl={anchorEl}
                     open={open}
                     onClose={handleClose}
-                    anchorOrigin={{
-                        vertical: 'bottom',
-                        horizontal: 'left',
-                    }}
-                    transformOrigin={{
-                        vertical: 'top',
-                        horizontal: 'left',
-                    }}
+                    anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
+                    transformOrigin={{ vertical: 'top', horizontal: 'left' }}
                 >
                     <Button
-                        sx={{
-                            fontFamily: 'Kiona',
-                            fontWeight: 300,
-                            fontSize: "20px",
-                            color: "#434343",
-                            px: '13px'
-                        }}
+                        sx={{ "&:hover": { backgroundColor: '#DFD8CA' }, fontFamily: 'Kiona', fontWeight: 300, fontSize: "20px", color: "#434343", px: '13px' }}
                         startIcon={<img src={Union} alt="union" />}
                         onClick={handleReportPopOut}
                     >
                         &nbsp; Report &nbsp;
                     </Button>
                     <br />
+                    <hr className='mainHeaderHorizontalLine'></hr>
                     <Button
-                        sx={{
-                            fontFamily: 'Kiona',
-                            fontWeight: 300,
-                            fontSize: "20px",
-                            color: "#434343",
-                            paddingLeft: '13px',
-                            paddingRight: '18px',
-                        }}
+                        sx={{ "&:hover": { backgroundColor: '#DFD8CA' }, fontFamily: 'Kiona', fontWeight: 300, fontSize: "20px", color: "#434343", paddingLeft: '13px', paddingRight: '18px' }}
                         startIcon={<img src={Setting} alt="setting" />}
                     >
                         &nbsp; Setting
