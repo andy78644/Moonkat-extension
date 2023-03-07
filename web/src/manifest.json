@@ -16,7 +16,7 @@
     },
 
     "action": {
-        "default_popup": "extension.html"
+        "default_popup": "popup.html"
     },
 
     "background": {
