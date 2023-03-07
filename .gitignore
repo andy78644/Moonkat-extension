@@ -9,7 +9,6 @@ cloud_sql_proxy
 # server
 server/app/config/config.json
 server/app/config/db.config
-server/txnres.json
 
 # web
 web/dist/*
