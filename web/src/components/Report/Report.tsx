@@ -74,23 +74,13 @@ const Report = () => {
                 <div id="reportMaliciousContent">Is this a malicious contract ?</div>
             </div>
             <Stack sx={{ marginLeft: 0.5, marginRight: 0.5 }} spacing={3} direction="row">
-                <Button sx={{
-                    color: '#434343',
-                    '&:hover, &:focus': {
-                        color: 'white',
-                        backgroundColor: '#77736A',
-                    },
+                <Button sx={{ color: '#434343', '&:hover, &:focus': { color: 'white', backgroundColor: '#77736A' },
                     borderRadius: 5,
                     backgroundColor: "#DFD8C9",
                     fontWeight: "500",
                     width: '50%'
                 }} onClick={() => { setReportFlow(1) }} variant="text">Yes</Button>
-                <Button sx={{
-                    color: '#434343',
-                    '&:hover, &:focus': {
-                        color: 'white',
-                        backgroundColor: '#77736A',
-                    },
+                <Button sx={{ color: '#434343', '&:hover, &:focus': { color: 'white', backgroundColor: '#77736A', },
                     borderRadius: 5,
                     backgroundColor: "#DFD8C9",
                     fontWeight: "500",
@@ -128,12 +118,7 @@ const Report = () => {
                     </div>
                     <ReportForm onTextValue={handleDescription} placeholder="Share more detail with the community" formHeight={130} />
                     <Stack sx={{ mx: 0.5, mt: 4 }}>
-                        <Button sx={{
-                            color: '#434343',
-                            '&:hover, &:focus': {
-                                color: 'white',
-                                backgroundColor: '#77736A',
-                            },
+                        <Button sx={{ color: '#434343', '&:hover, &:focus': { color: 'white', backgroundColor: '#77736A', },
                             height: 40,
                             borderRadius: 5,
                             backgroundColor: "#DFD8C9",

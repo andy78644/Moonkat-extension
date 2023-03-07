@@ -1,80 +1,24 @@
 #loading {
-    padding-bottom: 60px;
-}
-
-@media (max-width: 500px) {
-    #loading {
-        padding-bottom: 200px;
-    }
-}
-
-@media (max-width: 450px) {
-    #loading {
-        padding-bottom: 230px;
-    }
-}
-
-@media (max-width: 400px) {
-    #loading {
-        padding-bottom: 60px;
-    }
-}
-
-@media (max-width: 363px) {
-    #loading {
-        padding-bottom: 60px;
-    }
-}
-
-#loadingFrame {
+    /* height: 30%; */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     padding: 16px;
-    /* padding-bottom: 100px; */
-    font-family: Lato, sans-serif;
-    font-weight: 700;
     text-align: center;
     background-color: #FFF8EA;
     font-size: 20px;
     width: 80%;
-    height: 30%;
+    height: 23%;
+    position: absolute;
+	top: 0;
+	left: 0;
+	bottom: 0;
+	right: 0;
+	margin: auto;
     border: 2px solid #DFD8CA;
     border-radius: 8px;
-    margin-left: auto;
-    margin-right: auto;
-}
-
-@media (max-width: 500px) {
-    #loadingFrame {
-        margin-top: 250px;
-        margin-bottom: 100px;
-    }
-}
-
-@media (max-width: 450px) {
-    #loadingFrame {
-        margin-top: 200px;
-        margin-bottom: 50px;
-    }
-}
-
-@media (max-width: 400px) {
-    #loadingFrame {
-        margin-top: 178px;
-        margin-bottom: 178px;
-    }
-}
-
-@media (max-width: 364px) {
-    #loadingFrame {
-        margin-top: 140px;
-        margin-bottom: 120px;
-    }
-}
-
-@media (max-width: 320px) {
-    #loadingFrame {
-        margin-top: 100px;
-        margin-bottom: 100px;
-    }
+    font-family: Lato, sans-serif;
+    font-weight: 700;
 }
 
 #simulating {
@@ -82,8 +26,6 @@
 }
 
 #loadingSloth {
-    margin-left: auto;
-    margin-right: auto;
-    width: 246px;
-    height: 113px;
+    width: 60%;
+    height: 60%;
 }

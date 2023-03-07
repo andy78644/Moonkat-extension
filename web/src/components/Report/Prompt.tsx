@@ -62,23 +62,14 @@ const Prompt = (props: Props) => {
     return (
         <div>
             <Dialog
-                PaperProps={{
-                    style: {
-                        backgroundColor: '#EFE8DB',
-                        boxShadow: 'none',
-                    },
-                }}
+                PaperProps={{ style: { backgroundColor: '#EFE8DB', boxShadow: 'none', } }}
                 open={props.submit}
                 onClose={handleClose}
                 disableEscapeKeyDown={true}
                 aria-labelledby="alert-dialog-title"
                 aria-describedby="alert-dialog-description"
             >
-                <DialogTitle sx={{
-                    mx: 5,
-                    color: '#434343',
-                    fontSize: 18,
-                }}
+                <DialogTitle sx={{ mx: 5, color: '#434343', fontSize: 18 }}
                     id="alert-dialog-title">
                     {"Report Submitted!"}
                 </DialogTitle>

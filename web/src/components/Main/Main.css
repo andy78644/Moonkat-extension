@@ -14,46 +14,24 @@
 }
 
 html, body {
-    /* height: 100%; */
+    height: 100%;
+    min-height: 700px;
 }
 
 #root {
-    /* height: 100%; */
+    height: 105%;
     color: #434343;
-    background: linear-gradient(180deg, rgba(239, 232, 219, 0) 0%, #D2C9AA 100%), linear-gradient(180deg, #D2C9AA 0%, rgba(239, 232, 219, 0) 100%), #FFFFFF;
+    background: linear-gradient(180deg, #D2C9AA 0%, rgba(239, 232, 219, 0.75) 48.96%, #D2C9AA 100%);
     box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.25);
     border-radius: 0px;
+}
+
+html::-webkit-scrollbar {
+    overflow: hidden;
+    width: 0px;
 }
 
 hr {
     color: #E6E0D3;
     padding-bottom: 8px;
-}
-
-.fullScreenSetup {
-    padding-bottom: 100px;
-}
-
-@media (max-width: 500px) {
-    .fullScreenSetup {
-        padding-bottom: 330px;
-    }
-}
-
-@media (max-width: 450px) {
-    .fullScreenSetup {
-        padding-bottom: 230px;
-    }
-}
-
-@media (max-width: 400px) {
-    .fullScreenSetup {
-        padding-bottom: 150px;
-    }
-}
-
-@media (max-width: 363px) {
-    .fullScreenSetup {
-        padding-bottom: 100px;
-    }
 }

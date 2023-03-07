@@ -4,11 +4,31 @@ const sleep = (ms) => {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
+const fetchWithRetry = async (url, options, retries = 3, waitTime = 1000) => {
+  try {
+    const response = await fetch(url, options);
+    if (response.status === 429) {
+      if (retries > 0) {
+        console.log(`Got 429, retrying in ${waitTime}ms...`);
+        await new Promise(resolve => setTimeout(resolve, waitTime));
+        return fetchWithRetry(url, options, retries - 1, waitTime);
+      } else {
+        throw new Error("Max retries exceeded");
+      }
+    } else {
+      return response;
+    }
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+}
+
 const getAssetData = async (change, txn) => {
   if (txn.assetType === 'ERC20' || txn.assetType === 'NATIVE'){
     change.amount = Number(txn.amount).toFixed(4);
     change.tokenURL = txn.logo
-    change.name = txn.name
+    change.collectionName = txn.name
   }
   else{
     await fetch(`https://eth-mainnet.g.alchemy.com/v2/${process.env.ALCHEMY_API_KEY}\n
@@ -17,12 +37,15 @@ const getAssetData = async (change, txn) => {
       response.json()
     )
     .then(response => {
+      console.log('getAssetData: ', response)
       if (response.error){
         change.tokenURL = response.contractMetadata.openSea.imageUrl
       }
       else{
         change.tokenURL = response.media[0].gateway
       }
+      change.title = response.title
+      change.collectionName = response.contractMetadata.openSea.collectionName
       change.osVerified = response.contractMetadata.openSea.safelistRequestStatus
       change.amount = txn.amount
       change.tokenId = txn.tokenId
@@ -56,35 +79,16 @@ const transferHandler = async (txn) => {
     type:"",
     symbol:"",
     tokenURL:"",
+    collectionName:"",
+    title:"",
     osVerified:"",
     tokenId:null,
-    name:""
   }
   asset.type = txn.assetType
   asset.symbol = txn.symbol
   let err = await getAssetData(asset, txn)
   if (err) return err
   return asset
-}
-
-const fetchWithRetry = async (url, options, retries = 3, waitTime = 1000) => {
-  try {
-    const response = await fetch(url, options);
-    if (response.status === 429) {
-      if (retries > 0) {
-        console.log(`Got 429, retrying in ${waitTime}ms...`);
-        await new Promise(resolve => setTimeout(resolve, waitTime));
-        return fetchWithRetry(url, options, retries - 1, waitTime);
-      } else {
-        throw new Error("Max retries exceeded");
-      }
-    } else {
-      return response;
-    }
-  } catch (error) {
-    console.error(error);
-    throw error;
-  }
 }
 
 exports.sendTransaction = async (req, res) => {
