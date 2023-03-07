@@ -31,7 +31,7 @@ const ContractInfo = (props: Props) => {
                 mode === 'transaction-assets-exchange' ?
                     <div id="infoText">
                         Interacting with <u>{contractName ?? ''}</u> &nbsp;
-                        <IconButton>
+                        <IconButton href={contractLink} target="_blank">
                             {
                                 contractVerification ?
                                     <VerifiedIcon color="primary" sx={{ fontSize: 25, paddingBottom: 0.5 }} /> :
@@ -41,7 +41,7 @@ const ContractInfo = (props: Props) => {
                     </div> :
                     <div id="infoText">
                         Giving approval to <u>{contractName ?? ''}</u> &nbsp;
-                        <IconButton sx={{ fontSize: 20, padding: 0 }}>
+                        <IconButton href={contractLink} target="_blank" sx={{ fontSize: 20, padding: 0 }}>
                             {
                                 contractVerification ?
                                     <VerifiedIcon color="primary" sx={{ fontSize: 25, paddingBottom: 0.5 }}/> :
