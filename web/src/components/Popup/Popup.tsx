@@ -9,7 +9,7 @@ import Contact from '../../assets/extensionContact.png';
 // @ts-ignore
 const root = ReactDOM.createRoot(document.getElementById("root"));
 
-import './Extension.css';
+import './Popup.css';
 
 const Extension = () => {
     return (

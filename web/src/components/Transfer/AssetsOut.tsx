@@ -42,6 +42,13 @@ const AssetsOut = (props: Props) => {
                 return (
                     <ListItem key={token} sx={{}}>
                         <img src={token.tokenURL ?? nft} height="48px" width="48px" alt="Free Mint" />
+                        <ListItemText sx={{textAlign: 'right'}}
+                                primary={
+                                    <Typography sx={{ fontFamily: 'Lato', fontSize: '20px', fontWeight: 100 }}>
+                                        {sendTokens[0].title ?? '-'}
+                                    </Typography>
+                                }
+                            />
                         <ListItemText sx={{ paddingLeft: '8px' }}
                             primary={
                                 <Typography sx={{ fontFamily: 'Lato', fontSize: '20px', fontWeight: 100 }}>
@@ -59,7 +66,6 @@ const AssetsOut = (props: Props) => {
                         />
                     </ListItem>
                 )
-
             }
         });
     }

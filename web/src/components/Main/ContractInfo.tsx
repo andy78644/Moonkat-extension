@@ -7,27 +7,28 @@ import './ContractInfo.css'
 
 interface Props {
     mode: string | null,
-    address: any
+    transaction: any
 };
 
 const ContractInfo = (props: Props) => {
-    const { mode, address } = props;
-
-    // mock getBasicInfo API response
+    const { mode, transaction } = props;
+    let contractAddress = ''
+    if(mode === 'transaction-assets-exchange') { contractAddress = transaction }
+    else  { contractAddress = transaction.approve.contractAddress}
+    
     const contractInfo = {
         contractName: "Contract",
-        contractAddress: address ?? 'Error',
-        contractLink: `https://etherscan.io/address/${address}`,
+        contractLink: `https://etherscan.io/address/${contractAddress}`,
         contractVerification: true
     }
-    const { contractName, contractAddress, contractLink, contractVerification } = contractInfo;
+    const { contractName, contractLink, contractVerification } = contractInfo;
 
     const truncatedAddress = contractAddress.slice(0, 6) + '....' + contractAddress.slice(-4);
 
     return (
         <div id="contractInfo">
             {
-                mode === 'asset exchange' ?
+                mode === 'transaction-assets-exchange' ?
                     <div id="infoText">
                         Interacting with <u>{contractName ?? ''}</u> &nbsp;
                         <IconButton href={contractLink} target="_blank">
