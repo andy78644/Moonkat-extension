@@ -1,6 +1,5 @@
 const webpack = require('webpack');
 const path = require('path');
-const CopyPlugin = require('copy-webpack-plugin');
 const WextManifestWebpackPlugin = require("wext-manifest-webpack-plugin");
 const HtmlWebPackPlugin = require('html-webpack-plugin');
 
@@ -36,7 +35,6 @@ module.exports = {
     'content-scripts/window-ethereum-messages': path.join(srcDir, 'content-scripts', 'window-ethereum-messages.tsx'),
     'injected/proxy-window-ethereum': path.join(srcDir, 'injected', 'proxy-window-ethereum.tsx'),
   },
-
   output: {
     path: path.join(__dirname, '..', 'dist', targetBrowser),
     filename: 'js/[name].js',
@@ -98,10 +96,6 @@ module.exports = {
     reportHtmlPlugin,
     popupHtmlPlugin, 
     new WextManifestWebpackPlugin(),
-    new CopyPlugin({
-      patterns: [{ from: '.', to: '.', context: 'public' }],
-      options: {},
-    }),
     new webpack.ProvidePlugin({
       process: 'process/browser',
     }),

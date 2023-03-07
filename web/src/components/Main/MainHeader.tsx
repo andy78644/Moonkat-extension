@@ -39,22 +39,22 @@ const MainHeader = (props: Props) => {
             const queryString = new URLSearchParams({
                 contractAddress: contractAddress ?? 'Error',
                 userAddress: userAddress ?? 'Error',
-              }).toString();
+            }).toString();
             const width = 360;
             const height = 600;
             const left = window.left! + Math.round((window.width! - width) * 0.5);
             const top = window.top! + Math.round((window.height! - height) * 0.2);
-        
+
             await Browser.windows.create({
-              url: `report.html?${queryString}`,
-              type: 'popup',
-              width: width,
-              height: height,
-              left: left + width,
-              top: top
+                url: `report.html?${queryString}`,
+                type: 'popup',
+                width: width,
+                height: height,
+                left: left + width,
+                top: top
             });
-          })
-          return true;
+        })
+        return true;
     }
 
     return (
@@ -66,7 +66,7 @@ const MainHeader = (props: Props) => {
                     <MenuIcon />
                 </IconButton>
                 <Popover
-                    classes={{ paper: "MuiPopover-paper" }}
+                    className="assetsInPopOver"
                     anchorEl={anchorEl}
                     open={open}
                     onClose={handleClose}
