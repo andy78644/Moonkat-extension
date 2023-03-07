@@ -19,12 +19,19 @@ const reportHtmlPlugin = new HtmlWebPackPlugin({
   chunks: ['report']
 });
 
+const extensionHtmlPlugin = new HtmlWebPackPlugin({
+  template: './extension.html',
+  filename: './extension.html',
+  chunks: ['extension']
+});
+
 module.exports = {
   entry: {
     manifest: path.join(srcDir, 'manifest.json'),
     background: path.join(srcDir, 'background.ts'),
     main: path.join(srcDir, 'index.tsx'),
     report: path.join(srcDir, 'components/Report/Report.tsx'),
+    extension: path.join(srcDir, 'components/Extension/Extension.tsx'),
     'content-scripts/inject-scripts': path.join(srcDir, 'content-scripts', 'inject-scripts.tsx'),
     'content-scripts/window-ethereum-messages': path.join(srcDir, 'content-scripts', 'window-ethereum-messages.tsx'),
     'injected/proxy-window-ethereum': path.join(srcDir, 'injected', 'proxy-window-ethereum.tsx'),
@@ -89,6 +96,7 @@ module.exports = {
   plugins: [
     mainHtmlPlugin,
     reportHtmlPlugin,
+    extensionHtmlPlugin, 
     new WextManifestWebpackPlugin(),
     new CopyPlugin({
       patterns: [{ from: '.', to: '.', context: 'public' }],
