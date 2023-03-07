@@ -13,7 +13,7 @@ const Footer = (props: Props) => {
     const { onAccept, onReject } = props;
     return (
         <div>
-            <Stack sx={{ width: '100%', backgroundColor: "rgba(255, 248, 234, 0.5)", padding: '16px', position: 'fixed', left: 0, bottom: 0 }}
+            <Stack sx={{ width: '100%', backgroundColor: "#DFD8CA", padding: '16px', position: 'fixed', left: 0, bottom: 0 }}
                 direction="row"
                 spacing='8px'
             >
