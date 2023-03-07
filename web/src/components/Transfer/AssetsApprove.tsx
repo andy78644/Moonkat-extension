@@ -50,7 +50,7 @@ const AssetsApprove = (props: Props) => {
                 >
                     Assets Approve &nbsp;
                     <Typography
-                        aria-owns={hover ? 'assetsApprovePopOver' : undefined}
+                        aria-owns={hover ? 'mouse-over-popover' : undefined}
                         aria-haspopup="true"
                         onMouseEnter={handlePopoverOpen}
                         onMouseLeave={handlePopoverClose}
@@ -58,7 +58,7 @@ const AssetsApprove = (props: Props) => {
                         <HelpOutlineIcon sx={{ fontSize: 18 }} />
                     </Typography>
                     <Popover
-                        id="assetsApprovePopOver"
+                        id="mouse-over-popover"
                         sx={{ pointerEvents: 'none' }}
                         open={hover}
                         anchorEl={anchorEl}
@@ -67,7 +67,7 @@ const AssetsApprove = (props: Props) => {
                         onClose={handlePopoverClose}
                         disableRestoreFocus
                     >
-                        <Typography sx={{ p: 1 }}>The assets can be withdraw by others.</Typography>
+                        <Typography sx={{ p: 1 }}>I use Popover.</Typography>
                     </Popover>
                     <ListItemText />
                 </ListItemButton>
@@ -85,14 +85,12 @@ const AssetsApprove = (props: Props) => {
                                 </Typography>
                             }
                         />
-                        {
-                            sendTokens.osVerified === true ?
-                                <VerifiedIcon
-                                    color="primary"
-                                    sx={{ fontSize: 22, marginBottom: '8px' }}
-                                /> :
-                                <div></div>
-                        }
+                        <IconButton>
+                            <VerifiedIcon
+                                color={sendTokens.osVerified === true ? "primary" : undefined}
+                                sx={{ fontSize: 22, marginBottom: '8px' }}
+                            />
+                        </IconButton>
                     </div>
                 </ListItem>
                 <ListItem

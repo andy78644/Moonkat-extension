@@ -1,17 +1,7 @@
-html, body {
-    height: 100%;
-    background: linear-gradient(180deg, #D2C9AA 0%, rgba(239, 232, 219, 0.75) 48.96%, #D2C9AA 100%);
-    min-height: 700px;
-}
-
-#report {
+body {
     color: #434343;
-    border-radius: 0px;
-}
-
-html::-webkit-scrollbar {
-    overflow: hidden;
-    width: 0px;
+    height: 100%;
+    background-color: #EFE8DB
 }
 
 .Button {
