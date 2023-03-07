@@ -85,12 +85,14 @@ const AssetsApprove = (props: Props) => {
                                 </Typography>
                             }
                         />
-                        <IconButton>
-                            <VerifiedIcon
-                                color={sendTokens.osVerified === true ? "primary" : undefined}
-                                sx={{ fontSize: 22, marginBottom: '8px' }}
-                            />
-                        </IconButton>
+                        {
+                            sendTokens.osVerified === true ?
+                                <VerifiedIcon
+                                    color="primary"
+                                    sx={{ fontSize: 22, marginBottom: '8px' }}
+                                /> :
+                                <div></div>
+                        }
                     </div>
                 </ListItem>
                 <ListItem
