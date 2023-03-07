@@ -42,7 +42,7 @@ const AssetsIn = (props: Props) => {
         return sendTokens.map((token: any) => {
             if (token) {
                 return (
-                    <ListItem key={token} sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                    <List key={token.tokenId} sx={{ display: 'flex', justifyContent: 'space-between' }}>
                         <ListItem sx={{ paddingBottom: "2px", paddingTop: "0px" }}>
                             <img src={ token.tokenURL ?? nft } height="48px" width="48px" alt="Asset In" /></ListItem>
                         <ListItem>
@@ -54,7 +54,7 @@ const AssetsIn = (props: Props) => {
                                 }
                             />
                         </ListItem>
-                    </ListItem>
+                    </List>
                 )
             }
         });
