@@ -50,7 +50,7 @@ const AssetsApprove = (props: Props) => {
                 >
                     Assets Approve &nbsp;
                     <Typography
-                        aria-owns={hover ? 'mouse-over-popover' : undefined}
+                        aria-owns={hover ? 'assetsApprovePopOver' : undefined}
                         aria-haspopup="true"
                         onMouseEnter={handlePopoverOpen}
                         onMouseLeave={handlePopoverClose}
@@ -58,7 +58,7 @@ const AssetsApprove = (props: Props) => {
                         <HelpOutlineIcon sx={{ fontSize: 18 }} />
                     </Typography>
                     <Popover
-                        id="mouse-over-popover"
+                        id="assetsApprovePopOver"
                         sx={{ pointerEvents: 'none' }}
                         open={hover}
                         anchorEl={anchorEl}
@@ -67,7 +67,7 @@ const AssetsApprove = (props: Props) => {
                         onClose={handlePopoverClose}
                         disableRestoreFocus
                     >
-                        <Typography sx={{ p: 1 }}>I use Popover.</Typography>
+                        <Typography sx={{ p: 1 }}>The assets can be withdraw by others.</Typography>
                     </Popover>
                     <ListItemText />
                 </ListItemButton>

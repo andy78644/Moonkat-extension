@@ -11,3 +11,11 @@
     padding-top: 4px;
     padding-bottom: 10px;
 }
+
+#assetsApprovePopOver > .MuiPopover-paper {
+    object-fit: fill;
+    width: 200px;
+    background-color: #FFF8EA !important;
+    border: 2px solid #DFD8CA;
+    border-radius: 8px !important;
+}
