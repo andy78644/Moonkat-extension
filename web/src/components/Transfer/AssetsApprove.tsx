@@ -81,7 +81,7 @@ const AssetsApprove = (props: Props) => {
                             primary={
                                 <Typography
                                     sx={{ fontFamily: 'Lato', fontSize: '20px', fontWeight: 100 }}>
-                                    {sendTokens.name}
+                                    {sendTokens.collectionName}
                                 </Typography>
                             }
                         />

@@ -45,6 +45,13 @@ const AssetsIn = (props: Props) => {
                     <ListItem key={token} sx={{ display: 'flex', justifyContent: 'space-between' }}>
                         <ListItem sx={{ paddingBottom: "2px", paddingTop: "0px" }}>
                             <img src={ token.tokenURL ?? nft } height="48px" width="48px" alt="Asset In" /></ListItem>
+                            <ListItemText sx={{ fontSize: '20px', textAlign: 'right'}}
+                                primary={
+                                    <Typography sx={{ fontFamily: 'Lato', fontSize: '20px', fontWeight: 100 }}>
+                                        +{token.title ?? '-'}
+                                    </Typography>
+                                }
+                            />
                         <ListItem>
                             <ListItemText sx={{ textAlign: 'right', color: '#509A57' }}
                                 primary={
@@ -107,13 +114,13 @@ const AssetsIn = (props: Props) => {
                         <ListItemText sx={{ display: 'inline-block', fontSize: '20px' }}
                             primary={
                                 <Typography sx={{ fontFamily: 'Lato', fontSize: '20px', fontWeight: 100 }}>
-                                    {sendTokens[0].name ?? ''}
+                                    {sendTokens[0].collectionName ?? ''}
                                 </Typography>
                             }
                         />
                         <IconButton>
                             <VerifiedIcon
-                                color={sendTokens[0].osVerified === true ? "primary" : undefined}
+                                color={sendTokens[0].osVerified === 'verified' ? "primary" : undefined}
                                 sx={{ fontSize: 22, marginBottom: '8px' }}
                             />
                         </IconButton>
@@ -123,6 +130,13 @@ const AssetsIn = (props: Props) => {
                     sendTokens.length === 1 ?
                         <ListItem>
                             <img src={sendTokens[0].tokenURL ?? nft} height="48px" width="48px" alt="Tokens" />
+                            <ListItemText sx={{ fontSize: '20px', textAlign: 'right'}}
+                                primary={
+                                    <Typography sx={{ fontFamily: 'Lato', fontSize: '20px', fontWeight: 100 }}>
+                                        {sendTokens[0].title ?? '-'}
+                                    </Typography>
+                                }
+                            />
                             <ListItemText sx={{ fontSize: '20px', textAlign: 'right', color: '#509A57' }}
                                 primary={
                                     <Typography sx={{ fontFamily: 'Lato', fontSize: '20px', fontWeight: 100 }}>

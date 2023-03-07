@@ -63,13 +63,13 @@ const approvalHandler = (txn) => {
     contractAddress:"",
     amount:"",
     tokenURL:"",
-    name:"",
+    collectionName:"",
   }
   assetApprove.symbol = txn.symbol
-  assetApprove.contractAddress = txn.contractAddress
+  assetApprove.contractAddress = txn.to
   assetApprove.amount = txn.amount
   assetApprove.tokenURL = txn.logo
-  assetApprove.name = txn.name
+  assetApprove.collectionName = txn.name
   return assetApprove
 }
 
@@ -121,7 +121,7 @@ exports.sendTransaction = async (req, res) => {
         .then(async response => {
           await sleep(500)
           console.log('Simulation Response: ', response)
-          if(response.error && response.status === 429){
+          if(response.error){
             res.status(500).send({
               message:response.error.message
             })
@@ -129,7 +129,7 @@ exports.sendTransaction = async (req, res) => {
           }
           const result = response.result
           transactionInfo.gas = result.gasUsed
-          let r = new Promise (async (resolve, reject)=>{
+          let _ = new Promise (async (resolve, reject)=>{
             for ( let changeObj of result.changes){
               if(changeObj.from === from){
                 if (changeObj.changeType === 'APPROVE'){
@@ -166,11 +166,10 @@ exports.sendTransaction = async (req, res) => {
           resolve()
           })
       })
-    } catch (error) {
-      console.log(err.message)  
+    } catch (error) {  
       res.status(500).send({
           message:
-            err.message
+          error.message
         }); 
     }
 }
