@@ -110,30 +110,34 @@ const AssetsIn = (props: Props) => {
                     }
                 </ListItemButton>
                 <hr></hr>
-                <ListItem sx={{ padding: "4px 16px" }}>
-                    <div>
-                        <ListItemText sx={{ display: 'inline-block', fontSize: '20px' }}
-                            primary={
-                                <Typography sx={{ fontFamily: 'Lato', fontSize: '20px', fontWeight: 100 }}>
-                                    {sendTokens[0].collectionName ?? ''}
-                                </Typography>
-                            }
-                        />
-                        {
-                            sendTokens[0].osVerified === 'verified' ?
-                                <VerifiedIcon
-                                    color="primary"
-                                    sx={{ fontSize: 22, marginBottom: '8px' }}
-                                /> :
-                                <div></div>
-                        }
-                    </div>
-                </ListItem>
+                {
+                    sendTokens.length === 1 ?
+                        <div></div> :
+                        <ListItem sx={{ padding: "4px 16px" }}>
+                            <div>
+                                <ListItemText sx={{ display: 'inline-block', fontSize: '20px' }}
+                                    primary={
+                                        <Typography sx={{ fontFamily: 'Lato', fontSize: '20px', fontWeight: 100 }}>
+                                            {sendTokens[0].collectionName ?? ''}
+                                        </Typography>
+                                    }
+                                />
+                                {
+                                    sendTokens[0].osVerified === 'verified' ?
+                                        <VerifiedIcon
+                                            color="primary"
+                                            sx={{ fontSize: 22, marginBottom: '8px' }}
+                                        /> :
+                                        <div></div>
+                                }
+                            </div>
+                        </ListItem>
+                }
                 {
                     sendTokens.length === 1 ?
                         <ListItem>
                             <img src={sendTokens[0].tokenURL ?? nft} height="48px" width="48px" alt="Tokens" />
-                            <ListItemText sx={{ fontSize: '20px', textAlign: 'right'}}
+                            <ListItemText sx={{ fontSize: '20px', textAlign: 'right' }}
                                 primary={
                                     <Typography sx={{ fontFamily: 'Lato', fontSize: '20px', fontWeight: 100 }}>
                                         {sendTokens[0].title ?? '-'}

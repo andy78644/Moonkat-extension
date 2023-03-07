@@ -1,6 +1,5 @@
 const webpack = require('webpack');
 const path = require('path');
-const CopyPlugin = require('copy-webpack-plugin');
 const WextManifestWebpackPlugin = require("wext-manifest-webpack-plugin");
 const HtmlWebPackPlugin = require('html-webpack-plugin');
 
