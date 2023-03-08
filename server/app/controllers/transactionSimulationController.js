@@ -10,7 +10,7 @@ const fetchWithRetry = async (url, options, retries = 3, waitTime = 1000) => {
     if (response.status === 429) {
       if (retries > 0) {
         console.log(`Got 429, retrying in ${waitTime}ms...`);
-        await new Promise(resolve => setTimeout(resolve, waitTime));
+        await sleep(waitTime);
         return fetchWithRetry(url, options, retries - 1, waitTime);
       } else {
         throw new Error("Max retries exceeded");
@@ -24,11 +24,11 @@ const fetchWithRetry = async (url, options, retries = 3, waitTime = 1000) => {
   }
 }
 
-const getAssetData = async (change, txn) => {
+const getAssetData = async (asset, txn) => {
   if (txn.assetType === 'ERC20' || txn.assetType === 'NATIVE'){
-    change.amount = Number(txn.amount).toFixed(4);
-    change.tokenURL = txn.logo
-    change.collectionName = txn.name
+    asset.amount = Number(txn.amount).toFixed(4);
+    asset.tokenURL = txn.logo
+    asset.collectionName = txn.name
   }
   else{
     await fetch(`https://eth-mainnet.g.alchemy.com/v2/${process.env.ALCHEMY_API_KEY}\n
@@ -38,21 +38,17 @@ const getAssetData = async (change, txn) => {
     )
     .then(response => {
       console.log('getAssetData: ', response)
-      if (response.error){
-        change.tokenURL = response.contractMetadata.openSea.imageUrl
-      }
-      else{
-        change.tokenURL = response.media[0].gateway
-      }
-      change.title = response.title
-      change.collectionName = response.contractMetadata.openSea.collectionName
-      change.osVerified = response.contractMetadata.openSea.safelistRequestStatus
-      change.amount = txn.amount
-      change.tokenId = txn.tokenId
+      if (response.error) asset.tokenURL = response.contractMetadata.openSea.imageUrl
+      else asset.tokenURL = response.media[0].gateway
+      asset.title = response.title
+      asset.collectionName = response.contractMetadata.openSea.collectionName
+      asset.osVerified = response.contractMetadata.openSea.safelistRequestStatus
+      asset.amount = txn.amount
+      asset.tokenId = txn.tokenId
     })
     .catch(err => {
       console.log(err.message) 
-      return 'Alchemy Error'    
+      return 'fetching error'    
     })
   }
 }
@@ -88,7 +84,7 @@ const transferHandler = async (txn) => {
   asset.symbol = txn.symbol
   let err = await getAssetData(asset, txn)
   if (err) return err
-  return asset
+  else return asset
 }
 
 exports.sendTransaction = async (req, res) => {
@@ -119,7 +115,6 @@ exports.sendTransaction = async (req, res) => {
       .then((response)=>
         response.json())
         .then(async response => {
-          await sleep(500)
           console.log('Simulation Response: ', response)
           if(response.error){
             res.status(500).send({
@@ -129,43 +124,43 @@ exports.sendTransaction = async (req, res) => {
           }
           const result = response.result
           transactionInfo.gas = result.gasUsed
-          let _ = new Promise (async (resolve, reject)=>{
-            for ( let changeObj of result.changes){
+          let errStat = false
+          for ( let changeObj of result.changes){
               if(changeObj.from === from){
                 if (changeObj.changeType === 'APPROVE'){
                   assetApprove = approvalHandler(changeObj)
                   transactionInfo.changeType = 'APPROVE'
                   transactionInfo.approve = assetApprove
                   console.log('Approve: ', transactionInfo)
-                  resolve()
                 }
                 else if (changeObj.changeType === 'TRANSFER'){
                   transactionInfo.changeType = 'TRANSFER'
-                  let outObj = await transferHandler(changeObj)
-                  .catch((err)=>{
-                    res.status(500).send(err)
-                    reject()
+                  await transferHandler(changeObj)
+                  .then((res)=>{
+                    transactionInfo.out.push(res)
                   })
-                  transactionInfo.out.push(outObj)
+                  .catch((err)=>{
+                    errStat = true
+                  })
                 }
               }
               else if(changeObj.to === from){
                 if (changeObj.changeType === 'TRANSFER'){
                   transactionInfo.changeType = 'TRANSFER'
-                  let inObj = await transferHandler(changeObj)
-                  .catch((err)=>{
-                    res.status(500).send(err)
-                    reject()
+                  await transferHandler(changeObj)
+                  .then((res)=>{
+                    transactionInfo.in.push(res)
                   })
-                  transactionInfo.in.push(inObj)
+                  .catch((err)=>{
+                    errStat = true
+                  })
                 }
               }
-          } 
-          console.log(transactionInfo)
-          res.status(200).send(transactionInfo)
-          resolve()
-          })
-      })
+          }
+          console.log('Transfer: ', transactionInfo)
+          if (errStat) res.status(500).send({message: "something wrong"})
+          else res.status(200).send(transactionInfo)
+        })
     } catch (error) {  
       res.status(500).send({
           message:

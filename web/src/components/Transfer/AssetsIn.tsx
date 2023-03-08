@@ -110,9 +110,9 @@ const AssetsIn = (props: Props) => {
                     }
                 </ListItemButton>
                 <hr></hr>
-                {
+                {/* {
                     sendTokens.length === 1 ?
-                        <div></div> :
+                        <div></div> : */}
                         <ListItem sx={{ padding: "4px 16px" }}>
                             <div>
                                 <ListItemText sx={{ display: 'inline-block', fontSize: '20px' }}
@@ -132,7 +132,7 @@ const AssetsIn = (props: Props) => {
                                 }
                             </div>
                         </ListItem>
-                }
+                {/* } */}
                 {
                     sendTokens.length === 1 ?
                         <ListItem>
