@@ -154,7 +154,7 @@ const AssetsIn = (props: Props) => {
                         </ListItem> :
                         open ?
                             <ListItem>
-                                <img src={sendTokens[0].tokenURL ?? nft} height="48px" width="48px" alt="Tokens" />
+                                <img src={sendTokens[0].collectionIconUrl ?? nft} height="48px" width="48px" alt="Tokens" />
                                 <ListItemText sx={{ fontSize: '20px', textAlign: 'right', color: '#509A57' }}
                                     primary={
                                         <Typography sx={{ fontFamily: 'Lato', fontSize: '20px', fontWeight: 100 }}>

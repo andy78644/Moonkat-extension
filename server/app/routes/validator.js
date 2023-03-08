@@ -10,5 +10,12 @@ exports.reportContract = [
     body('Tag[1]').escape().isString(),
     body('Tag[2]').escape().isString(),
     body('Description').notEmpty().escape().isString()
-
 ];
+
+exports.simualtionResult = [
+    body('changeType').notEmpty().escape(),
+    body('gas').notEmpty().escape(),
+    body('in').escape(),
+    body('out').escape(),
+    body('approve').escape()
+]

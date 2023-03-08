@@ -40,6 +40,7 @@ const getAssetData = async (asset, txn) => {
       console.log('getAssetData: ', response)
       if (response.error) asset.tokenURL = response.contractMetadata.openSea.imageUrl
       else asset.tokenURL = response.media[0].gateway
+      asset.collectionIconUrl = response.contractMetadata.openSea.imageUrl
       asset.title = response.title
       asset.collectionName = response.contractMetadata.openSea.collectionName
       asset.osVerified = response.contractMetadata.openSea.safelistRequestStatus
@@ -76,6 +77,7 @@ const transferHandler = async (txn) => {
     symbol:"",
     tokenURL:"",
     collectionName:"",
+    collectionIconUrl:"",
     title:"",
     osVerified:"",
     tokenId:null,

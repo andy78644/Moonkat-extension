@@ -1,6 +1,6 @@
 const db = require("../models");
+const { validationResult } = require('express-validator');
 const { UserRecord } = db;
-const Op = db.Sequelize.Op;
 
 exports.sendRecord = async (req, res) => {
     UserRecord.create(req.body)
@@ -35,6 +35,10 @@ exports.behaviorRecord = async (req, res) => {
 }
 
 exports.simulationRecord = async (req, res) => {
+    const errors = validationResult(req.body.SimulationResult);
+    if (!errors.isEmpty()) {
+        return res.status(422).json({ errors: errors.array() });
+    }
     let record = {
         SimulationResult: req.body.SimulationResult
     }

@@ -1,4 +1,3 @@
-const net = require("net");
 const simulator = require("../controllers/transactionSimulationController");
 const express = require('express');
 const router = express.Router();
