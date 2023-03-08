@@ -11,6 +11,7 @@ interface Props {
 };
 
 const ContractInfo = (props: Props) => {
+    console.log("ContractInfo "+ props.transaction);
     const { mode, transaction } = props;
     let contractAddress = ''
     if(mode === 'transaction-assets-exchange') { contractAddress = transaction }
