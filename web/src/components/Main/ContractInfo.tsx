@@ -18,9 +18,9 @@ const ContractInfo = (props: Props) => {
     else  { contractAddress = transaction.approve.contractAddress}
     
     const contractInfo = {
-        contractName: "Contract",
+        contractName: undefined,
         contractLink: `https://etherscan.io/address/${contractAddress}`,
-        contractVerification: true
+        contractVerification: false
     }
     const { contractName, contractLink, contractVerification } = contractInfo;
 
