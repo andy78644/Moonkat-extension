@@ -1,8 +1,8 @@
 const webpack = require('webpack');
 const path = require('path');
-const WextManifestWebpackPlugin = require("wext-manifest-webpack-plugin");
+const WebpackObfuscator = require('webpack-obfuscator');
 const HtmlWebPackPlugin = require('html-webpack-plugin');
-
+const WextManifestWebpackPlugin = require('wext-manifest-webpack-plugin');
 const srcDir = path.join(__dirname, '..', 'src');
 const targetBrowser = process.env.TARGET_BROWSER;
 
@@ -102,5 +102,8 @@ module.exports = {
     new webpack.DefinePlugin({
       'process.env.WORK_ENV': JSON.stringify(process.env.WORK_ENV || 'dev')
     }),
+    new WebpackObfuscator({
+      rotateStringArray: true
+    })
   ],
 };
