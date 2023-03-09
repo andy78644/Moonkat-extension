@@ -46,7 +46,7 @@ const postFeedBackByAddress = (feedBack: contractFeedBack) => {
             resolve(res.data)
         }).catch((err)=>{
             console.log('postFeedBackByAddress Err: ', err)
-            reject(err)
+            reject(err.message)
         })
     })
 }
@@ -59,7 +59,7 @@ const postTransactionSimulation = (transaction: any) :Promise<any>  => {
             resolve(res.data)
         }).catch((err)=>{
             console.log('postTransactionSimulation Error: ', err.response.data.message)
-            reject(err)
+            reject(err.message)
         })})
 }
 const postURL = (url: any, pos: any) :Promise<any> =>{

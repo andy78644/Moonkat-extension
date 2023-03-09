@@ -39,34 +39,34 @@ const MainHeader = (props: Props) => {
             const queryString = new URLSearchParams({
                 contractAddress: contractAddress ?? 'Error',
                 userAddress: userAddress ?? 'Error',
-              }).toString();
+            }).toString();
             const width = 360;
             const height = 600;
             const left = window.left! + Math.round((window.width! - width) * 0.5);
             const top = window.top! + Math.round((window.height! - height) * 0.2);
-        
+
             await Browser.windows.create({
-              url: `report.html?${queryString}`,
-              type: 'popup',
-              width: width,
-              height: height,
-              left: left + width,
-              top: top
+                url: `report.html?${queryString}`,
+                type: 'popup',
+                width: width,
+                height: height,
+                left: left + width,
+                top: top
             });
-          })
-          return true;
+        })
+        return true;
     }
 
     return (
         <div id="mainHeader">
-            <img id="logo" src={Logo} alt="logo" />
-            <div id="brandName"> MoonKat </div>
+            <a href="https://moonkats.webflow.io/" target="_blank"><img id="logo" src={Logo} alt="logo" /></a>
+            <a href="https://moonkats.webflow.io/" target="_blank"><div id="brandName"> MoonKat </div></a>
             <div id="menu">
                 <IconButton onClick={handleClick}>
                     <MenuIcon />
                 </IconButton>
                 <Popover
-                    classes={{ paper: "MuiPopover-paper" }}
+                    className="assetsInPopOver"
                     anchorEl={anchorEl}
                     open={open}
                     onClose={handleClose}

@@ -1,5 +1,5 @@
 {
-  "name": "ggl_crx",
+  "name": "Moonkat",
   "version": "1.0.0",
   "main": "index.js",
   "license": "MIT",
@@ -51,6 +51,7 @@
     "style-loader": "^3.3.1",
     "tailwindcss": "^3.1.8",
     "ts-loader": "^9.3.1",
+    "webpack-obfuscator": "^3.5.1",
     "yarn": "^1.22.19"
   }
 }

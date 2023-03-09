@@ -26,8 +26,8 @@ const ReportForm = (props: Props) => {
                     height: props.formHeight
                 }
             }} 
-            error={textValue.length === 0}
-            helperText={!textValue.length ? 'Address Name is required' : ''}
+            // error={textValue.length === 0}
+            // helperText={!textValue.length ? 'Address Name is required' : ''}
             label={props.placeholder}
             onChange={(e) => {
                 settextValue(e.target.value);

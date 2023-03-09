@@ -27,7 +27,7 @@ const Main = (props: Props) => {
     const { id, mode, browserMsg, userAddress, gasPrice} = props;
     // This address is to pass the server restriction
     // Need to be edited to develop the sign feature
-    const [previewTxn, setPreviewTxnState] = useState({to:'0x1533858eBed0A40dB54b5b70347181Db4724855F'})
+    const [transactionResult, settransactionResultState] = useState({to:'Default To'})
     const [renderMode, setRenderMode] = useState('')
     const [hasLoaded, setHasLoaded] = useState(false);
     useEffect(() => {
@@ -43,21 +43,21 @@ const Main = (props: Props) => {
                         recordUpdate(id, res, "simulate").then((res)=>{console.log(res)})
                         res.gasPrice = gasPrice
                         res.to = transaction.to
-                        setPreviewTxnState(res)
+                        settransactionResultState(res)
                         if (res.changeType === 'APPROVE') setRenderMode('transaction-assets-approval')
                         else setRenderMode('transaction-assets-exchange')
                         setHasLoaded(true)
                     })
                     .catch((err) => {
-                            setRenderMode("debug-end")
-                            setHasLoaded(true)
-                            console.log('Simulation Failed: ', err.message)
+                        console.log('Simulation Failed: ', err.message)
+                        setRenderMode("debug-end")
+                        setHasLoaded(true)
                     })
                 delete transaction.maxFeePerGas
                 delete transaction.maxPriorityFeePerGas
             }
             getPreview(transaction)
-                }
+            }
         else {
             setRenderMode(mode)
             setHasLoaded(true)
@@ -81,7 +81,7 @@ const Main = (props: Props) => {
         }   
         const result = await dataService.postURL(recordData, method)
         .catch((err)=>{
-            console.log(err)
+            console.log('PostURL error:', err)
             return err
         })
         if(result) return false
@@ -91,22 +91,22 @@ const Main = (props: Props) => {
     // Close extension
     const extensionResponse = async (data: boolean) => {
         await Browser.runtime.sendMessage(undefined, { id, data });
-        //record(msg.data.signatureData.signAddress ?? 'signature error', remotePort.sender?.tab?.url??'signature error')
-        if(data) await recordUpdate(id, "accept", "behavior").then((res)=>{console.log(res)})
-        else await recordUpdate(id, "reject", "behavior").then((res)=>{console.log(res)})
+        if(data) await recordUpdate(id, "accept", "behavior")
+        else await recordUpdate(id, "reject", "behavior")
         window.close();
     }
     const accept = () => extensionResponse(true);
     const reject = () => extensionResponse(false);
 
     const renderCurrentSelection = (renderMode: string | null) => {
+        console.log('renderMode: ', renderMode)
         switch (renderMode) {
             case 'transaction-assets-exchange': {
                 return (
                     <div className="fullScreenSetup">
-                        <MainHeader contractAddress={previewTxn.to} userAddress={userAddress}></MainHeader>
-                        <ContractInfo mode={mode} address={previewTxn.to} />
-                        <Transfer mode={renderMode} transaction={previewTxn} />
+                        <MainHeader contractAddress={transactionResult.to} userAddress={userAddress}></MainHeader>
+                        <ContractInfo mode={renderMode} transaction={transactionResult.to} />
+                        <Transfer mode={renderMode} transaction={transactionResult} />
                         <Footer onAccept={accept} onReject={reject} />
                     </div>
                 )
@@ -114,9 +114,9 @@ const Main = (props: Props) => {
             case 'transaction-assets-approval': {
                 return (
                     <div className="fullScreenSetup">
-                        <MainHeader contractAddress={previewTxn.to} userAddress={userAddress}></MainHeader>
-                        <ContractInfo mode={mode} address={previewTxn.to} />
-                        <Transfer mode={renderMode} transaction={previewTxn} />
+                        <MainHeader contractAddress={transactionResult.to} userAddress={userAddress}></MainHeader>
+                        <ContractInfo mode={renderMode} transaction={transactionResult} />
+                        <Transfer mode={renderMode} transaction={transactionResult} />
                         <Footer onAccept={accept} onReject={reject} />
                     </div>
                 )
@@ -124,7 +124,7 @@ const Main = (props: Props) => {
             case 'transaction-not-configured': {
                 return (
                     <div className="fullScreenSetup">
-                        <MainHeader contractAddress={previewTxn.to} userAddress={userAddress}></MainHeader>
+                        <MainHeader contractAddress={transactionResult.to} userAddress={userAddress}></MainHeader>
                         <SimulationError />
                         <Footer onAccept={accept} onReject={reject} />
                     </div>
@@ -133,7 +133,7 @@ const Main = (props: Props) => {
             case 'signature-no-risk-safe': {
                 return (
                     <div className="fullScreenSetup">
-                        <MainHeader contractAddress={previewTxn.to} userAddress={userAddress}></MainHeader>
+                        <MainHeader contractAddress={transactionResult.to} userAddress={userAddress}></MainHeader>
                         <Safe />
                         <Footer onAccept={accept} onReject={reject} />
                     </div>
@@ -143,7 +143,7 @@ const Main = (props: Props) => {
             case 'signature-712': {
                 return (
                     <div className="fullScreenSetup">
-                        <MainHeader contractAddress={previewTxn.to} userAddress={userAddress}></MainHeader>
+                        <MainHeader contractAddress={transactionResult.to} userAddress={userAddress}></MainHeader>
                         <EIP712 />
                         <Footer onAccept={accept} onReject={reject} />
                     </div>
@@ -152,7 +152,7 @@ const Main = (props: Props) => {
             case 'signature-no-risk-malicious': {
                 return (
                     <div className="fullScreenSetup">
-                        <MainHeader contractAddress={previewTxn.to} userAddress={userAddress}></MainHeader>
+                        <MainHeader contractAddress={transactionResult.to} userAddress={userAddress}></MainHeader>
                         <Malicious />
                         <Footer onAccept={accept} onReject={reject} />
                     </div>
@@ -161,9 +161,9 @@ const Main = (props: Props) => {
             case 'signature-token-approval': {
                 return (
                     <div className="fullScreenSetup">
-                        <MainHeader contractAddress={previewTxn.to} userAddress={userAddress}></MainHeader>
-                        <ContractInfo mode={mode} address={previewTxn.to} />
-                        <Transfer mode={mode} transaction={previewTxn} />
+                        <MainHeader contractAddress={transactionResult.to} userAddress={userAddress}></MainHeader>
+                        <ContractInfo mode={renderMode} transaction={transactionResult.to} />
+                        <Transfer mode={mode} transaction={transactionResult} />
                         <Footer onAccept={accept} onReject={reject} />
                     </div>
                 )
@@ -171,9 +171,9 @@ const Main = (props: Props) => {
             case 'signature-move-assets': {
                 return (
                     <div className="fullScreenSetup">
-                        <MainHeader contractAddress={previewTxn.to} userAddress={userAddress}></MainHeader>
-                        <ContractInfo mode={mode} address={previewTxn.to} />
-                        <Transfer mode={mode} transaction={previewTxn} />
+                        <MainHeader contractAddress={transactionResult.to} userAddress={userAddress}></MainHeader>
+                        <ContractInfo mode={renderMode} transaction={transactionResult.to} />
+                        <Transfer mode={mode} transaction={transactionResult} />
                         <Footer onAccept={accept} onReject={reject} />
                     </div>
                 )
@@ -181,7 +181,7 @@ const Main = (props: Props) => {
             case 'signature-not-configured': {
                 return (
                     <div className="fullScreenSetup">
-                        <MainHeader contractAddress={previewTxn.to} userAddress={userAddress}></MainHeader>
+                        <MainHeader contractAddress={transactionResult.to} userAddress={userAddress}></MainHeader>
                         <SignatureError />
                         <Footer onAccept={accept} onReject={reject} />
                     </div>
@@ -190,7 +190,7 @@ const Main = (props: Props) => {
             case 'debug-end': {
                 return (
                     <div className="fullScreenSetup">
-                        <MainHeader contractAddress={previewTxn.to} userAddress={userAddress}></MainHeader>
+                        <MainHeader contractAddress={transactionResult.to} userAddress={userAddress}></MainHeader>
                         <SimulationError />
                         <Footer onAccept={accept} onReject={reject} />
                     </div>
@@ -216,7 +216,7 @@ const Main = (props: Props) => {
                     </div>
                     :
                     <div>
-                        <MainHeader contractAddress={previewTxn.to} userAddress={userAddress} />
+                        <MainHeader contractAddress={transactionResult.to} userAddress={userAddress} />
                         <Loading />
                         <Footer onAccept={accept} onReject={reject} />
                     </div>

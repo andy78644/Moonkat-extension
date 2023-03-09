@@ -4,6 +4,7 @@ import { providers, utils } from 'ethers';
 import { Identifier } from '../constant';
 import { sendAndAwaitResponseFromStream } from '../utils';
 
+// Send data from website to content_script
 const stream = new WindowPostMessageStream({
   name: Identifier.INPAGE,
   target: Identifier.CONTENT_SCRIPT,
@@ -46,7 +47,6 @@ const overrideWindowEthereum = async () => {
   if (!(window as any).ethereum) return
 
   clearInterval(overrideInterval);
-
   const requestHandler = {
     apply: async (target: any, thisArg: any, argumentsList: any[]) => {
       const [request] = argumentsList;
@@ -156,16 +156,13 @@ const overrideWindowEthereum = async () => {
           signatureVersion: 'signature-712',
           signMethod: request?.method,
           text: "",
-          contractDetail: {
-            chainId: '',
-            address: ''
-          },
+          domain:{},
           signAddress: userAddress
         }
         console.log('signTypedDatav4 Website Request: ', request)
         let payLoad = JSON.parse(request.params[1])
-        signatureData.contractDetail.chainId = payLoad.domain.chainId
-        signatureData.contractDetail.address = payLoad.domain.verifyingContract
+        console.log('Payload: ', payLoad)
+        signatureData.domain = payLoad.domain
         signatureData.text = JSON.stringify(payLoad.message)
         console.log('NeededData: ', signatureData)
         const isOk = await sendAndAwaitResponseFromStream(stream, { signatureData, userAddress});
@@ -178,9 +175,13 @@ const overrideWindowEthereum = async () => {
   };
 
   const requestProxy = new Proxy((window as any).ethereum.request, requestHandler);
-
+  (window as any).ethereum?.providers?.forEach((provider: any, i: number) => {
+    //proxyEthereumProvider(provider, `window.ethereum.providers[${i}]`);
+    new Proxy(provider.request, requestHandler);
+  });
   (window as any).ethereum.request = requestProxy;
 };
 
 overrideInterval = setInterval(overrideWindowEthereum, 100);
 overrideWindowEthereum();
+ 

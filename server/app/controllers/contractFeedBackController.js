@@ -1,7 +1,5 @@
 const db = require("../models");
 const { ContractFeedBack, Contract }= db;
-const Op = db.Sequelize.Op;
-const querystring = require('querystring');
 const { validationResult } = require('express-validator');
 require('dotenv').config(); 
 
@@ -9,8 +7,6 @@ require('dotenv').config();
 // Get the Contract with Specific Address
 exports.reportFeedback = async (req, res) => {
     const errors = validationResult(req);
-
-    console.log(req.body)
 
     if (!errors.isEmpty()) {
         return res.status(422).json({ errors: errors.array() });
@@ -73,15 +69,6 @@ exports.getFeedback = async (req, res) => {
     else {
         res.status(500);
     }
-    
-        
-        
-        
-};
-
-function detectFunc(reqBody){
-
-    return true;
 }
 
 

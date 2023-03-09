@@ -37,13 +37,12 @@ const Report = () => {
 
     const contractAddress = params.get('contractAddress');
     const userAddress = params.get('userAddress');
-    console.log("contractAddress: " + contractAddress)
-    console.log("userAddress: " + userAddress)
 
     const [reportFlow, setReportFlow] = useState(0);
+    const [selected, setSelected] = useState('');
     const [isPrompt, setPrompt] = useState(false);
-    const [reportName, setReportName] = useState('')
-    const [reportDescription, setReportDescription] = useState('')
+    const [reportName, setReportName] = useState('DefaultName')
+    const [reportDescription, setReportDescription] = useState('DefaultDescription')
     const handleSubmit = async () => {
         setPrompt(true)
     }
@@ -57,13 +56,13 @@ const Report = () => {
         <div id="report">
             {
                 isPrompt ?
-                    <Prompt 
+                    <Prompt
                         name={reportName}
                         contractAddress={contractAddress}
                         userAddress={userAddress}
                         description={reportDescription}
-                        submit={isPrompt} 
-                        onSubmit={setPrompt} 
+                        submit={isPrompt}
+                        onSubmit={setPrompt}
                     /> :
                     <div></div>
             }
@@ -76,18 +75,40 @@ const Report = () => {
                 <div id="reportMaliciousContent">Is this a malicious contract ?</div>
             </div>
             <Stack sx={{ marginLeft: 0.5, marginRight: 0.5 }} spacing={3} direction="row">
-                <Button sx={{ color: '#434343', '&:hover, &:focus': { color: 'white', backgroundColor: '#77736A' },
-                    borderRadius: 5,
-                    backgroundColor: "#DFD8C9",
-                    fontWeight: "500",
-                    width: '50%'
-                }} onClick={() => { setReportFlow(1) }} variant="text">Yes</Button>
-                <Button sx={{ color: '#434343', '&:hover, &:focus': { color: 'white', backgroundColor: '#77736A', },
-                    borderRadius: 5,
-                    backgroundColor: "#DFD8C9",
-                    fontWeight: "500",
-                    width: '50%'
-                }} onClick={() => { setReportFlow(1) }} variant="text">No</Button>
+                <Button sx={()=>(
+                    selected === 'yes' ? 
+                    {
+                        color: 'white', '&:hover, &:focus': { color: 'white', backgroundColor: '#77736A' },
+                        borderRadius: 5,
+                        backgroundColor: "#77736A",
+                        fontWeight: "500",
+                        width: '50%'
+                    } :
+                    {
+                        color: '#434343', '&:hover, &:focus': { color: 'white', backgroundColor: '#77736A' },
+                        borderRadius: 5,
+                        backgroundColor: "#DFD8C9",
+                        fontWeight: "500",
+                        width: '50%'
+                    }
+                )} onClick={() => { setReportFlow(1); setSelected('yes'); }} variant="text">Yes</Button>
+                <Button sx={()=>(
+                    selected === 'no' ? 
+                    {
+                        color: 'white', '&:hover, &:focus': { color: 'white', backgroundColor: '#77736A' },
+                        borderRadius: 5,
+                        backgroundColor: "#77736A",
+                        fontWeight: "500",
+                        width: '50%'
+                    } :
+                    {
+                        color: '#434343', '&:hover, &:focus': { color: 'white', backgroundColor: '#77736A' },
+                        borderRadius: 5,
+                        backgroundColor: "#DFD8C9",
+                        fontWeight: "500",
+                        width: '50%'
+                    }
+                )} onClick={() => { setReportFlow(1); setSelected('no'); }} variant="text">No</Button>
             </Stack>
 
             {
@@ -120,14 +141,16 @@ const Report = () => {
                     </div>
                     <ReportForm onTextValue={handleDescription} placeholder="Share more detail with the community" formHeight={130} />
                     <Stack sx={{ mx: 0.5, mt: 4 }}>
-                        <Button sx={{ color: '#434343', '&:hover, &:focus': { color: 'white', backgroundColor: '#77736A', },
-                            height: 40,
-                            borderRadius: 5,
-                            backgroundColor: "#DFD8C9",
-                            fontSize: 15,
-                            fontWeight: "500",
-                            width: '100%'
-                        }}
+                        <Button sx={{
+                                    color: '#434343',
+                                    '&:hover, &:focus': { color: 'white', backgroundColor: '#77736A', },
+                                    height: 40,
+                                    borderRadius: 5,
+                                    backgroundColor: "#DFD8C9",
+                                    fontSize: 15,
+                                    fontWeight: "500",
+                                    width: '100%'
+                                }}
                             onClick={handleSubmit}
                             variant="text">Send
                         </Button>

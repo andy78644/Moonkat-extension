@@ -7,30 +7,31 @@ import './ContractInfo.css'
 
 interface Props {
     mode: string | null,
-    address: any
+    transaction: any
 };
 
 const ContractInfo = (props: Props) => {
-    const { mode, address } = props;
-
-    // mock getBasicInfo API response
+    const { mode, transaction } = props;
+    let contractAddress = ''
+    if(mode === 'transaction-assets-exchange') { contractAddress = transaction }
+    else  { contractAddress = transaction.approve.contractAddress}
+    
     const contractInfo = {
-        contractName: "hi",
-        contractAddress: address ?? 'Error',
-        contractLink: `https://etherscan.io/address/${address}`,
-        contractVerification: true
+        contractName: undefined,
+        contractLink: `https://etherscan.io/address/${contractAddress}`,
+        contractVerification: false
     }
-    const { contractName, contractAddress, contractLink, contractVerification } = contractInfo;
+    const { contractName, contractLink, contractVerification } = contractInfo;
 
     const truncatedAddress = contractAddress.slice(0, 6) + '....' + contractAddress.slice(-4);
 
     return (
         <div id="contractInfo">
             {
-                mode === 'asset exchange' ?
+                mode === 'transaction-assets-exchange' ?
                     <div id="infoText">
                         Interacting with <u>{contractName ?? ''}</u> &nbsp;
-                        <IconButton href={contractLink} target="_blank">
+                        <IconButton>
                             {
                                 contractVerification ?
                                     <VerifiedIcon color="primary" sx={{ fontSize: 25, paddingBottom: 0.5 }} /> :
@@ -40,7 +41,7 @@ const ContractInfo = (props: Props) => {
                     </div> :
                     <div id="infoText">
                         Giving approval to <u>{contractName ?? ''}</u> &nbsp;
-                        <IconButton href={contractLink} target="_blank" sx={{ fontSize: 20, padding: 0 }}>
+                        <IconButton sx={{ fontSize: 20, padding: 0 }}>
                             {
                                 contractVerification ?
                                     <VerifiedIcon color="primary" sx={{ fontSize: 25, paddingBottom: 0.5 }}/> :

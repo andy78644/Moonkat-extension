@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, { useState } from "react";
 import List from '@mui/material/List';
 import ListItem from "@mui/material/ListItem";
 import ListItemText from '@mui/material/ListItemText';
@@ -35,29 +35,30 @@ const AssetsOut = (props: Props) => {
     const handlePopoverClose = () => {
         setAnchorEl(null);
     };
-    console.log("Out Token: ", sendTokens)
     const hover = Boolean(anchorEl);
     const renderList = () => {
         return sendTokens.map((token: any) => {
             if (token) {
-                return <ListItem key={token} sx={{}}>
-                    <img src={token.tokenURL ?? nft} height="48px" width="48px" alt="Free Mint" />
-                    <ListItemText sx={{ paddingLeft: '8px' }}
-                        primary={
-                            <Typography sx={{ fontFamily: 'Lato', fontSize: '20px', fontWeight: 100 }}>
-                                {token.symbol  ?? ''}
-                            </Typography>
-                        }
-                    />
-                    <ListItemText sx={{ textAlign: 'right', color: '#B8463D' }}
-                        primary={
-                            <Typography
-                                sx={{ fontFamily: 'Lato', fontSize: '20px', fontWeight: 100 }}>
-                                -{token.amount ?? '-' + token.symbol ?? ''}
-                            </Typography>
-                        }
-                    />
-                </ListItem>
+                return (
+                    <ListItem key={token} sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                        <img src={token.tokenURL ?? nft} height="48px" width="48px" alt="Free Mint" />
+                        <ListItemText sx={{ paddingLeft: '8px' }}
+                            primary={
+                                <Typography sx={{ fontFamily: 'Lato', fontSize: '20px', fontWeight: 100 }}>
+                                    {token.symbol ?? ''}
+                                </Typography>
+                            }
+                        />
+                        <ListItemText sx={{ textAlign: 'right', color: '#B8463D' }}
+                            primary={
+                                <Typography
+                                    sx={{ fontFamily: 'Lato', fontSize: '20px', fontWeight: 100 }}>
+                                    -{token.amount + ' ETH' ?? '-' + token.symbol ?? ''}
+                                </Typography>
+                            }
+                        />
+                    </ListItem>
+                )
             }
         });
     }
@@ -77,7 +78,7 @@ const AssetsOut = (props: Props) => {
                 >
                     Assets Send &nbsp;
                     <Typography
-                        aria-owns={hover ? 'mouse-over-popover' : undefined}
+                        aria-owns={hover ? 'assetsOutPopOver' : undefined}
                         aria-haspopup="true"
                         onMouseEnter={handlePopoverOpen}
                         onMouseLeave={handlePopoverClose}
@@ -85,7 +86,7 @@ const AssetsOut = (props: Props) => {
                         <HelpOutlineIcon sx={{ fontSize: 18 }} />
                     </Typography>
                     <Popover
-                        id="mouse-over-popover"
+                        id="assetsOutPopOver"
                         sx={{ pointerEvents: 'none' }}
                         open={hover}
                         anchorEl={anchorEl}
@@ -94,7 +95,7 @@ const AssetsOut = (props: Props) => {
                         onClose={handlePopoverClose}
                         disableRestoreFocus
                     >
-                        <Typography sx={{ p: 1 }}>I use Popover.</Typography>
+                        <Typography sx={{ p: 1 }}>The assets will send after confirm this txn.</Typography>
                     </Popover>
                     <ListItemText />
                 </ListItemButton>
@@ -117,7 +118,7 @@ const AssetsOut = (props: Props) => {
                         primary={
                             <Typography
                                 sx={{ fontFamily: 'Lato', fontSize: '20px', fontWeight: 100 }}>
-                                -{gasFee.toFixed(4)}
+                                -{gasFee.toFixed(4) + ' ETH'}
                             </Typography>
                         }
                     />

@@ -46,8 +46,14 @@ const Prompt = (props: Props) => {
                     }, 2000)
                 })
                 .catch((err) => {
-                    console.log(`Fail to sumbit the report! ${err}`);
-                    // Need to goto error page
+                    // todo solve the report fail situation
+                    console.log(`Fail to sumbit the report! ${err}`)
+                    const windowId = getWindowId()
+                    setTimeout(async () => {
+                        if (windowId) {
+                            Browser.windows.remove((await windowId).id!)
+                        }
+                    }, 2000)
                 })
         }
         postReport(reportInfo)
