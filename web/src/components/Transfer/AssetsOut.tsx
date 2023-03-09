@@ -40,15 +40,8 @@ const AssetsOut = (props: Props) => {
         return sendTokens.map((token: any) => {
             if (token) {
                 return (
-                    <ListItem key={token} sx={{}}>
+                    <ListItem key={token} sx={{ display: 'flex', justifyContent: 'space-between' }}>
                         <img src={token.tokenURL ?? nft} height="48px" width="48px" alt="Free Mint" />
-                        <ListItemText sx={{textAlign: 'right'}}
-                                primary={
-                                    <Typography sx={{ fontFamily: 'Lato', fontSize: '20px', fontWeight: 100 }}>
-                                        {sendTokens[0].title ?? '-'}
-                                    </Typography>
-                                }
-                            />
                         <ListItemText sx={{ paddingLeft: '8px' }}
                             primary={
                                 <Typography sx={{ fontFamily: 'Lato', fontSize: '20px', fontWeight: 100 }}>

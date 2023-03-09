@@ -11,15 +11,16 @@ interface Props {
 };
 
 const ContractInfo = (props: Props) => {
+    console.log("ContractInfo "+ props.transaction);
     const { mode, transaction } = props;
     let contractAddress = ''
     if(mode === 'transaction-assets-exchange') { contractAddress = transaction }
     else  { contractAddress = transaction.approve.contractAddress}
     
     const contractInfo = {
-        contractName: "Contract",
+        contractName: undefined,
         contractLink: `https://etherscan.io/address/${contractAddress}`,
-        contractVerification: true
+        contractVerification: false
     }
     const { contractName, contractLink, contractVerification } = contractInfo;
 
