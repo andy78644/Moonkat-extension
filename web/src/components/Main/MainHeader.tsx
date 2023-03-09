@@ -59,8 +59,8 @@ const MainHeader = (props: Props) => {
 
     return (
         <div id="mainHeader">
-            <img id="logo" src={Logo} alt="logo" />
-            <div id="brandName"> MoonKat </div>
+            <a href="https://moonkats.webflow.io/" target="_blank"><img id="logo" src={Logo} alt="logo" /></a>
+            <a href="https://moonkats.webflow.io/" target="_blank"><div id="brandName"> MoonKat </div></a>
             <div id="menu">
                 <IconButton onClick={handleClick}>
                     <MenuIcon />

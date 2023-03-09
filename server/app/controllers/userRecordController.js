@@ -44,14 +44,16 @@ exports.simulationRecord = async (req, res) => {
     }
     const recordData = await UserRecord.findByPk(req.body.msgId);
     if(recordData === null) res.status(500).send("update failed");
-    recordData.update(record)
-    .then(()=>{
-        res.status(201).send("Success")
-    })
-    .catch(err => {
-        res.status(500).send({
-        message:
-            err.message || "Create failed"
-        });
-    })
+    if (record) {
+        recordData.update(record)
+        .then(()=>{
+            res.status(201).send("Success")
+        })
+        .catch(err => {
+            res.status(500).send({
+            message:
+                err.message || "Create failed"
+            });
+        })
+    } else res.status(500).send("update failed");
 }

@@ -44,7 +44,6 @@ const Main = (props: Props) => {
                         res.gasPrice = gasPrice
                         res.to = transaction.to
                         settransactionResultState(res)
-                        console.log('Main 46: ', res)
                         if (res.changeType === 'APPROVE') setRenderMode('transaction-assets-approval')
                         else setRenderMode('transaction-assets-exchange')
                         setHasLoaded(true)
@@ -82,7 +81,7 @@ const Main = (props: Props) => {
         }   
         const result = await dataService.postURL(recordData, method)
         .catch((err)=>{
-            console.log(err)
+            console.log('PostURL error:', err)
             return err
         })
         if(result) return false

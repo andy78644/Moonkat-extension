@@ -110,29 +110,25 @@ const AssetsIn = (props: Props) => {
                     }
                 </ListItemButton>
                 <hr></hr>
-                {/* {
-                    sendTokens.length === 1 ?
-                        <div></div> : */}
-                        <ListItem sx={{ padding: "4px 16px" }}>
-                            <div>
-                                <ListItemText sx={{ display: 'inline-block', fontSize: '20px' }}
-                                    primary={
-                                        <Typography sx={{ fontFamily: 'Lato', fontSize: '20px', fontWeight: 100 }}>
-                                            {sendTokens[0].collectionName ?? ''}
-                                        </Typography>
-                                    }
-                                />
-                                {
-                                    sendTokens[0].osVerified === 'verified' ?
-                                        <VerifiedIcon
-                                            color="primary"
-                                            sx={{ fontSize: 22, marginBottom: '8px' }}
-                                        /> :
-                                        <div></div>
-                                }
-                            </div>
-                        </ListItem>
-                {/* } */}
+                <ListItem sx={{ padding: "4px 16px" }}>
+                    <div>
+                        <ListItemText sx={{ display: 'inline-block', fontSize: '20px' }}
+                            primary={
+                                <Typography sx={{ fontFamily: 'Lato', fontSize: '20px', fontWeight: 100 }}>
+                                    {sendTokens[0].collectionName ?? ''}
+                                </Typography>
+                            }
+                        />
+                        {
+                            sendTokens[0].osVerified === 'verified' ?
+                                <VerifiedIcon
+                                    color="primary"
+                                    sx={{ fontSize: 22, marginBottom: '8px' }}
+                                /> :
+                                <div></div>
+                        }
+                    </div>
+                </ListItem>
                 {
                     sendTokens.length === 1 ?
                         <ListItem>

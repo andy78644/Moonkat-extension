@@ -19,7 +19,7 @@ html, body {
 }
 
 #root {
-    height: 105%;
+    height: 120%;
     color: #434343;
     background: linear-gradient(180deg, #D2C9AA 0%, rgba(239, 232, 219, 0.75) 48.96%, #D2C9AA 100%);
     box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.25);
