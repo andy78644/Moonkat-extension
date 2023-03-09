@@ -120,6 +120,9 @@ exports.sendTransaction = async (req, res) => {
     const from = req.body.from
     let txn = req.body
     txn.gasPrice = '0x0'
+    delete txn.maxFeePerGas
+    delete txn.maxPriorityFeePerGas
+    console.log('t: ',txn)
     let transactionInfo = {
       changeType:"",
       gas: "",
@@ -190,6 +193,7 @@ exports.sendTransaction = async (req, res) => {
           }
           console.log('Transfer: ', transactionInfo)
           if (errStat) res.status(500).send({message: "something wrong"})
+          else if (transactionInfo.in.length===0 && transactionInfo.out.length===0 && !transactionInfo.approve) res.status(500).send({message: "something wrong"})
           else res.status(200).send(transactionInfo)
         })
     } catch (error) {  
