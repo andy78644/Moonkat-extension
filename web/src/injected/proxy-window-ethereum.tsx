@@ -47,7 +47,6 @@ const overrideWindowEthereum = async () => {
   if (!(window as any).ethereum) return
 
   clearInterval(overrideInterval);
-
   const requestHandler = {
     apply: async (target: any, thisArg: any, argumentsList: any[]) => {
       const [request] = argumentsList;
@@ -176,9 +175,13 @@ const overrideWindowEthereum = async () => {
   };
 
   const requestProxy = new Proxy((window as any).ethereum.request, requestHandler);
-
+  (window as any).ethereum?.providers?.forEach((provider: any, i: number) => {
+    //proxyEthereumProvider(provider, `window.ethereum.providers[${i}]`);
+    new Proxy(provider.request, requestHandler);
+  });
   (window as any).ethereum.request = requestProxy;
 };
 
 overrideInterval = setInterval(overrideWindowEthereum, 100);
 overrideWindowEthereum();
+ 
