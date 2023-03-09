@@ -157,16 +157,13 @@ const overrideWindowEthereum = async () => {
           signatureVersion: 'signature-712',
           signMethod: request?.method,
           text: "",
-          contractDetail: {
-            chainId: '',
-            address: ''
-          },
+          domain:{},
           signAddress: userAddress
         }
         console.log('signTypedDatav4 Website Request: ', request)
         let payLoad = JSON.parse(request.params[1])
-        signatureData.contractDetail.chainId = payLoad.domain.chainId
-        signatureData.contractDetail.address = payLoad.domain.verifyingContract
+        console.log('Payload: ', payLoad)
+        signatureData.domain = payLoad.domain
         signatureData.text = JSON.stringify(payLoad.message)
         console.log('NeededData: ', signatureData)
         const isOk = await sendAndAwaitResponseFromStream(stream, { signatureData, userAddress});

@@ -54,20 +54,47 @@ const getAssetData = async (asset, txn) => {
   }
 }
 
-const approvalHandler = (txn) => {
+const getApproveData = async (asset, txn) => {
+  if (txn.assetType === 'ERC20' || txn.assetType === 'NATIVE'){
+    asset.amount = Number(txn.amount).toFixed(4);
+    asset.tokenURL = txn.logo
+    asset.collectionName = txn.name
+  }
+  else{
+    await fetch(`https://eth-mainnet.g.alchemy.com/nft/v2/${process.env.ALCHEMY_API_KEY}\n
+    /getContractMetadata?contractAddress=${txn.contractAddress}`)
+    .then(response => 
+      response.json()
+    )
+    .then(response => {
+      console.log('getApproveData: ', response)
+      asset.tokenURL = response.contractMetadata.openSea.imageUrl
+      asset.title = response.name
+      asset.collectionName = response.contractMetadata.openSea.collectionName
+      asset.osVerified = response.contractMetadata.openSea.safelistRequestStatus
+    })
+    .catch(err => {
+      console.log(err.message) 
+      return 'fetching error'    
+    })
+  }
+}
+const approvalHandler = async (txn) => {
   let assetApprove = {
     symbol:"",
     contractAddress:"",
     amount:"",
     tokenURL:"",
     collectionName:"",
+    title:"",
+    osVerified:""
   }
   assetApprove.symbol = txn.symbol
   assetApprove.contractAddress = txn.to
   assetApprove.amount = txn.amount
-  assetApprove.tokenURL = txn.logo
-  assetApprove.collectionName = txn.name
-  return assetApprove
+  let err = await getApproveData(assetApprove, txn)
+  if (err) return err
+  else return assetApprove
 }
 
 const transferHandler = async (txn) => {
@@ -91,6 +118,8 @@ const transferHandler = async (txn) => {
 
 exports.sendTransaction = async (req, res) => {
     const from = req.body.from
+    let txn = req.body
+    txn.gasPrice = '0x0'
     let transactionInfo = {
       changeType:"",
       gas: "",
@@ -107,7 +136,7 @@ exports.sendTransaction = async (req, res) => {
           jsonrpc: '2.0',
           method: 'alchemy_simulateAssetChanges',
           params: [
-            req.body
+            txn
           ]
         })
     };
@@ -130,7 +159,7 @@ exports.sendTransaction = async (req, res) => {
           for ( let changeObj of result.changes){
               if(changeObj.from === from){
                 if (changeObj.changeType === 'APPROVE'){
-                  assetApprove = approvalHandler(changeObj)
+                  assetApprove = await approvalHandler(changeObj)
                   transactionInfo.changeType = 'APPROVE'
                   transactionInfo.approve = assetApprove
                   console.log('Approve: ', transactionInfo)
