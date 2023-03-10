@@ -107,11 +107,11 @@ const AssetsApprove = (props: Props) => {
                         primary={
                             <div>
                                 <Typography
-                                    sx={{ display: 'inline-block', fontFamily: 'Lato-thin', fontSize: '20px', fontWeight: 100 }}>
+                                    sx={{ display: 'inline-block', fontFamily: 'Lato-thin', fontSize: '20px', fontWeight: 100, color:'#B8463D'}}>
                                     Can withdraw &nbsp;
                                 </Typography>
                                 <Typography
-                                    sx={{ display: 'inline-block', fontFamily: 'Lato', fontSize: '20px', fontWeight: 900 }}>
+                                    sx={{ display: 'inline-block', fontFamily: 'Lato', fontSize: '20px', fontWeight: 900, color:'#B8463D'}}>
                                     all {sendTokens.symbol}s
                                 </Typography>
                             </div>
