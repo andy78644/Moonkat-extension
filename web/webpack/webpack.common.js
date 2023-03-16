@@ -102,8 +102,8 @@ module.exports = {
     new webpack.DefinePlugin({
       'process.env.WORK_ENV': JSON.stringify(process.env.WORK_ENV || 'dev')
     }),
-    new WebpackObfuscator({
-      rotateStringArray: true
-    })
+    // new WebpackObfuscator({
+    //   rotateStringArray: true
+    // })
   ],
 };

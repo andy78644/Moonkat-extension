@@ -43,13 +43,13 @@ const getAddress = async () => {
   }
 }
 
-const overrideWindowEthereum = async () => {
+const proxyEthereumProvider = async (ethereumProvider: any, name: string) => {
   if (!(window as any).ethereum) return
 
-  clearInterval(overrideInterval);
   const requestHandler = {
     apply: async (target: any, thisArg: any, argumentsList: any[]) => {
       const [request] = argumentsList;
+      
       if (request?.method === 'eth_sendTransaction') {
         const userAddress = await getAddress()
         const [transaction] = request?.params ?? [];
@@ -175,13 +175,33 @@ const overrideWindowEthereum = async () => {
   };
 
   const requestProxy = new Proxy((window as any).ethereum.request, requestHandler);
+  
   (window as any).ethereum?.providers?.forEach((provider: any, i: number) => {
     //proxyEthereumProvider(provider, `window.ethereum.providers[${i}]`);
     new Proxy(provider.request, requestHandler);
   });
+  Object.defineProperty(ethereumProvider, 'request', {
+    value: new Proxy(ethereumProvider.request, requestHandler),
+    writable: true,
+  });
+
   (window as any).ethereum.request = requestProxy;
+
 };
 
-overrideInterval = setInterval(overrideWindowEthereum, 100);
-overrideWindowEthereum();
+const proxyAllEthereumProviders = () => {
+  if (!(window as any).ethereum) return
+  clearInterval(overrideInterval);
+
+  // Proxy the default window.ethereum provider
+  proxyEthereumProvider((window as any).ethereum, 'window.ethereum');
+
+  // Proxy any other providers listed on the window.ethereum object
+  (window as any).ethereum?.providers?.forEach((provider: any, i: number) => {
+    proxyEthereumProvider(provider, `window.ethereum.providers[${i}]`);
+  });
+};
+
+overrideInterval = setInterval(proxyAllEthereumProviders, 100);
+proxyAllEthereumProviders();
  
