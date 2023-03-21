@@ -235,27 +235,30 @@ async function openseaTransInfo(payload){
   return payload.tree;
 }
 
-async function seaMultipleList(payload, address){
+async function seaMultipleList(payload){
   var asset = {
     in:[],
-    out: []
+    out:[]
   }
-  console.log(payload.tree[0].offer)
-  payload.tree.forEach(order => {
-    //tmpAsset_in.amount = web3.utils.fromWei(item.consideration[0].startAmount, "ether")
-    //asset.in[i].amount = asset_in.amount;
-    order.consideration.forEach(item => {
-      if(address === item.Recipient){
-        var Asset_in = asset_handler(item)
+  const address = payload.tree.offerer
+  for (const order of payload.tree) {
+    const address = order.offerer
+    await Promise.all(order.consideration.map(async item => {
+      if(address === item.recipient){
+        let Asset_in = await asset_handler(item)
         asset.in.push(Asset_in);
       }
-    })
-    asset.in.push(tmpAsset_in);
-  });
+    }))
+    await Promise.all(order.offer.map(async item => {
+      let Asset_out = await asset_handler(item);
+      //console.log(Asset_out);
+      asset.out.push(Asset_out);
+    }))
+  }
   console.log(asset)
 }
 
-const asset_handler = async(item) => {
+async function asset_handler (item){
   let asset = {
     amount:"",
     type: '',
@@ -267,16 +270,41 @@ const asset_handler = async(item) => {
     osVerified:"",
     tokenId:null,
   }
-  switch(item.ItemType){
-    case 0: //eth
+  //console.log(item.itemType)
+  switch(item.itemType){
+    case '0': //eth
+      asset.amount = item.endAmount
       asset.type = 'NATIVE'
       asset.symbol = 'ETH'
       asset.tokenURL = 'https://static.alchemyapi.io/images/network-assets/eth.png'
       asset.collectionName = 'Ethereum'
+      //console.log(asset)
       return asset
-    case 1: //erc20
-    case 2: //nft
-    case 3: //erc1155 token
-    case 4: //nft bit 
+    case '1': //erc20
+      return asset;
+    case '2': //nft
+    case '3': //erc1155 token
+      await fetch(`https://eth-mainnet.g.alchemy.com/v2/${process.env.ALCHEMY_API_KEY}\n
+      /getNFTMetadata?contractAddress=${item.token}&tokenId=${item.identifierOrCriteria}`)
+      .then(response => 
+        response.json()
+      )
+      .then(response => {
+        //console.log('getApproveData: ', response)
+        asset.amount = item.endAmount
+        asset.tokenURL = response.contractMetadata.openSea.imageUrl
+        asset.title = response.title
+        asset.collectionName = response.contractMetadata.openSea.collectionName
+        asset.osVerified = response.contractMetadata.openSea.safelistRequestStatus
+        asset.collectionIconUrl = response.contractMetadata.openSea.imageUrl
+        asset.tokenId = item.identifierOrCriteria
+        //console.log(asset)
+      })
+      .catch(err => {
+        console.log(err.message) 
+        return 'fetching error'    
+      })
+      return asset
+    case '4': //nft bit 
   }
 }
