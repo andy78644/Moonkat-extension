@@ -1,5 +1,6 @@
 require('dotenv').config()
-
+const Web3 = require('web3');
+const web3 = new Web3();
 const sleep = (ms) => {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
@@ -202,4 +203,80 @@ exports.sendTransaction = async (req, res) => {
           error.message
         }); 
     }
+}
+
+exports.signatureParsing = async (req, res) => {
+  openseaTransInfo(req.body)
+  res.status(200).send();
+
+}
+
+async function openseaTransInfo(payload){
+  //const offerAddress = payload
+  let transactionInfo = {
+    changeType:"",
+    gas: "",
+    in:[],
+    out:[],
+    approve:null
+  };
+  let asset_in = {
+    amount:"",
+    type: 'NATIVE',
+    symbol: 'ETH',
+    tokenURL: 'https://static.alchemyapi.io/images/network-assets/eth.png',
+    collectionName: 'Ethereum',
+    collectionIconUrl: "",
+    title:"",
+    osVerified:"",
+    tokenId:null,
+  }
+  seaMultipleList(payload)
+  return payload.tree;
+}
+
+async function seaMultipleList(payload, address){
+  var asset = {
+    in:[],
+    out: []
+  }
+  console.log(payload.tree[0].offer)
+  payload.tree.forEach(order => {
+    //tmpAsset_in.amount = web3.utils.fromWei(item.consideration[0].startAmount, "ether")
+    //asset.in[i].amount = asset_in.amount;
+    order.consideration.forEach(item => {
+      if(address === item.Recipient){
+        var Asset_in = asset_handler(item)
+        asset.in.push(Asset_in);
+      }
+    })
+    asset.in.push(tmpAsset_in);
+  });
+  console.log(asset)
+}
+
+const asset_handler = async(item) => {
+  let asset = {
+    amount:"",
+    type: '',
+    symbol: '',
+    tokenURL: '',
+    collectionName: '',
+    collectionIconUrl: "",
+    title:"",
+    osVerified:"",
+    tokenId:null,
+  }
+  switch(item.ItemType){
+    case 0: //eth
+      asset.type = 'NATIVE'
+      asset.symbol = 'ETH'
+      asset.tokenURL = 'https://static.alchemyapi.io/images/network-assets/eth.png'
+      asset.collectionName = 'Ethereum'
+      return asset
+    case 1: //erc20
+    case 2: //nft
+    case 3: //erc1155 token
+    case 4: //nft bit 
+  }
 }
