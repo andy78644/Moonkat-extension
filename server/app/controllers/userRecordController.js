@@ -3,7 +3,7 @@ const { validationResult } = require('express-validator');
 const { UserRecord } = db;
 
 exports.sendRecord = async (req, res) => {
-    console.log(JSON.stringify(req.body.SimulationResult.message))
+    //console.log(JSON.stringify(req.body))
     UserRecord.create(req.body)
     .then(()=>{
         res.status(201).send()
