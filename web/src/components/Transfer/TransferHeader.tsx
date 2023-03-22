@@ -10,7 +10,7 @@ const TransferHeader = (props: Props) => {
     const { mode } = props
     return (
         <div id="transferHeader">
-            <div id="headerChange"> Change can be made by {
+            <div id="headerChange"> Change will be made by {
                 mode.split('-')[0] === "transaction" ?
                 "accepting txn" :
                 "signing signature"

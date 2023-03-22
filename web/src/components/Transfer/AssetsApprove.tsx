@@ -73,7 +73,7 @@ const AssetsApprove = (props: Props) => {
                 </ListItemButton>
                 <hr></hr>
                 <ListItem
-                    sx={{ padding: "4px 16px" }}
+                    sx={{ padding: "0px 16px" }}
                 >
                     <div>
                         <ListItemText
@@ -107,7 +107,7 @@ const AssetsApprove = (props: Props) => {
                         primary={
                             <div>
                                 <Typography
-                                    sx={{ display: 'inline-block', fontFamily: 'Lato-thin', fontSize: '20px', fontWeight: 100, color:'#B8463D'}}>
+                                    sx={{ display: 'inline-block', fontFamily: 'Lato-thin', fontSize: '20px', fontWeight: 900, color:'#B8463D'}}>
                                     Can withdraw &nbsp;
                                 </Typography>
                                 <Typography
