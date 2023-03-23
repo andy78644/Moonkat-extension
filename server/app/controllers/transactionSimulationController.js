@@ -207,9 +207,10 @@ exports.sendTransaction = async (req, res) => {
 
 exports.signatureParsing = async (req, res) => {
   let transactionInfo = "";
-  let payload = req.body;
+  //console.log(req.body)
+  let payload = req.body.payload;
   //console.log(payload)
-  if(payload.domain.name === 'Seaport' && payload.domain.verifyingContract === '0x00000000000001ad428e4906aE43D8F9852d0dD6'){ transactionInfo =  await openseaTransInfo(req.body);}
+  if(req.body.type === 'eth_signTypedData_v4' && payload.domain.name === 'Seaport' && payload.domain.verifyingContract === '0x00000000000001ad428e4906aE43D8F9852d0dD6'){ transactionInfo =  await openseaTransInfo(payload);}
   //console.log(transactionInfo);payload.signatureVersion === '"signature-712' && 
   res.status(200).send(transactionInfo);
 
@@ -234,12 +235,12 @@ async function seaSingleList(payload){
   const address = order.offerer
   await Promise.all(order.consideration.map(async item => {
     if(address === item.recipient){
-      let Asset_in = await asset_handler(item)
+      let Asset_in = await SeaportAssetHandler(item)
       asset.in.push(Asset_in);
     }
   }))
   await Promise.all(order.offer.map(async item => {
-    let Asset_out = await asset_handler(item);
+    let Asset_out = await SeaportAssetHandler(item);
     //console.log(Asset_out);
     asset.out.push(Asset_out);
   }))
@@ -259,12 +260,12 @@ async function seaMultipleList(payload){
     const address = order.offerer
     await Promise.all(order.consideration.map(async item => {
       if(address === item.recipient){
-        let Asset_in = await asset_handler(item)
+        let Asset_in = await SeaportAssetHandler(item)
         asset.in.push(Asset_in);
       }
     }))
     await Promise.all(order.offer.map(async item => {
-      let Asset_out = await asset_handler(item);
+      let Asset_out = await SeaportAssetHandler(item);
       //console.log(Asset_out);
       asset.out.push(Asset_out);
     }))
@@ -274,7 +275,7 @@ async function seaMultipleList(payload){
   
 }
 
-async function asset_handler (item){
+async function SeaportAssetHandler (item){
   let asset = {
     amount:"",
     type: '',
@@ -286,7 +287,11 @@ async function asset_handler (item){
     osVerified:"",
     tokenId:null,
   }
-  //console.log(item.itemType)
+  const itemData = {
+    token: item.token,
+    tokenId: item.identifierOrCriteria
+
+  }
   switch(item.itemType){
     case '0': //eth
       asset.amount = item.endAmount
@@ -294,59 +299,83 @@ async function asset_handler (item){
       asset.symbol = 'ETH'
       asset.tokenURL = 'https://static.alchemyapi.io/images/network-assets/eth.png'
       asset.collectionName = 'Ethereum'
-      //console.log(asset)
       return asset
     case '1': //erc20
-      const options = {
-        method: 'POST',
-        headers: {accept: 'application/json', 'content-type': 'application/json'},
-        body: JSON.stringify({
-          id: 1,
-          jsonrpc: '2.0',
-          method: 'alchemy_getTokenMetadata',
-          params: [
-            item.token
-          ]
-        })
-      };
-      const url = `https://eth-mainnet.g.alchemy.com/v2/${process.env.ALCHEMY_API_KEY}`
-      try {
-        const response = await fetchWithRetry(url, options)
-        //const response = await fetch(`https://eth-mainnet.g.alchemy.com/v2/${process.env.ALCHEMY_API_KEY}/alchemy_getTokenMetadata?contractAddress=${item.token}&tokenId=${item.identifierOrCriteria}`);
-        const data = await response.json();
-        //console.log(data)
-        asset.amount = item.endAmount;
-        asset.type = 'ERC20'
-        asset.tokenURL = data.result.logo;
-        asset.collectionName = data.result.name;
-        asset.symbol = data.result.symbol;
-        return asset;
-      } catch (err) {
-        console.log(err.message);
-        return 'fetching error';
-      }
+      asset.amount = item.endAmount;
+      await erc20Metadata(asset, itemData);
+      return asset;
     case '2': //nft
     case '3': //erc1155 token
-      try {
-        const response = await fetch(`https://eth-mainnet.g.alchemy.com/v2/${process.env.ALCHEMY_API_KEY}/getNFTMetadata?contractAddress=${item.token}&tokenId=${item.identifierOrCriteria}`);
-        const data = await response.json();
-        //console.log(data)
-        asset.amount = item.endAmount;
-        asset.type = data.contractMetadata.tokenType;
-        asset.symbol = data.contractMetadata.symbol;
-        asset.tokenURL = data.contractMetadata.openSea.imageUrl;
-        asset.title = data.title;
-        asset.collectionName = data.contractMetadata.openSea.collectionName;
-        asset.osVerified = data.contractMetadata.openSea.safelistRequestStatus;
-        asset.collectionIconUrl = data.contractMetadata.openSea.imageUrl;
-        asset.tokenId = item.identifierOrCriteria;
-        //console.log(asset);
-        return asset;
-      } catch (err) {
-        console.log(err.message);
-        return 'fetching error';
-      }
-      //return asset;
+      asset.amount = item.endAmount;
+      asset.tokenId = item.identifierOrCriteria;
+      await NFTMetadata(asset, itemData)
+      return asset;
     case '4': //nft bit 
+      asset.amount = item.endAmount;
+      await ContractMetadata(asset, itemData)
+      return asset;
+
+  }
+}
+
+const erc20Metadata = async(asset, item) =>{
+  const options = {
+    method: 'POST',
+    headers: {accept: 'application/json', 'content-type': 'application/json'},
+    body: JSON.stringify({
+      id: 1,
+      jsonrpc: '2.0',
+      method: 'alchemy_getTokenMetadata',
+      params: [
+        item.token
+      ]
+    })
+  };
+  const url = `https://eth-mainnet.g.alchemy.com/v2/${process.env.ALCHEMY_API_KEY}`
+  try {
+    const response = await fetchWithRetry(url, options)
+    const data = await response.json();
+    asset.type = 'ERC20'
+    asset.tokenURL = data.result.logo;
+    asset.collectionName = data.result.name;
+    asset.symbol = data.result.symbol;
+  } catch (err) {
+    console.log(err.message);
+    return 'fetching error';
+  }
+}
+
+const NFTMetadata = async(asset, item) =>{
+  try {
+    const response = await fetch(`https://eth-mainnet.g.alchemy.com/v2/${process.env.ALCHEMY_API_KEY}/getNFTMetadata?contractAddress=${item.token}&tokenId=${item.tokenId}`);
+    const data = await response.json();
+    //console.log(data)
+    asset.type = data.contractMetadata.tokenType;
+    asset.symbol = data.contractMetadata.symbol;
+    asset.tokenURL = data.contractMetadata.openSea.imageUrl;
+    asset.title = data.title;
+    asset.collectionName = data.contractMetadata.openSea.collectionName;
+    asset.osVerified = data.contractMetadata.openSea.safelistRequestStatus;
+    asset.collectionIconUrl = data.contractMetadata.openSea.imageUrl;
+  } catch (err) {
+    console.log(err.message);
+    return 'fetching error';
+  }
+}
+
+const ContractMetadata = async(asset, item) =>{
+  try {
+    const response = await fetch(`https://eth-mainnet.g.alchemy.com/nft/v2/${process.env.ALCHEMY_API_KEY}/getContractMetadata?contractAddress=${item.token}`);
+    const data = await response.json();
+    asset.type = data.contractMetadata.tokenType;
+    asset.symbol = data.contractMetadata.symbol;
+    asset.tokenURL = data.contractMetadata.openSea.imageUrl;
+    asset.title = data.contractMetadata.symbol;
+    asset.collectionName = data.contractMetadata.openSea.collectionName;
+    asset.osVerified = data.contractMetadata.openSea.safelistRequestStatus;
+    asset.collectionIconUrl = data.contractMetadata.openSea.imageUrl;
+  } catch (err) {
+    console.log(err.message);
+    return 'fetching error';
   }
 }
