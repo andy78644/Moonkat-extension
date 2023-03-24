@@ -14,6 +14,10 @@
     height: 66px;
     align-items: flex-start;
     background: #ECE5D0;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 999;
 }
 
 #logo {

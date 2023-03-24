@@ -8,8 +8,9 @@
 #assetsOutTitle {
     font-family: Lato, sans-serif;
     font-size: 20px;
-    padding-top: 4px;
-    padding-bottom: 10px;
+    padding-top: 8px;
+    padding-bottom: 16px;
+    line-height: 100%;
 }
 
 #assetsOutPopOver > .MuiPopover-paper {
@@ -18,4 +19,8 @@
     background-color: #FFF8EA !important;
     border: 2px solid #DFD8CA;
     border-radius: 8px !important;
+}
+
+#assetsOutTitle > .css-ahj2mt-MuiTypography-root {
+    line-height: 100%;
 }

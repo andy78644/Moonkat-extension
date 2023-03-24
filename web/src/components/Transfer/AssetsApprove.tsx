@@ -103,16 +103,16 @@ const AssetsApprove = (props: Props) => {
                 >
                     <img src={sendTokens.tokenURL ?? nft} alt="nft" width="48px" height="48px" />
                     <ListItemText
-                        sx={{ fontSize: '20px', textAlign: 'right' }}
+                        sx={{ paddingLeft: '8px' }}
                         primary={
                             <div>
                                 <Typography
-                                    sx={{ display: 'inline-block', fontFamily: 'Lato-thin', fontSize: '20px', fontWeight: 900, color:'#B8463D'}}>
+                                    sx={{ lineHeight: '100%', display: 'inline-block', fontFamily: 'Lato', fontSize: '16px', fontWeight: 500, color:'#B8463D'}}>
                                     Can withdraw &nbsp;
                                 </Typography>
                                 <Typography
-                                    sx={{ display: 'inline-block', fontFamily: 'Lato', fontSize: '20px', fontWeight: 900, color:'#B8463D'}}>
-                                    all {sendTokens.symbol}s
+                                    sx={{ lineHeight: '100%',  display: 'inline-block', fontFamily: 'Lato-bold', fontSize: '16px', fontWeight: 900, color:'#B8463D'}}>
+                                    ALL {sendTokens.symbol}s
                                 </Typography>
                             </div>
 

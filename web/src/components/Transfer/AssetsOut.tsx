@@ -40,7 +40,7 @@ const AssetsOut = (props: Props) => {
         return sendTokens.map((token: any) => {
             if (token) {
                 return (
-                    <ListItem key={token} sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                    <ListItem key={token.tokenId}>
                         <img src={token.tokenURL ?? nft} height="48px" width="48px" alt="Free Mint" />
                         <ListItemText sx={{ paddingLeft: '8px' }}
                             primary={
@@ -51,8 +51,7 @@ const AssetsOut = (props: Props) => {
                         />
                         <ListItemText sx={{ textAlign: 'right', color: '#B8463D' }}
                             primary={
-                                <Typography
-                                    sx={{ fontFamily: 'Lato', fontSize: '20px', fontWeight: 100 }}>
+                                <Typography sx={{ fontFamily: 'Lato', fontSize: '16px', fontWeight: 100 }}>
                                     -{token.amount + ' ETH' ?? '-' + token.symbol ?? ''}
                                 </Typography>
                             }
@@ -117,7 +116,7 @@ const AssetsOut = (props: Props) => {
                         sx={{ textAlign: 'right', color: '#B8463D' }}
                         primary={
                             <Typography
-                                sx={{ fontFamily: 'Lato', fontSize: '20px', fontWeight: 100 }}>
+                                sx={{ fontFamily: 'Lato', fontSize: '16px', fontWeight: 100 }}>
                                 -{gasFee.toFixed(4) + ' ETH'}
                             </Typography>
                         }
