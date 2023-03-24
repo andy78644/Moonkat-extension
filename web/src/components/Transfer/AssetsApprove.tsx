@@ -95,7 +95,7 @@ const AssetsApprove = (props: Props) => {
                         }
                     </div>
                 </ListItem>
-                <ListItem sx={{ padding: "4px 16px" }}>
+                <ListItem sx={{ padding: "8px 16px" }}>
                     <img src={sendTokens.tokenURL ?? nft} alt="nft" width="48px" height="48px" />
                     <ListItemText
                         sx={{ paddingLeft: '8px', textAlign: 'right' }}
