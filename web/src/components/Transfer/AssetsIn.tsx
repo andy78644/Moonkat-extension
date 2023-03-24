@@ -52,7 +52,7 @@ const AssetsIn = (props: Props) => {
                         />
                         <ListItemText sx={{ textAlign: 'right', color: '#509A57' }}
                             primary={
-                                <Typography sx={{ fontFamily: 'Lato', fontSize: '16px', fontWeight: 100 }}>
+                                <Typography sx={{ fontFamily: 'Lato', fontSize: '20px', fontWeight: 100 }}>
                                     +{token.amount} {token.symbol}
                                 </Typography>
                             }
@@ -128,7 +128,7 @@ const AssetsIn = (props: Props) => {
                     sendTokens.length === 1 ?
                         <ListItem>
                             <img src={sendTokens[0].tokenURL ?? nft} height="48px" width="48px" alt="Tokens" />
-                            <ListItemText sx={{ fontSize: '20px', textAlign: 'right' }}
+                            <ListItemText sx={{ fontSize: '20px', paddingLeft: '8px'}}
                                 primary={
                                     <Typography sx={{ fontFamily: 'Lato', fontSize: '20px', fontWeight: 100 }}>
                                         {sendTokens[0].title ?? '-'}
@@ -148,7 +148,7 @@ const AssetsIn = (props: Props) => {
                                 <img src={sendTokens[0].collectionIconUrl ?? nft} height="48px" width="48px" alt="Tokens" />
                                 <ListItemText sx={{ fontSize: '20px', textAlign: 'right', color: '#509A57' }}
                                     primary={
-                                        <Typography sx={{ fontFamily: 'Lato', fontSize: '16px', fontWeight: 100 }}>
+                                        <Typography sx={{ fontFamily: 'Lato', fontSize: '20px', fontWeight: 100 }}>
                                             +{sendTokens.length ?? '-'} {sendTokens[0].symbol ?? ''}
                                         </Typography>
                                     } />

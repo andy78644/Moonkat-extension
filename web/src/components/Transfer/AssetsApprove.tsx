@@ -73,7 +73,7 @@ const AssetsApprove = (props: Props) => {
                 </ListItemButton>
                 <hr></hr>
                 <ListItem
-                    sx={{ padding: "0px 16px" }}
+                    sx={{ padding: "8px 16px" }}
                 >
                     <div>
                         <ListItemText
@@ -95,23 +95,18 @@ const AssetsApprove = (props: Props) => {
                         }
                     </div>
                 </ListItem>
-                <ListItem
-                    sx={{
-                        paddingBottom: "2px",
-                        paddingTop: "0px",
-                    }}
-                >
+                <ListItem sx={{ padding: "4px 16px" }}>
                     <img src={sendTokens.tokenURL ?? nft} alt="nft" width="48px" height="48px" />
                     <ListItemText
-                        sx={{ paddingLeft: '8px' }}
+                        sx={{ paddingLeft: '8px', textAlign: 'right' }}
                         primary={
                             <div>
                                 <Typography
-                                    sx={{ lineHeight: '100%', display: 'inline-block', fontFamily: 'Lato', fontSize: '16px', fontWeight: 500, color:'#B8463D'}}>
+                                    sx={{ lineHeight: '100%', display: 'inline-block', fontFamily: 'Lato', fontSize: '20px', fontWeight: 500, color:'#B8463D'}}>
                                     Can withdraw &nbsp;
                                 </Typography>
                                 <Typography
-                                    sx={{ lineHeight: '100%',  display: 'inline-block', fontFamily: 'Lato-bold', fontSize: '16px', fontWeight: 900, color:'#B8463D'}}>
+                                    sx={{ lineHeight: '100%',  display: 'inline-block', fontFamily: 'Lato-bold', fontSize: '20px', fontWeight: 900, color:'#B8463D'}}>
                                     ALL {sendTokens.symbol}s
                                 </Typography>
                             </div>
