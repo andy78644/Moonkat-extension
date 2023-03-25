@@ -3,8 +3,9 @@
     width: 164px;
     font-size: 16px;
     background-color: #FFF8EA !important;
-    border: 4px solid #DFD8CA;
+    border: 2px solid #DFD8CA;
     border-radius: 8px !important;
+    box-shadow: 0px 0px 4px 0px rgba(0, 0, 0, 0.25);
 }
 
 #mainHeader {
@@ -12,7 +13,11 @@
     flex-direction: row;
     height: 66px;
     align-items: flex-start;
-    background: rgba(255, 248, 234, 0.6);
+    background: #ECE5D0;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 999;
 }
 
 #logo {
