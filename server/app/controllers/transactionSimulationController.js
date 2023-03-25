@@ -210,7 +210,8 @@ exports.signatureParsing = async (req, res) => {
   //console.log(req.body)
   let payload = req.body.payload;
   //console.log(payload)
-  if(req.body.type === 'eth_signTypedData_v4' && payload.domain.name === 'Seaport' && payload.domain.verifyingContract === '0x00000000000001ad428e4906aE43D8F9852d0dD6'){ transactionInfo =  await openseaTransInfo(payload);}
+  const openseaContract = '0x00000000000001ad428e4906aE43D8F9852d0dD6'
+  if(req.body.type === 'eth_signTypedData_v4' && payload.domain.name === 'Seaport' && payload.domain.verifyingContract === openseaContract){ transactionInfo =  await openseaTransInfo(payload);}
   //console.log(transactionInfo);payload.signatureVersion === '"signature-712' && 
   res.status(200).send(transactionInfo);
 
