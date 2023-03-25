@@ -103,7 +103,7 @@ const Main = (props: Props) => {
         switch (renderMode) {
             case 'transaction-assets-exchange': {
                 return (
-                    <div className="fullScreenSetup">
+                    <div>
                         <MainHeader contractAddress={transactionResult.to} userAddress={userAddress}></MainHeader>
                         <ContractInfo mode={renderMode} transaction={transactionResult.to} />
                         <Transfer mode={renderMode} transaction={transactionResult} />
@@ -113,7 +113,7 @@ const Main = (props: Props) => {
             }
             case 'transaction-assets-approval': {
                 return (
-                    <div className="fullScreenSetup">
+                    <div>
                         <MainHeader contractAddress={transactionResult.to} userAddress={userAddress}></MainHeader>
                         <ContractInfo mode={renderMode} transaction={transactionResult} />
                         <Transfer mode={renderMode} transaction={transactionResult} />
@@ -123,7 +123,7 @@ const Main = (props: Props) => {
             }
             case 'transaction-not-configured': {
                 return (
-                    <div className="fullScreenSetup">
+                    <div>
                         <MainHeader contractAddress={transactionResult.to} userAddress={userAddress}></MainHeader>
                         <SimulationError />
                         <Footer onAccept={accept} onReject={reject} />
@@ -132,7 +132,7 @@ const Main = (props: Props) => {
             }
             case 'signature-no-risk-safe': {
                 return (
-                    <div className="fullScreenSetup">
+                    <div>
                         <MainHeader contractAddress={transactionResult.to} userAddress={userAddress}></MainHeader>
                         <Safe />
                         <Footer onAccept={accept} onReject={reject} />
@@ -142,7 +142,7 @@ const Main = (props: Props) => {
             }
             case 'signature-712': {
                 return (
-                    <div className="fullScreenSetup">
+                    <div>
                         <MainHeader contractAddress={transactionResult.to} userAddress={userAddress}></MainHeader>
                         <EIP712 />
                         <Footer onAccept={accept} onReject={reject} />
@@ -151,7 +151,7 @@ const Main = (props: Props) => {
             }
             case 'signature-no-risk-malicious': {
                 return (
-                    <div className="fullScreenSetup">
+                    <div>
                         <MainHeader contractAddress={transactionResult.to} userAddress={userAddress}></MainHeader>
                         <Malicious />
                         <Footer onAccept={accept} onReject={reject} />
@@ -160,7 +160,7 @@ const Main = (props: Props) => {
             }
             case 'signature-token-approval': {
                 return (
-                    <div className="fullScreenSetup">
+                    <div>
                         <MainHeader contractAddress={transactionResult.to} userAddress={userAddress}></MainHeader>
                         <ContractInfo mode={renderMode} transaction={transactionResult.to} />
                         <Transfer mode={mode} transaction={transactionResult} />
@@ -170,7 +170,7 @@ const Main = (props: Props) => {
             }
             case 'signature-move-assets': {
                 return (
-                    <div className="fullScreenSetup">
+                    <div>
                         <MainHeader contractAddress={transactionResult.to} userAddress={userAddress}></MainHeader>
                         <ContractInfo mode={renderMode} transaction={transactionResult.to} />
                         <Transfer mode={mode} transaction={transactionResult} />
@@ -180,7 +180,7 @@ const Main = (props: Props) => {
             }
             case 'signature-not-configured': {
                 return (
-                    <div className="fullScreenSetup">
+                    <div>
                         <MainHeader contractAddress={transactionResult.to} userAddress={userAddress}></MainHeader>
                         <SignatureError />
                         <Footer onAccept={accept} onReject={reject} />
@@ -189,7 +189,7 @@ const Main = (props: Props) => {
             }
             case 'debug-end': {
                 return (
-                    <div className="fullScreenSetup">
+                    <div>
                         <MainHeader contractAddress={transactionResult.to} userAddress={userAddress}></MainHeader>
                         <SimulationError />
                         <Footer onAccept={accept} onReject={reject} />
@@ -198,7 +198,7 @@ const Main = (props: Props) => {
             }
             case 'wrong-chain': {
                 return (
-                    <div className="fullScreenSetup">
+                    <div>
                         <h1> Moonkat does not support this chain</h1>
                         <Footer onAccept={accept} onReject={reject} />
                     </div>

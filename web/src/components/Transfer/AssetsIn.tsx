@@ -33,7 +33,6 @@ const AssetsIn = (props: Props) => {
     const handlePopoverOpen = (event: React.MouseEvent<HTMLElement>) => {
         setAnchorEl(event.currentTarget);
     };
-
     const handlePopoverClose = () => {
         setAnchorEl(null);
     };
@@ -42,27 +41,23 @@ const AssetsIn = (props: Props) => {
         return sendTokens.map((token: any) => {
             if (token) {
                 return (
-                    <List key={token.tokenId} sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                        <ListItem sx={{ paddingBottom: "2px", paddingTop: "0px" }}>
-                            <img src={token.tokenURL ?? nft} height="48px" width="48px" alt="Asset In" />
-                            <ListItemText sx={{ paddingLeft: '8px' }}
-                                primary={
-                                    <Typography sx={{ fontFamily: 'Lato', fontSize: '20px', fontWeight: 100 }}>
-                                        {token.title ?? '-'}
-                                    </Typography>
-                                }
-                            />
-                        </ListItem>
-                        <ListItem>
-                            <ListItemText sx={{ textAlign: 'right', color: '#509A57' }}
-                                primary={
-                                    <Typography sx={{ fontFamily: 'Lato', fontSize: '20px', fontWeight: 100 }}>
-                                        +{token.amount} {token.symbol}
-                                    </Typography>
-                                }
-                            />
-                        </ListItem>
-                    </List>
+                    <ListItem key={token.tokenId}>
+                        <img src={token.tokenURL ?? nft} height="48px" width="48px" alt="Asset In" />
+                        <ListItemText sx={{ paddingLeft: '8px' }}
+                            primary={
+                                <Typography sx={{ fontFamily: 'Lato', fontSize: '20px', fontWeight: 100 }}>
+                                    {token.title ?? '-'}
+                                </Typography>
+                            }
+                        />
+                        <ListItemText sx={{ textAlign: 'right', color: '#509A57' }}
+                            primary={
+                                <Typography sx={{ fontFamily: 'Lato', fontSize: '20px', fontWeight: 100 }}>
+                                    +{token.amount} {token.symbol}
+                                </Typography>
+                            }
+                        />
+                    </ListItem>
                 )
             }
         });
@@ -105,35 +100,35 @@ const AssetsIn = (props: Props) => {
                     <ListItemText />
                     {
                         sendTokens.length > 1 ?
-                            open ? <ExpandLess /> : <ExpandMore /> :
+                            open ? <ExpandLess sx={{ fontSize: '20px' }} /> : <ExpandMore sx={{ fontSize: '20px' }} /> :
                             <div></div>
                     }
                 </ListItemButton>
                 <hr></hr>
-                <ListItem sx={{ padding: "4px 16px" }}>
-                    <div>
-                        <ListItemText sx={{ display: 'inline-block', fontSize: '20px' }}
-                            primary={
-                                <Typography sx={{ fontFamily: 'Lato', fontSize: '20px', fontWeight: 100 }}>
-                                    {sendTokens[0].collectionName ?? ''}
-                                </Typography>
-                            }
-                        />
-                        {
-                            sendTokens[0].osVerified === 'verified' ?
-                                <VerifiedIcon
-                                    color="primary"
-                                    sx={{ fontSize: 22, marginBottom: '8px' }}
-                                /> :
-                                <div></div>
+                <ListItem sx={{ padding: "8px 16px" }}>
+                    {/* <div> */}
+                    <ListItemText sx={{ display: 'inline-block' }}
+                        primary={
+                            <Typography sx={{ fontFamily: 'Lato', fontSize: '20px', fontWeight: 100, lineHeight: '100%' }}>
+                                {sendTokens[0].collectionName ?? ''}
+                            </Typography>
                         }
-                    </div>
+                    />
+                    {
+                        sendTokens[0].osVerified === 'verified' ?
+                            <VerifiedIcon
+                                color="primary"
+                                sx={{ fontSize: 22, marginBottom: '8px' }}
+                            /> :
+                            <div></div>
+                    }
+                    {/* </div> */}
                 </ListItem>
                 {
                     sendTokens.length === 1 ?
                         <ListItem>
                             <img src={sendTokens[0].tokenURL ?? nft} height="48px" width="48px" alt="Tokens" />
-                            <ListItemText sx={{ fontSize: '20px', textAlign: 'right' }}
+                            <ListItemText sx={{ fontSize: '20px', paddingLeft: '8px'}}
                                 primary={
                                     <Typography sx={{ fontFamily: 'Lato', fontSize: '20px', fontWeight: 100 }}>
                                         {sendTokens[0].title ?? '-'}

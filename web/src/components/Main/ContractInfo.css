@@ -4,12 +4,12 @@
     border-style: solid;
     border-color: #DFD8CA;
     border-radius: 8px;
-    background-color: #FFF8EA;
+    background-color: #FFF8EAFF;
     text-align: center;
 }
 
 #infoText {
-    padding-top: 12px;
+    padding-top: 16px;
     font-family: Lato, sans-serif;
     font-weight: 900;
     font-size: 18px;
@@ -17,8 +17,8 @@
 }
 
 #contractText {
-    padding-bottom: 12px;
-    font-family: Lato-thin, sans-serif;
-    font-weight: 900;
+    padding-bottom: 16px;
+    font-family: Lato, sans-serif;
+    font-weight: 100;
     font-size: 14px;
 }
