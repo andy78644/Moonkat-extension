@@ -1,0 +1,37 @@
+@font-face {
+    font-family: Kiona;
+    src: url(../../assets/kiona/Kiona-SemiBold.ttf);
+}
+
+@font-face {
+    font-family: Lato;
+    src: url(../../assets/Lato/Lato-Regular.ttf);
+}
+
+@font-face {
+    font-family: Lato-thin;
+    src: url(../../assets/Lato/Lato-Light.ttf);
+}
+
+html, body {
+    height: 100%;
+    min-height: 700px;
+}
+
+#root {
+    height: 120%;
+    color: #434343;
+    background: linear-gradient(180deg, #D2C9AA 0%, rgba(239, 232, 219, 0.75) 48.96%, #D2C9AA 100%);
+    box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.25);
+    border-radius: 0px;
+}
+
+html::-webkit-scrollbar {
+    overflow: hidden;
+    width: 0px;
+}
+
+hr {
+    color: #E6E0D3;
+    padding-bottom: 8px;
+}

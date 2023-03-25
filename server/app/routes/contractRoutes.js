@@ -1,7 +1,8 @@
-module.exports = app => {
-    const contracts = require("../controllers/contractController.js");
-    var router = require("express").Router();
-    // Find a Contract Address exist or not
-    router.get("/:address", contracts.findOne);
-    app.use('/api/contracts', router);
-  };
+const contracts = require("../controllers/contractController.js");
+const express = require('express');
+const router = express.Router();
+// Find a Contract
+router.get("/token", contracts.getTokenInformation);
+module.exports = router;
+
+

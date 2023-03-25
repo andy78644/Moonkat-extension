@@ -1,0 +1,24 @@
+#contractInfo {
+    margin: 16px;
+    border-width: 2px;
+    border-style: solid;
+    border-color: #DFD8CA;
+    border-radius: 8px;
+    background-color: #FFF8EA;
+    text-align: center;
+}
+
+#infoText {
+    padding-top: 12px;
+    font-family: Lato, sans-serif;
+    font-weight: 900;
+    font-size: 18px;
+    line-height: 120%;
+}
+
+#contractText {
+    padding-bottom: 12px;
+    font-family: Lato-thin, sans-serif;
+    font-weight: 900;
+    font-size: 14px;
+}

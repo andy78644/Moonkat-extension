@@ -1,0 +1,15 @@
+#headerChange {
+    font-family: Lato, sans-serif;
+    color: #77736A;
+    font-size: 16px;
+    font-weight: 600;
+    text-align: center;
+    margin: -5px 0px;
+}
+
+#button {
+    padding: 0.4rem 0.9rem 0rem 1.5rem;
+    color: red;
+    float: right;
+    font-weight: 700;
+}

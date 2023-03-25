@@ -1,0 +1,9 @@
+{
+  "devDependencies": {
+    "node-fetch": "^2.6.7"
+  },
+  "dependencies": {
+    "dotenv": "^16.0.3",
+    "sequelize-cli": "^6.6.0"
+  }
+}

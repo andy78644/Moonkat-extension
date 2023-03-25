@@ -1,6 +1,17 @@
 *.log
 **/node_modules
 .DS_Store
-cloud_sql_proxy
 .vscode
+.env
 node_modules/
+cloud_sql_proxy
+.scannerwork/
+# server
+server/app/config/config.json
+server/app/config/db.config
+
+# web
+web/dist/*
+
+# previous version code
+revoke/
