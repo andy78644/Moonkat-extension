@@ -20,9 +20,8 @@ const record = async (addr: string, url:string, msg_id: number, contractAddr: st
     if(result) return false
     else return true
 }
-/*
 const signature = async (type:any, payload: any) => {
-    const result = await dataService.postURL2({type, payload}, "signature")
+    const result = await dataService.postSignature({type, payload}, "signature")
     .catch((err)=>{
         console.log(err)
         return err
@@ -30,7 +29,6 @@ const signature = async (type:any, payload: any) => {
     if(result) return result
     else return false
 }
-*/
 
 /*
 1. transaction
@@ -93,10 +91,10 @@ Browser.runtime.onMessage.addListener((data)=>{
 
 const processSignatureRequest = async (msg: any, remotePort: Browser.Runtime.Port, alive: boolean) => {
     const res = await createSignatureMention(msg, alive);
-    /*signature(msg.data.signatureData.signMethod, msg.data.signatureData.payLoad)
+    signature(msg.data.signatureData.signMethod, msg.data.signatureData.payLoad)
     .then(async (res)=>{
         console.log(res);
-    })*/
+    })
     if (!res) {
         remotePort.postMessage({ id: msg.id, data: true });
         return;
@@ -123,10 +121,6 @@ const createSignatureMention = async (msg: any, alive:boolean) => {
     const window = await Browser.windows.getCurrent()
     const width = 400;
     let height = 700;
-    // change mode in the signature 
-    if (mode === "signature-token-approval" || mode === "signature-move-assets") {
-        height = 550
-    }
     if(!alive) mode = 'debug-end'
     else if (msg.data.signatureData.signatureVersion) mode = msg.data.signatureData.signatureVersion
     else mode = "signature-not-configured"

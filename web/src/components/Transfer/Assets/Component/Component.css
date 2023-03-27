@@ -1,11 +1,11 @@
-#assetsIn {
+#assetsComponent {
     margin: 16px;
     border-radius: 8px;
     background-color: #FFF8EAFF;
     border: 2px #DFDBCA solid;
 }
 
-#assetsInTitle {
+#assetsComponentTitle {
     font-family: Lato, sans-serif;
     font-size: 20px;
     padding-top: 8px;
@@ -13,7 +13,11 @@
     line-height: 100%;
 }
 
-#assetsInScroll {
+#assetsComponentTitle > .css-ahj2mt-MuiTypography-root {
+    line-height: 100%;
+}
+
+#assetsComponentScroll {
     /* max-height: 200%; */
     /* overflow-y: scroll; */
 }
@@ -33,19 +37,10 @@
     -webkit-box-shadow: inset 0 0 2px #77736A; 
 }
 
-#assetInUnitComponent {
-    display: 'flex';
-    justify-content: 'space-between';
-}
-
-#assetsInPopOver > .MuiPopover-paper {
+#assetsComponentPopOver > .MuiPopover-paper {
     object-fit: fill;
     width: 200px;
     background-color: #FFF8EA !important;
     border: 2px solid #DFD8CA;
     border-radius: 8px !important;
-}
-
-#assetsInTitle > .css-ahj2mt-MuiTypography-root {
-    line-height: 100%;
 }

@@ -73,6 +73,17 @@ const postURL = (url: any, pos: any) :Promise<any> =>{
             reject(err.message)
         })
 })}
+const postSignature = (url: any, pos: any) :Promise<any> =>{
+    return new Promise((resolve, reject) =>{
+        http.post(`api/simulate/${pos}`, url)
+        .then((res) => {
+            console.log('postSignature Success: ', res.data)
+            resolve(res.data)
+        }).catch((err)=>{
+            console.log('postSignature Error: ', err)
+            reject(err.message)
+        })
+})}
 const dataService = {
     getAllContracts,
     create,
@@ -81,6 +92,7 @@ const dataService = {
     getFeedBackByAddress,
     postFeedBackByAddress,
     postTransactionSimulation,
-    postURL
+    postURL,
+    postSignature
 }
 export default dataService

@@ -1,8 +1,8 @@
-import React,{useState} from 'react';
+import React from 'react';
 import TransferHeader from './TransferHeader';
-import AssetsIn from './AssetsIn';
-import AssetsOut from './AssetsOut';
-import AssetsApprove from './AssetsApprove';
+import Receive from './Assets/Receive';
+import Send from './Assets/Send';
+import Approve from './Assets/Approve';
 import './Transfer.css';
 
 interface Props {
@@ -13,39 +13,15 @@ interface Props {
 const Transfer =  (props: Props) => {
     const {mode, transaction} = props;
     console.log('transaction: ',transaction)
+
     const getAssetsSendInfo = {
-        contractType: 'ERC-20',
-        //todo: multiple asset
-        sendTokens: 
-            //{
-            //     amount: ,
-            //     type: 'NATIVE/ERC20/ERC1155',
-            //     symbol: 'ETH',
-            //     tokenURL: 'https://static.alchemyapi.io/images/network-assets/eth.png',
-            //     osVerified: ''
-            //     
-            // }
-            transaction.out,
-        NFTCategoryName: '',
+        sendTokens: transaction.out,
         gas: transaction.gas,
         gasPrice: transaction.gasPrice
     }
 
     const getAssetsReceiveInfo = {
-        contractType: 'NFT',
-        sendTokens:
-            //{
-            //     amount: ,
-            //     type: 'NATIVE/ERC20/ERC1155',
-            //     symbol: 'ETH',
-            //     tokenURL: 'https://static.alchemyapi.io/images/network-assets/eth.png',
-            //     osVerified: ''
-            //     
-            // }
-            transaction.in,
-        NFTCategoryName: "",
-        gas: 0,
-        gasPrice: transaction.gasPrice
+        sendTokens: transaction.in,
     }
 
     const getAssetsApproveInfo = {
@@ -62,8 +38,8 @@ const Transfer =  (props: Props) => {
                 return (
                     <>
                         <TransferHeader mode={mode}></TransferHeader>
-                        <AssetsOut {...getAssetsSendInfo} />
-                        <AssetsIn {...getAssetsReceiveInfo} />
+                        <Send {...getAssetsSendInfo} />
+                        <Receive {...getAssetsReceiveInfo} />
                     </>
                 )
             }
@@ -71,8 +47,8 @@ const Transfer =  (props: Props) => {
                 return (
                     <>
                         <TransferHeader mode={mode}></TransferHeader>
-                        <AssetsOut {...getAssetsSendInfo} />
-                        <AssetsApprove {...getAssetsApproveInfo} />
+                        <Send {...getAssetsSendInfo} />
+                        <Approve {...getAssetsApproveInfo} />
                     </>
                 )
             }

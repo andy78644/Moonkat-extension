@@ -3,22 +3,20 @@ import List from '@mui/material/List';
 import ListItem from "@mui/material/ListItem";
 import ListItemText from '@mui/material/ListItemText';
 import ListItemButton from '@mui/material/ListItemButton';
-import nft from '../../assets/icons8-nft-64.png'
+import nft from '../../../assets/icons8-nft-64.png'
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import Typography from '@mui/material/Typography';
 import IconButton from "@mui/material/IconButton";
 import VerifiedIcon from '@mui/icons-material/Verified';
 import Popover from '@mui/material/Popover';
 
-import './AssetsApprove.css';
+import './Approve.css';
 
 interface Props {
-    contractType: string;
     sendTokens: any;
-    NFTCategoryName: string | null;
 }
 
-const AssetsApprove = (props: Props) => {
+const Approve = (props: Props) => {
     const { sendTokens } = props
     const [open, setOpen] = useState(false);
     const handleClick = () => {
@@ -119,4 +117,4 @@ const AssetsApprove = (props: Props) => {
     )
 };
 
-export default AssetsApprove;
+export default Approve;
