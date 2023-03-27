@@ -15,9 +15,6 @@ declare module '@mui/material/styles' {
         }
     }
 }
-
-import './Receive.css'
-
 interface Props {
     sendTokens: Array<any>;
 }

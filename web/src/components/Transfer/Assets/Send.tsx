@@ -15,8 +15,6 @@ declare module '@mui/material/styles' {
         }
     }
 }
-
-import './Send.css'
 interface Props {
     sendTokens: Array<any>
     gas: string

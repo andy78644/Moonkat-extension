@@ -12,7 +12,7 @@ interface Props {
 
 const Transfer =  (props: Props) => {
     const {mode, transaction} = props;
-    console.log('transaction: ',transaction)
+    console.log('[Transfer.tsx]: transaction: ',transaction)
 
     const getAssetsSendInfo = {
         sendTokens: transaction.out,

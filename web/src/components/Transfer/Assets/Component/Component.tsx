@@ -47,8 +47,7 @@ const Component = (props: Props) => {
     // Handle different mode
     useEffect(() => {
 
-        console.log(`The response for ${mode} is :`)
-        console.log(sendTokens)
+        console.log(`[Component.tsx]: The response for ${mode} is :`, sendTokens)
 
         const collectionIconUrl = sendTokens[0].collectionIconUrl === "" ? nft : sendTokens[0].collectionIconUrl
         const tokenURL = sendTokens[0].tokenURL === null ? "" : sendTokens[0].tokenURL
@@ -93,7 +92,7 @@ const Component = (props: Props) => {
             tokenLength: sendTokens.length,
         }
 
-        console.log(info);
+        console.log(`[Component.tsx]: The token info for is : `, info)
 
         setTokenInfo(info)
     }, [])

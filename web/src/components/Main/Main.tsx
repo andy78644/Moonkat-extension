@@ -99,7 +99,7 @@ const Main = (props: Props) => {
     const reject = () => extensionResponse(false);
 
     const renderCurrentSelection = (renderMode: string | null) => {
-        console.log('renderMode: ', renderMode)
+        console.log('[Main.tsx]: renderMode: ', renderMode)
         switch (renderMode) {
             case 'transaction-assets-exchange': {
                 return (
