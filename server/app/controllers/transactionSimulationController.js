@@ -452,7 +452,7 @@ const NFTMetadata = async(asset, item) =>{
     const data = await response.json();
     //console.log(data)
     asset.type = data.contractMetadata.tokenType;
-    asset.symbol = data.contractMetadata.symbol;
+    asset.symbol = data.contractMetadata.symbol ?  data.contractMetadata.symbol: "NFT";
     asset.tokenURL = data.media[0].gateway;
     asset.title = data.title;
     asset.collectionName = data.contractMetadata.openSea.collectionName;
@@ -469,9 +469,9 @@ const ContractMetadata = async(asset, item) =>{
   try {
     const response = await fetch(`https://eth-mainnet.g.alchemy.com/nft/v2/${process.env.ALCHEMY_API_KEY}/getContractMetadata?contractAddress=${item.token}`);
     const data = await response.json();
-    console.log(data);
+    //console.log(data);
     asset.type = data.contractMetadata.tokenType;
-    asset.symbol = data.contractMetadata.symbol;
+    asset.symbol = data.contractMetadata.symbol ?  data.contractMetadata.symbol: "NFT";
     asset.tokenURL = data.contractMetadata.openSea.imageUrl;
     asset.title = data.contractMetadata.name;
     asset.collectionName = data.contractMetadata.openSea.collectionName;
