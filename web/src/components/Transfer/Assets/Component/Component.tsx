@@ -27,7 +27,7 @@ interface TokenContextType {
 const defaultTokenInfoType: TokenContextType = {
     sendTokens: [] as any[], gasFee: 0, mode: "",
     verbForPopOverText: "", operator: "",
-    tokenURL: "", tokenSymbol: "",
+    tokenURL: nft, tokenSymbol: "",
     collectionIconUrl: nft, collectionName: "",
     totalToken: 0, osVerified: false, tokenLength: 0,
 }
@@ -44,13 +44,13 @@ const Component = (props: Props) => {
     // Handle different mode
     useEffect(() => {
 
-        console.log(`[Component.tsx]: The response for ${mode} is :`, sendTokens)
+        // console.log(`[Component.tsx]: The response for ${mode} is :`, sendTokens)
 
         const InfoContainer = Object.assign({}, defaultTokenInfoType);
 
         InfoContainer.sendTokens = sendTokens
         InfoContainer.mode = mode
-        InfoContainer.gasFee = gasFee
+        if (gasFee) InfoContainer.gasFee = gasFee
 
         // not empty
         if (sendTokens[0]) {

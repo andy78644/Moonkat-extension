@@ -41,7 +41,7 @@ const themeForReceive = createTheme({
 const Change = (props: Props) => {
     const { assetsIn, assetsOut, gas, gasPrice } = props
     const gasFee = parseInt(gas, 16) * parseInt(gasPrice) * 10 ** (-9)
-    console.log("[Change.tsx]: GasFee is: ", gasFee)
+    // console.log("[Change.tsx]: GasFee is: ", gasFee)
     return (
         <>
             <ThemeProvider theme={themeForSend}>

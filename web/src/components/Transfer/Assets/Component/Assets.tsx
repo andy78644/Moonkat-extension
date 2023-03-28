@@ -12,11 +12,11 @@ interface Props {
 
 const Assets = (props: Props) => {
 
-    const { sendTokens, tokenURL, 
-            tokenSymbol, operator, 
-            totalToken, collectionIconUrl, 
-            tokenLength } = useContext(TokenContext)
-    
+    const { sendTokens, tokenURL,
+        tokenSymbol, operator,
+        totalToken, collectionIconUrl,
+        tokenLength } = useContext(TokenContext)
+
     const { expand } = props
 
     if (!sendTokens[0]) return <></>
@@ -27,7 +27,7 @@ const Assets = (props: Props) => {
                 tokenLength === 1 ?
                     <ListItem>
                         <img src={tokenURL} height="48px" width="48px" alt="Tokens" />
-                        <ListItemText sx={{ fontSize: '20px', paddingLeft: '8px' }}
+                        <ListItemText sx={{ maxWidth: '30%', fontSize: '20px', paddingLeft: '8px' }}
                             primary={
                                 <Typography sx={{ fontFamily: 'Lato', fontSize: '20px', fontWeight: 100 }}>
                                     {tokenSymbol} {/* Should be title but now is empty */}
@@ -45,6 +45,13 @@ const Assets = (props: Props) => {
                     expand ?
                         <ListItem>
                             <img src={collectionIconUrl} height="48px" width="48px" alt="Tokens" />
+                            <ListItemText sx={{ maxWidth: '30%', fontSize: '20px', paddingLeft: '8px' }}
+                                primary={
+                                    <Typography sx={{ fontFamily: 'Lato', fontSize: '20px', fontWeight: 100 }}>
+                                        {tokenSymbol} {/* Should be title but now is empty */}
+                                    </Typography>
+                                }
+                            />
                             <ListItemText sx={{ fontSize: '20px', textAlign: 'right', color: '#509A57' }}
                                 primary={
                                     <Typography sx={{ fontFamily: 'Lato', fontSize: '20px', fontWeight: 100 }}>

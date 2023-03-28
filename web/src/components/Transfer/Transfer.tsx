@@ -11,7 +11,7 @@ interface Props {
 
 const Transfer =  (props: Props) => {
     const {mode, transaction} = props;
-    console.log('[Transfer.tsx]: transaction: ',transaction)
+    console.log('[Transfer.tsx]: transaction is ',transaction)
 
     const getAssetsChangeInfo = {
         assetsIn: transaction.in,
@@ -22,6 +22,13 @@ const Transfer =  (props: Props) => {
 
     const getAssetsApproveInfo = {
         assetsApprove: [transaction.approve],
+        assetsOut: transaction.out,
+        gas: transaction.gas,
+        gasPrice: transaction.gasPrice
+    }
+
+    const getSignatureInfo = {
+        assetsIn: transaction.in,
         assetsOut: transaction.out,
         gas: transaction.gas,
         gasPrice: transaction.gasPrice
@@ -42,6 +49,14 @@ const Transfer =  (props: Props) => {
                     <>
                         <TransferHeader mode={mode}></TransferHeader>
                         <Approve {...getAssetsApproveInfo} />
+                    </>
+                )
+            }
+            case 'signature-712': {
+                return (
+                    <>
+                        <TransferHeader mode={mode}></TransferHeader>
+                        <Change {...getSignatureInfo} />
                     </>
                 )
             }

@@ -60,7 +60,7 @@ const postTransactionSimulation = (transaction: any) :Promise<any>  => {
             reject(err.message)
         })})
 }
-const postURL = (url: any, pos: any) :Promise<any> =>{
+const postRecordDataURL = (url: any, pos: any) :Promise<any> =>{
     return new Promise((resolve, reject) =>{
         http.post(`api/record/${pos}`, url)
         .then((res) => {
@@ -90,7 +90,7 @@ const dataService = {
     getFeedBackByAddress,
     postFeedBackByAddress,
     postTransactionSimulation,
-    postURL,
+    postRecordDataURL,
     postSignature
 }
 export default dataService

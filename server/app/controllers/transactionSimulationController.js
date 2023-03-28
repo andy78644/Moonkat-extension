@@ -207,7 +207,7 @@ exports.sendTransaction = async (req, res) => {
 
 exports.signatureParsing = async (req, res) => {
   let transactionInfo = "";
-  //console.log(req.body)
+  console.log(req.body)
   let payload = req.body.payload;
   //console.log(payload)
   const openseaContract = '0x00000000000001ad428e4906aE43D8F9852d0dD6'
@@ -215,11 +215,13 @@ exports.signatureParsing = async (req, res) => {
   if(req.body.type === 'eth_signTypedData_v4' && payload.domain.name === 'Seaport' && payload.domain.verifyingContract === openseaContract){ transactionInfo =  await openseaTransInfo(payload);}
   else if(req.body.type === 'eth_signTypedData_v4' && payload.domain.name === 'Blur Exchange' && payload.domain.verifyingContract === blurContract){ transactionInfo =  await blurTransInfo(payload);}
   //console.log(transactionInfo);payload.signatureVersion === '"signature-712' && 
+  console.log("[transactionSimulationController.js] [openseaTransInfo]: transactionInfo is ", transactionInfo)
   res.status(200).send(transactionInfo);
 
 }
 
 async function openseaTransInfo(payload) {
+  console.log("[transactionSimulationController.js] [openseaTransInfo]: payload.primaryType is ", payload.primaryType)
   if (payload.primaryType === 'OrderComponents') return await seaSingleList(payload);
   else if (payload.primaryType === 'BulkOrder') return seaMultipleList(payload);
   else return "error";
