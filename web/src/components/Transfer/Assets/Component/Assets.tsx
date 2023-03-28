@@ -8,7 +8,6 @@ import { TokenContext } from './Component'
 
 interface Props {
     expand: boolean
-    setExpand: any
 }
 
 const Assets = (props: Props) => {
@@ -16,14 +15,16 @@ const Assets = (props: Props) => {
     const { sendTokens, tokenURL, 
             tokenSymbol, operator, 
             totalToken, collectionIconUrl, 
-            hasMultipleAssets } = useContext(TokenContext)
+            tokenLength } = useContext(TokenContext)
     
-    const { expand, setExpand } = props
+    const { expand } = props
+
+    if (!sendTokens[0]) return <></>
 
     return (
         <>
             {
-                !hasMultipleAssets ?
+                tokenLength === 1 ?
                     <ListItem>
                         <img src={tokenURL} height="48px" width="48px" alt="Tokens" />
                         <ListItemText sx={{ fontSize: '20px', paddingLeft: '8px' }}
@@ -33,7 +34,7 @@ const Assets = (props: Props) => {
                                 </Typography>
                             }
                         />
-                        <ListItemText sx={{ fontSize: '20px', textAlign: 'right', color: (theme) => (theme.palette.primary.main) }}
+                        <ListItemText sx={{ fontSize: '20px', textAlign: 'right', color: (theme) => (theme.palette.secondary.main) }}
                             primary={
                                 <Typography sx={{ fontFamily: 'Lato', fontSize: '20px', fontWeight: 100 }}>
                                     {operator}{totalToken} {tokenSymbol}
@@ -60,11 +61,11 @@ const Assets = (props: Props) => {
                                             <ListItemText sx={{ paddingLeft: '8px' }}
                                                 primary={
                                                     <Typography sx={{ fontFamily: 'Lato', fontSize: '20px', fontWeight: 100 }}>
-                                                        {token.title} {/* Should be title but now is empty */}
+                                                        {token.symbol} {/* Should be title but now is empty */}
                                                     </Typography>
                                                 }
                                             />
-                                            <ListItemText sx={{ textAlign: 'right', color: (theme) => (theme.palette.primary.main) }}
+                                            <ListItemText sx={{ textAlign: 'right', color: (theme) => (theme.palette.secondary.main) }}
                                                 primary={
                                                     <Typography sx={{ fontFamily: 'Lato', fontSize: '20px', fontWeight: 100 }}>
                                                         {operator}{token.amount} {token.symbol}

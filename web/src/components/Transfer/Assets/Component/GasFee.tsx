@@ -11,35 +11,29 @@ interface Props {
 
 const GasFee = (props: Props) => {
 
-    const { showGasFee, operator, gasFee } = useContext(TokenContext)
+    const { operator, gasFee } = useContext(TokenContext)
 
     return (
         <>
-            {
-                showGasFee
-                    ?
-                    <ListItem>
-                        <img src={gasFeeIcon} alt="gasFee" />
-                        <ListItemText
-                            sx={{ paddingLeft: '8px' }}
-                            primary={
-                                <Typography sx={{ fontFamily: 'Lato', fontSize: '20px', fontWeight: 100 }}>
-                                    GasFee
-                                </Typography>
-                            }
-                        />
-                        <ListItemText
-                            sx={{ textAlign: 'right', color: '#B8463D' }}
-                            primary={
-                                <Typography sx={{ fontFamily: 'Lato', fontSize: '20px', fontWeight: 100 }}>
-                                    {operator}{gasFee.toFixed(4) + ' ETH'}
-                                </Typography>
-                            }
-                        />
-                    </ListItem>
-                    :
-                    <></>
-            }
+            <ListItem>
+                <img src={gasFeeIcon} alt="gasFee" />
+                <ListItemText
+                    sx={{ paddingLeft: '8px' }}
+                    primary={
+                        <Typography sx={{ fontFamily: 'Lato', fontSize: '20px', fontWeight: 100 }}>
+                            GasFee
+                        </Typography>
+                    }
+                />
+                <ListItemText
+                    sx={{ textAlign: 'right', color: '#B8463D' }}
+                    primary={
+                        <Typography sx={{ fontFamily: 'Lato', fontSize: '20px', fontWeight: 100 }}>
+                            {operator}{gasFee.toFixed(4) + ' ETH'}
+                        </Typography>
+                    }
+                />
+            </ListItem>
         </>
     )
 }

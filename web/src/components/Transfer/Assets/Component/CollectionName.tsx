@@ -11,18 +11,19 @@ interface Props {
 
 const CollectionName = (props: Props) => {
     const { collectionIconUrl, collectionName, osVerified } = useContext(TokenContext)
+    if (collectionName === "") return <></>
     return (
         <>
             <ListItem sx={{ padding: "8px 16px" }}>
                 <img src={collectionIconUrl} height="48px" width="48px" alt="Tokens" />
-                <ListItemText sx={{ display: 'inline-block', paddingLeft: '8px' }}
+                <ListItemText sx={{  paddingLeft: '8px' }}
                     primary={
                         <Typography sx={{ fontFamily: 'Lato', fontSize: '20px', fontWeight: 100, lineHeight: '100%' }}>
                             {collectionName}
                         </Typography>
                     }
                 />
-                {osVerified ? <VerifiedIcon color="primary" sx={{ fontSize: 22, marginBottom: '8px' }} /> : <></>}
+                {osVerified ? <VerifiedIcon color="primary" sx={{ fontSize: 22 }} /> : <></>}
             </ListItem>
         </>
     )

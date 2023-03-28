@@ -1,7 +1,6 @@
 import React from 'react';
 import TransferHeader from './TransferHeader';
-import Receive from './Assets/Receive';
-import Send from './Assets/Send';
+import Change from './Assets/Change'
 import Approve from './Assets/Approve';
 import './Transfer.css';
 
@@ -14,21 +13,17 @@ const Transfer =  (props: Props) => {
     const {mode, transaction} = props;
     console.log('[Transfer.tsx]: transaction: ',transaction)
 
-    const getAssetsSendInfo = {
-        sendTokens: transaction.out,
+    const getAssetsChangeInfo = {
+        assetsIn: transaction.in,
+        assetsOut: transaction.out,
         gas: transaction.gas,
         gasPrice: transaction.gasPrice
     }
 
-    const getAssetsReceiveInfo = {
-        sendTokens: transaction.in,
-    }
-
     const getAssetsApproveInfo = {
-        contractType: 'NFT',
-        sendTokens: transaction.approve,
-        NFTCategoryName: "",
-        gas: 0,
+        assetsApprove: [transaction.approve],
+        assetsOut: transaction.out,
+        gas: transaction.gas,
         gasPrice: transaction.gasPrice
     }
 
@@ -38,8 +33,7 @@ const Transfer =  (props: Props) => {
                 return (
                     <>
                         <TransferHeader mode={mode}></TransferHeader>
-                        <Send {...getAssetsSendInfo} />
-                        <Receive {...getAssetsReceiveInfo} />
+                        <Change {...getAssetsChangeInfo}/>
                     </>
                 )
             }
@@ -47,7 +41,6 @@ const Transfer =  (props: Props) => {
                 return (
                     <>
                         <TransferHeader mode={mode}></TransferHeader>
-                        <Send {...getAssetsSendInfo} />
                         <Approve {...getAssetsApproveInfo} />
                     </>
                 )

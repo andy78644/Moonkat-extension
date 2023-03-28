@@ -17,6 +17,11 @@
     line-height: 100%;
 }
 
+#assetsComponentPopover > .MuiPaper-root {
+    background-color: #FFF8EA !important;
+    border: 2px solid #DFD8CA;
+}
+
 #assetsComponentScroll {
     /* max-height: 200%; */
     /* overflow-y: scroll; */

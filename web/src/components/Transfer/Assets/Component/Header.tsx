@@ -29,9 +29,8 @@ const Header = (props: Props) => {
     return (
         <div>
             <ListItemButton
-                sx={{ width: '100%', "&:hover, &.Mui-focusVisible": { backgroundColor: '#FFF8EA' } }}
+                sx={{ lineHeight: "100%", paddingTop: "8px", paddingBottom: "16px", fontFamily: "Lato", fontSize: "20px", width: '100%', "&:hover, &.Mui-focusVisible": { backgroundColor: '#FFF8EA' } }}
                 component="div"
-                id="assetsOutTitle"
                 onClick={handleClick}
                 disableRipple
             >
@@ -44,8 +43,8 @@ const Header = (props: Props) => {
                 >
                     <HelpOutlineIcon sx={{ fontSize: 18 }} />
                 </Typography>
-                <Popover
-                    id="assetsComponentPopOver"
+                <Popover 
+                    id="assetsComponentPopover"
                     sx={{ pointerEvents: 'none' }}
                     open={hover}
                     anchorEl={anchorEl}
