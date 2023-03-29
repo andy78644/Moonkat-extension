@@ -13,7 +13,7 @@ interface Props {
 const ContractInfo = (props: Props) => {
     const { mode, transaction } = props;
     let contractAddress = ''
-    if(mode === 'transaction-assets-exchange') { contractAddress = transaction }
+    if(mode === 'transaction-assets-exchange' || mode === 'signature-712') { contractAddress = transaction }
     else  { contractAddress = transaction.approve.contractAddress}
     
     const contractInfo = {
