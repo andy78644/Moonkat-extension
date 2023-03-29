@@ -63,24 +63,30 @@ const Main = (props: Props) => {
             const signature = JSON.parse(browserMsg)
             const signatureAddress = signature.signAddress
             const type = signature.signMethod ?? ''
-            const payload = signature.payLoad ?? ''
-            const getsignature = async (type: any, payload: any) => {
-                await dataService.postSignature({ type, payload }, "signature")
-                    .then(res => {
-                        console.log("[Main.tsx] -- Signature Success", res)
-                        // recordUpdate(id, res, "signature").then((res)=>{console.log(res)})
-                        res.to = signatureAddress
-                        setSignatureResultState(res)
-                        setRenderMode('signature-712')
-                        setHasLoaded(true)
-                    })
-                    .catch((err) => {
-                        console.log('[Main.tsx] -- Signature Failed because', err.message)
-                        setRenderMode("debug-end")
-                        setHasLoaded(true)
-                    })
+            if (type !== 'eth_signTypedData_v4') {
+                setRenderMode('signature-no-risk-safe')
+                setHasLoaded(true)
             }
-            getsignature(type, payload)
+            else {
+                const payload = signature.payLoad ?? ''
+                const getsignature = async (type: any, payload: any) => {
+                    await dataService.postSignature({ type, payload }, "signature")
+                        .then(res => {
+                            console.log("[Main.tsx] -- Signature Success", res)
+                            // recordUpdate(id, res, "signature").then((res)=>{console.log(res)})
+                            res.to = signatureAddress
+                            setSignatureResultState(res)
+                            setRenderMode('signature-712')
+                            setHasLoaded(true)
+                        })
+                        .catch((err) => {
+                            console.log('[Main.tsx] -- Signature Failed because', err.message)
+                            setRenderMode("debug-end")
+                            setHasLoaded(true)
+                        })
+                }
+                getsignature(type, payload)
+            }
         }
         else {
             setRenderMode(mode)

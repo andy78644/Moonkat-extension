@@ -29,7 +29,7 @@ const GasFee = (props: Props) => {
                     sx={{ textAlign: 'right', color: '#B8463D' }}
                     primary={
                         <Typography sx={{ fontFamily: 'Lato', fontSize: '20px', fontWeight: 100 }}>
-                            {operator}{gasFee.toFixed(4) + ' ETH'}
+                            {operator}{gasFee > 0 ? gasFee.toFixed(4) + ' ETH' : gasFee.toFixed(0)}
                         </Typography>
                     }
                 />

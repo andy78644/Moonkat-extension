@@ -15,7 +15,7 @@ const Assets = (props: Props) => {
     const { sendTokens, tokenURL,
         tokenSymbol, operator,
         totalToken, collectionIconUrl,
-        tokenLength } = useContext(TokenContext)
+        tokenLength, collectionName } = useContext(TokenContext)
     const [tokenName, setTokenName] = useState("")
     const { expand } = props
 
@@ -58,7 +58,7 @@ const Assets = (props: Props) => {
                             <ListItemText sx={{ maxWidth: '30%', fontSize: '20px', paddingLeft: '8px' }}
                                 primary={
                                     <Typography sx={{ fontFamily: 'Lato', fontSize: '20px', fontWeight: 100 }}>
-                                        {sendTokens[0].collectionName.length > 7 ? sendTokens[0].collectionName.substring(0, 7) + "..." : sendTokens[0].collectionName} {/* Should be title but now is empty */}
+                                        {collectionName.length > 7 ? collectionName.substring(0, 7) + "..." : sendTokens[0].collectionName} {/* Should be title but now is empty */}
                                     </Typography>
                                 }
                             />

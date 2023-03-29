@@ -148,6 +148,8 @@ const createSignatureMention = async (msg: any, alive: boolean) => {
     const window = await Browser.windows.getCurrent();
     const width = 400;
     let height = 700;
+    console.log("[background.ts]: mode", msg.data.signatureData)
+    console.log("[background.ts]: mode", msg.data.signatureData.signatureVersion)
     if (!alive) mode = "debug-end";
     else if (msg.data.signatureData.signatureVersion)
         mode = msg.data.signatureData.signatureVersion;
