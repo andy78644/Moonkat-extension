@@ -1,0 +1,42 @@
+.assetsInPopOver > .MuiPaper-root {
+    object-fit: fill;
+    width: 164px;
+    font-size: 16px;
+    background-color: #FFF8EA !important;
+    border: 2px solid #DFD8CA;
+    border-radius: 8px !important;
+    box-shadow: 0px 0px 4px 0px rgba(0, 0, 0, 0.25);
+}
+
+#mainHeader {
+    display: flex;
+    flex-direction: row;
+    height: 66px;
+    align-items: flex-start;
+    background: #ECE5D0;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 999;
+}
+
+#logo {
+    padding: 9px 0px 9px 16px;
+}
+
+#brandName {
+    font-family: Kiona, sans-serif;
+    font-size: 24px;
+    padding: 15px 0px 15px 16px;
+}
+
+#menu {
+    order: 2;
+    margin-left: auto;
+    margin-right: 9px;
+    padding: 13px 0px 0px 0px;
+}
+
+.mainHeaderHorizontalLine {
+    padding: 0px;
+}
