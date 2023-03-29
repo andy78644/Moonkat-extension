@@ -19,10 +19,12 @@ const Assets = (props: Props) => {
     const [tokenName, setTokenName] = useState("")
     const { expand } = props
 
+    console.log(sendTokens[0] === undefined)
+
     useEffect(() => {
-        if (sendTokens.length > 0 && (sendTokens[0].type === "ERC20" || sendTokens[0].type === "NATIVE")) {
+        if (sendTokens[0] !== undefined && sendTokens[0] !== null && (sendTokens[0].type === "ERC20" || sendTokens[0].type === "NATIVE")) {
             setTokenName(tokenSymbol)
-        } else if (sendTokens.length > 0) {
+        } else if (sendTokens[0] !== undefined && sendTokens[0] !== null) {
             setTokenName(sendTokens[0].tokenId)
         }
     }, [sendTokens])
