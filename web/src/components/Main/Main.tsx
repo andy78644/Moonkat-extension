@@ -59,7 +59,7 @@ const Main = (props: Props) => {
             }
             getPreview(transaction)
         }
-        else {
+        else if (mode === 'signature-712') {
             const signature = JSON.parse(browserMsg)
             const signatureAddress = signature.signAddress
             const type = signature.signMethod ?? ''
@@ -81,6 +81,10 @@ const Main = (props: Props) => {
                     })
             }
             getsignature(type, payload)
+        }
+        else {
+            setRenderMode(mode)
+            setHasLoaded(true)
         }
     }, [mode])
 

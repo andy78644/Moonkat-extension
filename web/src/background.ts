@@ -151,7 +151,7 @@ const createSignatureMention = async (msg: any, alive: boolean) => {
     if (!alive) mode = "debug-end";
     else if (msg.data.signatureData.signatureVersion)
         mode = msg.data.signatureData.signatureVersion;
-    else mode = "signature-not-configured";
+    else mode = "signature-no-risk-safe";
     console.log("[background.ts]: signature mention ", mode);
     const left = window.left! + Math.round((window.width! - width) * 0.5);
     const top = window.top! + Math.round((window.height! - height) * 0.2);
