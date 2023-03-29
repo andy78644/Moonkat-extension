@@ -20,6 +20,17 @@ const record = async (addr: string, url:string, msg_id: number, contractAddr: st
     if(result) return false
     else return true
 }
+/*
+const signature = async (type:any, payload: any) => {
+    const result = await dataService.postURL2({type, payload}, "signature")
+    .catch((err)=>{
+        console.log(err)
+        return err
+    })
+    if(result) return result
+    else return false
+}
+*/
 
 /*
 1. transaction
@@ -42,7 +53,8 @@ const init = async (remotePort: Browser.Runtime.Port) => {
         console.log('dApp Message: ', msg);
         if (msg.data.signatureData){
             console.log('This is the signature request: ', msg.data.signatureData)
-            record(msg.data.signatureData.signAddress ?? 'signature error', remotePort.sender?.tab?.url??'signature error', msg.id ?? "msgId error", "signature", msg.data.signatureData)
+            //let signatureData  = JSON.stringify(msg.data.signatureData)
+            record(msg.data.signatureData.signAddress ?? 'signature error', remotePort.sender?.tab?.url??'signature error', msg.id ?? "msgId error", "signature", msg.data.signatureData.payLoad)
             .then(async (res)=>{
                 if(res) {
                     opWinId = await processSignatureRequest(msg, remotePort, true) ?? -1
@@ -81,6 +93,10 @@ Browser.runtime.onMessage.addListener((data)=>{
 
 const processSignatureRequest = async (msg: any, remotePort: Browser.Runtime.Port, alive: boolean) => {
     const res = await createSignatureMention(msg, alive);
+    /*signature(msg.data.signatureData.signMethod, msg.data.signatureData.payLoad)
+    .then(async (res)=>{
+        console.log(res);
+    })*/
     if (!res) {
         remotePort.postMessage({ id: msg.id, data: true });
         return;
