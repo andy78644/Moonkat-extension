@@ -27,8 +27,8 @@ interface TokenContextType {
 const defaultTokenInfoType: TokenContextType = {
     sendTokens: [] as any[], gasFee: 0, mode: "",
     verbForPopOverText: "", operator: "",
-    tokenURL: nft, tokenSymbol: "",
-    collectionIconUrl: nft, collectionName: "",
+    tokenURL: nft, tokenSymbol: "NFT",
+    collectionIconUrl: nft, collectionName: "NFT Collection",
     totalToken: 0, osVerified: false, tokenLength: 0,
 }
 
@@ -54,19 +54,30 @@ const Component = (props: Props) => {
 
         // not empty
         if (sendTokens[0]) {
-            if (sendTokens[0].tokenURL && sendTokens[0].tokenURL !== "") 
+
+            if (sendTokens[0].tokenURL && sendTokens[0].tokenURL !== "")
                 InfoContainer.tokenURL = sendTokens[0].tokenURL
-            InfoContainer.tokenSymbol = sendTokens[0].symbol
-            if (sendTokens[0].collectionIconUrl && sendTokens[0].collectionIconUrl !== "") 
+
+            if (sendTokens[0].symbol && sendTokens[0].symbol !== "")
+                InfoContainer.tokenSymbol = sendTokens[0].symbol
+
+            if (sendTokens[0].collectionIconUrl && sendTokens[0].collectionIconUrl !== "")
                 InfoContainer.collectionIconUrl = sendTokens[0].collectionIconUrl
-            if (sendTokens[0].collectionName && sendTokens[0].collectionName !== "") 
+
+            if (sendTokens[0].collectionName && sendTokens[0].collectionName !== "")
                 InfoContainer.collectionName = sendTokens[0].collectionName
-            InfoContainer.totalToken = sendTokens[0].totalToken
-            InfoContainer.osVerified = sendTokens[0].osVerified
+
+            if (sendTokens[0].totalToken && sendTokens[0].totalToken !== "")
+                InfoContainer.totalToken = sendTokens[0].totalToken
+
+            if (sendTokens[0].osVerified && sendTokens[0].osVerified !== "")
+                InfoContainer.osVerified = sendTokens[0].osVerified
+
             InfoContainer.tokenLength = sendTokens.length
+
             InfoContainer.totalToken = 0 // implicit mark totalToken to number type
-            sendTokens.map((token: any) => { 
-                InfoContainer.totalToken =  InfoContainer.totalToken + parseFloat(token.amount) 
+            sendTokens.map((token: any) => {
+                InfoContainer.totalToken = InfoContainer.totalToken + parseFloat(token.amount)
             })
         }
 
@@ -113,8 +124,8 @@ const Component = (props: Props) => {
                         <List sx={{ width: '100%', bgcolor: '#FFF8EA', borderRadius: 8 }} component="nav">
                             <Header expand={expand} setExpand={setExpand} />
                             <CollectionName />
-                            <GasFee />
                             <Assets expand={expand} />
+                            <GasFee />
                         </List>
                     </div>
                 </TokenContext.Provider>

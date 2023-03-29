@@ -19,6 +19,8 @@ const Header = (props: Props) => {
     const { expand, setExpand } = props
     const { mode, verbForPopOverText, tokenLength } = useContext(TokenContext)
 
+    console.log("[Header.tsx]: ", tokenLength)
+
     // PopOver
     const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null)
     const hover = Boolean(anchorEl)
