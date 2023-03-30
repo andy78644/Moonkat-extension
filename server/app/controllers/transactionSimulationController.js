@@ -38,15 +38,23 @@ const getAssetData = async (asset, txn) => {
         response.json()
       )
       .then(response => {
+        asset.amount = txn.amount
+        asset.tokenId = txn.tokenId
+
         console.log('getAssetData: ', response)
         if (response.error) asset.tokenURL = response.contractMetadata.openSea.imageUrl
         else asset.tokenURL = response.media[0].gateway
-        asset.collectionIconUrl = response.contractMetadata.openSea.imageUrl
+        // else -> NFT png 
+
+        // response.metadata.name / response.title
+        // If Null -> "NFT" ? :
         asset.title = response.title
-        asset.collectionName = response.contractMetadata.openSea.collectionName
+        asset.collectionName = response.contractMetadata.name
+        asset.symbol = response.contractMetadata.symbol
+        // May be null
+        // ?: rule 
+        asset.collectionIconUrl = response.contractMetadata.openSea.imageUrl
         asset.osVerified = response.contractMetadata.openSea.safelistRequestStatus
-        asset.amount = txn.amount
-        asset.tokenId = txn.tokenId
       })
       .catch(err => {
         console.log(err.message)
@@ -69,9 +77,12 @@ const getApproveData = async (asset, txn) => {
       )
       .then(response => {
         console.log('getApproveData: ', response)
-        asset.tokenURL = response.contractMetadata.openSea.imageUrl
-        asset.title = response.name
-        asset.collectionName = response.contractMetadata.openSea.collectionName
+        // As Approve, we do not approve single NFT, so we assign the contractimageUrl as collectionUrl
+        asset.collectionIconUrl = response.contractMetadata.openSea.imageUrl
+        asset.symbol = response.contractMetadata.symbol
+        asset.collectionName = response.contractMetadata.name
+        // May be null
+        // ?: rule 
         asset.osVerified = response.contractMetadata.openSea.safelistRequestStatus
       })
       .catch(err => {
@@ -448,10 +459,10 @@ const erc20Metadata = async (asset, item) => {
 }
 
 const NFTMetadata = async (asset, item) => {
+  // single NFT
   try {
     const response = await fetch(`https://eth-mainnet.g.alchemy.com/v2/${process.env.ALCHEMY_API_KEY}/getNFTMetadata?contractAddress=${item.token}&tokenId=${item.tokenId}`);
     const data = await response.json();
-    //console.log(data)
     asset.type = data.contractMetadata.tokenType;
     asset.symbol = data.contractMetadata.symbol ?  data.contractMetadata.symbol: "NFT";
     asset.tokenURL = data.media[0].gateway;
@@ -467,10 +478,10 @@ const NFTMetadata = async (asset, item) => {
 }
 
 const ContractMetadata = async (asset, item) => {
+  // series NFT
   try {
     const response = await fetch(`https://eth-mainnet.g.alchemy.com/nft/v2/${process.env.ALCHEMY_API_KEY}/getContractMetadata?contractAddress=${item.token}`);
     const data = await response.json();
-    //console.log(data);
     asset.type = data.contractMetadata.tokenType;
     asset.symbol = data.contractMetadata.symbol ?  data.contractMetadata.symbol: "NFT";
     asset.tokenURL = data.contractMetadata.openSea.imageUrl;
