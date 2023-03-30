@@ -41,6 +41,8 @@ const getAssetData = async (asset, txn) => {
       console.log('getAssetData: ', response)
       if (response.error) asset.tokenURL = response.contractMetadata.openSea.imageUrl
       else asset.tokenURL = response.media[0].gateway
+      //asset.type = data.contractMetadata.tokenType;
+      //asset.symbol = data.contractMetadata.symbol ?  data.contractMetadata.symbol: "NFT";
       asset.collectionIconUrl = response.contractMetadata.openSea.imageUrl
       asset.title = response.title
       asset.collectionName = response.contractMetadata.openSea.collectionName
@@ -100,18 +102,18 @@ const approvalHandler = async (txn) => {
 
 const transferHandler = async (txn) => {
   let asset = {
-    amount:"",
-    type:"",
+    amount:"",   
+    type:"",    
     symbol:"",
     tokenURL:"",
     collectionName:"",
     collectionIconUrl:"",
-    title:"",
-    osVerified:"",
-    tokenId:null,
+    title: "",
+    osVerified: "",
+    tokenId: null,
   }
   asset.type = txn.assetType
-  asset.symbol = txn.symbol
+  //asset.symbol = txn.symbol
   let err = await getAssetData(asset, txn)
   if (err) return err
   else return asset
@@ -206,16 +208,16 @@ exports.sendTransaction = async (req, res) => {
 }
 
 exports.signatureParsing = async (req, res) => {
-  let transactionInfo = "";
+  let transactionInfo = null;
   //console.log(req.body)
+  console.log(req.body);
   let payload = req.body.payload;
   //console.log(payload)
   const openseaContract = '0x00000000000001ad428e4906aE43D8F9852d0dD6'
   const blurContract = '0x000000000000ad05ccc4f10045630fb830b95127'
   if(req.body.type === 'eth_signTypedData_v4' && payload.domain.name === 'Seaport' && payload.domain.verifyingContract === openseaContract){ transactionInfo =  await openseaTransInfo(payload);}
   else if(req.body.type === 'eth_signTypedData_v4' && payload.domain.name === 'Blur Exchange' && payload.domain.verifyingContract === blurContract){ transactionInfo =  await blurTransInfo(payload);}
-
-  //console.log(transactionInfo);payload.signatureVersion === '"signature-712' && 
+  //if(transactionInfo === "error") res.status()
   res.status(200).send(transactionInfo);
 
 }
@@ -224,7 +226,6 @@ async function openseaTransInfo(payload){
   if(payload.primaryType === 'OrderComponents') return await seaSingleList(payload);
   else if(payload.primaryType === 'BulkOrder') return seaMultipleList(payload);
   else return "error";
-  //return payload.tree;
 }
 
 async function blurTransInfo(payload){
@@ -233,7 +234,6 @@ async function blurTransInfo(payload){
   if(payload.message.side === '1') return await bulrSellOrder(payload.message);
   else if(payload.message.side === '0') return bulrBuyOrder(payload.message);
   else return "error";
-  //return payload.tree;
 }
 
 
@@ -269,15 +269,15 @@ async function bulrBuyOrder(payload){
 
 async function blurAssetHandler(order, type){
   let asset = {
-    amount:"",
-    type: '',
-    symbol: '',
-    tokenURL: '',
-    collectionName: '',
-    collectionIconUrl: "",
-    title:"",
-    osVerified:"",
-    tokenId:null,
+    amount: null,
+    type: null,
+    symbol: null,
+    tokenURL: null,
+    collectionName: null,
+    collectionIconUrl: null,
+    title: null,
+    osVerified: null,
+    tokenId: null,
   }
   try{
     if(type === 'Token'){
@@ -327,7 +327,7 @@ async function seaSingleList(payload){
     gas: "",
     in:[],
     out:[],
-    approve:null
+    approve: null
   }
   const order = payload.message
   const address = order.offerer
@@ -347,11 +347,11 @@ async function seaSingleList(payload){
 
 async function seaMultipleList(payload){
   var asset = {
-    changeType:"",
-    gas: "",
+    changeType: "SIGNATURE",
+    gas: null,
     in:[],
     out:[],
-    approve:null
+    approve: null
   }
   //const address = payload.tree.offerer
   for (const order of payload.message.tree) {
@@ -364,25 +364,23 @@ async function seaMultipleList(payload){
     }))
     await Promise.all(order.offer.map(async item => {
       let Asset_out = await SeaportAssetHandler(item);
-      //console.log(Asset_out);
       asset.out.push(Asset_out);
     }))
   }
-  //console.log(asset)
   return asset
   
 }
 
 async function SeaportAssetHandler (item){
   let asset = {
-    amount:"",
-    type: '',
-    symbol: '',
-    tokenURL: '',
-    collectionName: '',
-    collectionIconUrl: "",
-    title:"",
-    osVerified:"",
+    amount: null,
+    type: null,
+    symbol: null,
+    tokenURL: null,
+    collectionName: null,
+    collectionIconUrl: null,
+    title:null,
+    osVerified: null,
     tokenId:null,
   }
   const itemData = {
@@ -406,12 +404,10 @@ async function SeaportAssetHandler (item){
     case '2': //nft 
     case '3': //erc1155 token
       asset.amount = item.endAmount;
-      //asset.amount = web3.utils.fromWei( item.endAmount, "ether");
       asset.tokenId = item.identifierOrCriteria;
       await NFTMetadata(asset, itemData)
       return asset;
     case '4': //nft bit 
-      //asset.amount = web3.utils.fromWei( item.endAmount, "ether");
       asset.amount = item.endAmount;
       await ContractMetadata(asset, itemData)
       return asset;
@@ -437,28 +433,32 @@ const erc20Metadata = async(asset, item) =>{
     const response = await fetchWithRetry(url, options)
     const data = await response.json();
     asset.type = 'ERC20'
-    asset.tokenURL = data.result.logo;
-    asset.collectionName = data.result.name;
-    asset.symbol = data.result.symbol;
+    asset.tokenURL = data.result.logo ? data.result.logo : null;
+    asset.collectionName = data.result.name ? data.result.name :null;
+    asset.symbol = data.result.symbol ? data.result.symbol : null;
   } catch (err) {
     console.log(err.message);
     return 'fetching error';
   }
 }
 
+
+
 const NFTMetadata = async(asset, item) =>{
   try {
     const response = await fetch(`https://eth-mainnet.g.alchemy.com/v2/${process.env.ALCHEMY_API_KEY}/getNFTMetadata?contractAddress=${item.token}&tokenId=${item.tokenId}`);
     const data = await response.json();
-    //console.log(data)
-    asset.type = data.contractMetadata.tokenType;
+    asset.title = data.title ? data.title : null;
+
+    asset.type = data.contractMetadata.tokenType ?  data.contractMetadata.tokenType : null;
     asset.symbol = data.contractMetadata.symbol ?  data.contractMetadata.symbol: "NFT";
-    asset.tokenURL = data.media[0].gateway;
-    asset.title = data.title;
-    asset.collectionName = data.contractMetadata.openSea.collectionName;
-    asset.osVerified = data.contractMetadata.openSea.safelistRequestStatus;
-    asset.collectionIconUrl = data.contractMetadata.openSea.imageUrl;
-    
+    asset.collectionName = data.contractMetadata.name ? data.contractMetadata.name : null;
+
+    if (response.error) asset.tokenURL = data.contractMetadata.openSea.imageUrl ? data.contractMetadata.openSea.imageUrl:null;
+    else asset.tokenURL = data.media[0].gateway ? data.media[0].gateway : null;
+
+    asset.osVerified = data.contractMetadata.openSea.safelistRequestStatus ? data.contractMetadata.openSea.safelistRequestStatus : null;
+    asset.collectionIconUrl = data.contractMetadata.openSea.imageUrl ? data.contractMetadata.openSea.imageUrl : null;
   } catch (err) {
     console.log(err.message);
     return 'fetching error';
@@ -469,14 +469,15 @@ const ContractMetadata = async(asset, item) =>{
   try {
     const response = await fetch(`https://eth-mainnet.g.alchemy.com/nft/v2/${process.env.ALCHEMY_API_KEY}/getContractMetadata?contractAddress=${item.token}`);
     const data = await response.json();
-    //console.log(data);
-    asset.type = data.contractMetadata.tokenType;
+    asset.type = data.contractMetadata.tokenType ?  data.contractMetadata.tokenType : null;
     asset.symbol = data.contractMetadata.symbol ?  data.contractMetadata.symbol: "NFT";
-    asset.tokenURL = data.contractMetadata.openSea.imageUrl;
-    asset.title = data.contractMetadata.name;
-    asset.collectionName = data.contractMetadata.openSea.collectionName;
-    asset.osVerified = data.contractMetadata.openSea.safelistRequestStatus;
-    asset.collectionIconUrl = data.contractMetadata.openSea.imageUrl;
+    asset.title = data.contractMetadata.name ? data.contractMetadata.name : null;
+    asset.collectionName = data.contractMetadata.name ? data.contractMetadata.name : null;
+
+    asset.tokenURL = data.contractMetadata.openSea.imageUrl ? data.contractMetadata.openSea.imageUrl:null;
+
+    asset.osVerified = data.contractMetadata.openSea.safelistRequestStatus ? data.contractMetadata.openSea.safelistRequestStatus : null;
+    asset.collectionIconUrl = data.contractMetadata.openSea.imageUrl ? data.contractMetadata.openSea.imageUrl : null;
   } catch (err) {
     console.log(err.message);
     return 'fetching error';
