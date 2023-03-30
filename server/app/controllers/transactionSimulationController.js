@@ -217,7 +217,7 @@ exports.signatureParsing = async (req, res) => {
   const blurContract = '0x000000000000ad05ccc4f10045630fb830b95127'
   if(req.body.type === 'eth_signTypedData_v4' && payload.domain.name === 'Seaport' && payload.domain.verifyingContract === openseaContract){ transactionInfo =  await openseaTransInfo(payload);}
   else if(req.body.type === 'eth_signTypedData_v4' && payload.domain.name === 'Blur Exchange' && payload.domain.verifyingContract === blurContract){ transactionInfo =  await blurTransInfo(payload);}
-  //if(transactionInfo === "error") res.status()
+  if(transactionInfo === "error") res.status(500).send("error");
   res.status(200).send(transactionInfo);
 
 }
@@ -239,11 +239,11 @@ async function blurTransInfo(payload){
 
 async function bulrSellOrder(order){
   var asset = {
-    changeType:"",
-    gas: "",
+    changeType: "SIGNATURE",
+    gas: null,
     in:[],
     out:[],
-    approve:null
+    approve: null
   }
   let assetIn = await blurAssetHandler(order, 'Token')
   asset.in.push(assetIn);
@@ -254,11 +254,11 @@ async function bulrSellOrder(order){
 
 async function bulrBuyOrder(payload){
   var asset = {
-    changeType:"",
-    gas: "",
+    changeType: "SIGNATURE",
+    gas: null,
     in:[],
     out:[],
-    approve:null
+    approve: null
   }
   let assetIn = await blurAssetHandler(order, 'NFT')
   asset.in.push(assetIn);
@@ -323,8 +323,8 @@ async function blurAssetHandler(order, type){
 
 async function seaSingleList(payload){
   var asset = {
-    changeType:"",
-    gas: "",
+    changeType: "SIGNATURE",
+    gas: null,
     in:[],
     out:[],
     approve: null
@@ -339,7 +339,6 @@ async function seaSingleList(payload){
   }))
   await Promise.all(order.offer.map(async item => {
     let Asset_out = await SeaportAssetHandler(item);
-    //console.log(Asset_out);
     asset.out.push(Asset_out);
   }))
   return asset;
