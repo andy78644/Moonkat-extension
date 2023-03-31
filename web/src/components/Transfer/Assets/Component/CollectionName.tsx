@@ -7,7 +7,6 @@ import { TokenContext } from './Component'
 interface Props {
 
 }
-
 const CollectionName = (props: Props) => {
     const { type, collectionName, osVerified } = useContext(TokenContext)
     if (type==="ERC20" || type==="NATIVE" || !type ) return <></>

@@ -50,7 +50,6 @@ const Component = (props: Props) => {
         InfoContainer.sendTokens = sendTokens
         InfoContainer.mode = mode
         if (gasFee) InfoContainer.gasFee = gasFee
-
         // backend
         sendTokens.map((token: any) => {
             for (const [key, value] of Object.entries(token)) {

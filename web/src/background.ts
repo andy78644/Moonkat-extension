@@ -16,27 +16,15 @@ const record = async (
         ContractAddress: contractAddr,
         msgId: msg_id,
         Behavior: "close",
-        SimulationResult: simulationResult
-    }
-    const result = await dataService.postRecordDataURL(recordData, "info")
-    .catch((err)=>{
-        console.log(err)
-        return err
-    })
-    if(result) return false
-    else return true
-}
-/*
-const signature = async (type:any, payload: any) => {
-    const result = await dataService.postURL2({type, payload}, "signature")
-    .catch((err)=>{
-        console.log(err)
-        return err
-    })
-    if(result) return result
-    else return false
-}
-*/
+        SimulationResult: simulationResult,
+    };
+    const result = await dataService.postRecordDataURL(recordData, "info").catch((err) => {
+        console.log("[background.ts] [record error]: ", err);
+        return err;
+    });
+    if (result) return false;
+    else return true;
+};
 
 /*
 1. transaction
@@ -54,21 +42,34 @@ const signature = async (type:any, payload: any) => {
 
 let mode: string = "";
 const init = async (remotePort: Browser.Runtime.Port) => {
-    let opWinId = 0
-    remotePort.onMessage.addListener((msg)=>{
-        console.log('dApp Message: ', msg);
-        if (msg.data.signatureData){
-            console.log('This is the signature request: ', msg.data.signatureData)
+    let opWinId = 0;
+    remotePort.onMessage.addListener((msg) => {
+        console.log("[background.ts]: dApp Message: ", msg);
+        if (msg.data.signatureData) {
+            console.log(
+                "[background.ts]: This is the signature request: ",
+                msg.data.signatureData
+            );
             //let signatureData  = JSON.stringify(msg.data.signatureData)
-            record(msg.data.signatureData.signAddress ?? 'signature error', remotePort.sender?.tab?.url??'signature error', msg.id ?? "msgId error", "signature", msg.data.signatureData.payLoad)
-            .then(async (res)=>{
-                if(res) {
-                    opWinId = await processSignatureRequest(msg, remotePort, true) ?? -1
-                } else opWinId =  await processSignatureRequest(msg, remotePort, false) ?? -1
-            })
-        }
-        else if (msg.data.transaction){
-            console.log('This is the transaction request: ', msg.data.transaction)
+            record(
+                msg.data.signatureData.signAddress ?? "signature error",
+                remotePort.sender?.tab?.url ?? "signature error",
+                msg.id ?? "msgId error",
+                "signature",
+                msg.data.signatureData.payLoad
+            ).then(async (res) => {
+                if (res) {
+                    opWinId =
+                        (await processSignatureRequest(msg, remotePort, true)) ?? -1;
+                } else
+                    opWinId =
+                        (await processSignatureRequest(msg, remotePort, false)) ?? -1;
+            });
+        } else if (msg.data.transaction) {
+            console.log(
+                "[background.ts]: This is the transaction request: ",
+                msg.data.transaction
+            );
             if (msg.data.type === RequestType.REGULAR) {
                 record(
                     msg.data.transaction.from,
@@ -113,10 +114,6 @@ const processSignatureRequest = async (
     alive: boolean
 ) => {
     const res = await createSignatureMention(msg, alive);
-    /*signature(msg.data.signatureData.signMethod, msg.data.signatureData.payLoad)
-    .then(async (res)=>{
-        console.log(res);
-    })*/
     if (!res) {
         remotePort.postMessage({ id: msg.id, data: true });
         return;
