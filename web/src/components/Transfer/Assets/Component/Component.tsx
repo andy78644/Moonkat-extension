@@ -49,7 +49,7 @@ const Component = (props: Props) => {
 
         InfoContainer.sendTokens = sendTokens
         InfoContainer.mode = mode
-        InfoContainer.gasFee = gasFee
+        if (gasFee) InfoContainer.gasFee = gasFee
 
         // backend
         sendTokens.map((token: any) => {

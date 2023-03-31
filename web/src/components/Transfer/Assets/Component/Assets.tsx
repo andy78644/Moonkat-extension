@@ -27,11 +27,6 @@ const Assets = (props: Props) => {
 
     if (!sendTokens || !sendTokens[0]) return <></>
 
-    console.log("[Assets.tsx]: expand ", expand)
-    console.log("[Assets.tsx]: tokenLength ", tokenLength)
-    console.log("[Assets.tsx]: tokenLength > 1 ", tokenLength > 1)
-    console.log("[Assets.tsx]: expand && tokenLength > 1 ", expand && tokenLength > 1)
-
     return (
         <>
             {
