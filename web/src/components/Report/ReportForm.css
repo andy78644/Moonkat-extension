@@ -1,0 +1,26 @@
+#reportForm {
+    box-sizing: border-box;
+    margin: 0px 16px;
+    width: calc(100% - 32px);
+}
+#reportFormInput {
+    width: 100%;
+    box-sizing: border-box;
+    display: block;
+    border-radius: 8px;
+    border: 2px solid #DFD8CA;
+    background-color: #FFF8EA;
+    padding: 8px 16px;
+    font-size: 16px;
+}
+
+#reportFormInput:focus, #reportFormInput:hover {
+    outline: none;
+    border:2px solid rgba(67, 67, 67, 0.5);
+    transition: 0.15s;
+}
+
+#reportFormInput::placeholder {
+    font-weight: 500;
+    color: rgba(67, 67, 67, 0.5);
+}

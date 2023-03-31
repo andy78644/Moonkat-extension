@@ -19,16 +19,17 @@ interface Props {
 interface TokenContextType {
     sendTokens: any[], gasFee: number, mode: string,
     verbForPopOverText: string, operator: string,
-    tokenURL: string, tokenSymbol: string,
-    collectionIconUrl: string, collectionName: string,
+    tokenURL: string, symbol: string, title: string,
+    collectionIconUrl: string, collectionName: string, type: string,
     totalToken: number, osVerified: boolean, tokenLength: number,
+    [key: string]: any
 }
 
 const defaultTokenInfoType: TokenContextType = {
     sendTokens: [] as any[], gasFee: 0, mode: "",
     verbForPopOverText: "", operator: "",
-    tokenURL: nft, tokenSymbol: "NFT",
-    collectionIconUrl: nft, collectionName: "NFT Collection",
+    tokenURL: nft, symbol: "NFT", title: "unknown",
+    collectionIconUrl: nft, collectionName: "NFT Collection", type: "",
     totalToken: 0, osVerified: false, tokenLength: 0,
 }
 
@@ -38,49 +39,27 @@ const Component = (props: Props) => {
 
     // State Variables
     const { sendTokens, gasFee, mode } = props
-    const [expand, setExpand] = useState(false)
+    const [expand, setExpand] = useState(true)
     const [tokenInfo, setTokenInfo] = useState<TokenContextType>(defaultTokenInfoType)
 
     // Handle different mode
     useEffect(() => {
 
-        // console.log(`[Component.tsx]: The response for ${mode} is :`, sendTokens)
-
-        const InfoContainer = Object.assign({}, defaultTokenInfoType);
+        const InfoContainer = JSON.parse(JSON.stringify(defaultTokenInfoType))
 
         InfoContainer.sendTokens = sendTokens
         InfoContainer.mode = mode
         if (gasFee) InfoContainer.gasFee = gasFee
-
-        // not empty
-        if (sendTokens[0]) {
-
-            if (sendTokens[0].tokenURL && sendTokens[0].tokenURL !== "")
-                InfoContainer.tokenURL = sendTokens[0].tokenURL
-
-            if (sendTokens[0].symbol && sendTokens[0].symbol !== "")
-                InfoContainer.tokenSymbol = sendTokens[0].symbol
-
-            if (sendTokens[0].collectionIconUrl && sendTokens[0].collectionIconUrl !== "")
-                InfoContainer.collectionIconUrl = sendTokens[0].collectionIconUrl
-
-            if (sendTokens[0].collectionName && sendTokens[0].collectionName !== "")
-                InfoContainer.collectionName = sendTokens[0].collectionName
-
-            if (sendTokens[0].totalToken && sendTokens[0].totalToken !== "")
-                InfoContainer.totalToken = sendTokens[0].totalToken
-
-            if (sendTokens[0].osVerified && sendTokens[0].osVerified !== "")
-                InfoContainer.osVerified = sendTokens[0].osVerified
-
-            InfoContainer.tokenLength = sendTokens.length
-
-            InfoContainer.totalToken = 0 // implicit mark totalToken to number type
-            sendTokens.map((token: any) => {
-                InfoContainer.totalToken = InfoContainer.totalToken + parseFloat(token.amount)
-            })
-        }
-
+        // backend
+        sendTokens.map((token: any) => {
+            for (const [key, value] of Object.entries(token)) {
+                if (value) InfoContainer[key] = value
+            }
+        })
+        InfoContainer.tokenLength = sendTokens.length
+        sendTokens.map((token: any) => {
+            InfoContainer.totalToken = InfoContainer.totalToken + parseFloat(token.amount)
+        })
         switch (mode) {
             case "Assets Receive":
                 InfoContainer.verbForPopOverText = "receive"

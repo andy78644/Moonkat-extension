@@ -10,7 +10,7 @@ interface Props {
 }
 
 const Withdraw = () => {
-    const { tokenURL, tokenSymbol } = useContext(TokenContext)
+    const { tokenURL, symbol } = useContext(TokenContext)
     return (
         <>
             <ListItem sx={{ padding: "8px 16px" }}>
@@ -20,12 +20,12 @@ const Withdraw = () => {
                     primary={
                         <div>
                             <Typography
-                                sx={{ lineHeight: '100%', display: 'inline-block', fontFamily: 'Lato', fontSize: '20px', fontWeight: 500, color: '#B8463D' }}>
+                                sx={{ lineHeight: '100%', display: 'inline-block', fontFamily: 'Lato', fontSize: '20px', fontWeight: 500, color: (theme) => (theme.palette.secondary.main) }}>
                                 Can withdraw &nbsp;
                             </Typography>
                             <Typography
-                                sx={{ lineHeight: '100%', display: 'inline-block', fontFamily: 'Lato-bold', fontSize: '20px', fontWeight: 900, color: '#B8463D' }}>
-                                ALL {tokenSymbol}s
+                                sx={{ lineHeight: '100%', display: 'inline-block', fontFamily: 'Lato-bold', fontSize: '20px', fontWeight: 900, color: (theme) => (theme.palette.secondary.main) }}>
+                                ALL {symbol}s
                             </Typography>
                         </div>
 

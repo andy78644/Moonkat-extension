@@ -40,8 +40,8 @@ const MainHeader = (props: Props) => {
                 contractAddress: contractAddress ?? 'Error',
                 userAddress: userAddress ?? 'Error',
             }).toString();
-            const width = 360;
-            const height = 600;
+            const width = 400;
+            const height = 700;
             const left = window.left! + Math.round((window.width! - width) * 0.5);
             const top = window.top! + Math.round((window.height! - height) * 0.2);
 

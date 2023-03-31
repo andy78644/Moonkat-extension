@@ -1,14 +1,13 @@
 import React, { useState } from 'react';
 import ReactDOM from 'react-dom/client';
-import TagBar from '../Transfer/MoreTags/TagBar';
 import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
 import ReportForm from './ReportForm';
 import Prompt from './Prompt'
-import CampaignIcon from '@mui/icons-material/Campaign';
-import LocalOfferIcon from '@mui/icons-material/LocalOffer';
-import FeedbackIcon from '@mui/icons-material/Feedback';
-import AddIcon from '@mui/icons-material/Add';
+import SectionHeader from './SectionHeader'
+import Campaign from '../../assets/campaign.png'
+import PriceTag from '../../assets/pricetag.png'
+import Notification from '../../assets/notification.png'
 
 import './Report.css'
 
@@ -66,14 +65,9 @@ const Report = () => {
                     /> :
                     <div></div>
             }
-            <div id="reportTitle">
-                Report Contract
-            </div>
-            <ReportForm onTextValue={handleReportName} placeholder="What's the address Name?" formHeight={50} />
-            <div id="reportMalicious">
-                <CampaignIcon id="reportCampaignIcon" /> &nbsp;
-                <div id="reportMaliciousContent">Is this a malicious contract ?</div>
-            </div>
+            <div id="reportTitle"> Report Contract & Address </div>
+            <ReportForm onTextValue={handleReportName} placeholder="What's the address name?" formHeight={50} />
+            <SectionHeader icon={Campaign} content={"Is this a malicious contract?"}/>
             <Stack sx={{ marginLeft: 0.5, marginRight: 0.5 }} spacing={3} direction="row">
                 <Button sx={()=>(
                     selected === 'yes' ? 
@@ -110,35 +104,11 @@ const Report = () => {
                     }
                 )} onClick={() => { setReportFlow(1); setSelected('no'); }} variant="text">No</Button>
             </Stack>
-
             {
                 reportFlow == 1 &&
                 <div>
-                    {/* <div id="reportMoreTags">
-                        <LocalOfferIcon id="reportLocalOfferIcon" /> &nbsp;
-                        <div id="reportMoreTagsContent"> More related tags about the contract </div>
-                    </div>
-                    <Button sx={{
-                        color: '#434343',
-                        margin: 0.5,
-                        '&:hover, &:focus': {
-                            color: 'white',
-                            backgroundColor: '#77736A',
-                        },
-                        height: 30,
-                        borderRadius: 5,
-                        backgroundColor: "#DFD8C9",
-                        fontSize: 15,
-                        fontWeight: "500",
-                        width: '35%'
-                    }}
-                        startIcon={<AddIcon />}
-                        variant="text">ADD TAGS</Button>
-                    <TagBar tags={tagExample1} tagDisable={false} /> */}
-                    <div id="reportMoreDetails">
-                        <FeedbackIcon id="reportFeedbackIcon" /> &nbsp;
-                        <div id="reportMoreDetailsContent"> More detail about the contract </div>
-                    </div>
+                    <SectionHeader icon={PriceTag} content={"More related tags about the contract"}/>
+                    <SectionHeader icon={Notification} content={"More detail about this smart contract"}/>
                     <ReportForm onTextValue={handleDescription} placeholder="Share more detail with the community" formHeight={130} />
                     <Stack sx={{ mx: 0.5, mt: 4 }}>
                         <Button sx={{

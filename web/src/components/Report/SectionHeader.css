@@ -1,0 +1,19 @@
+#reportSectionHeader {
+    display: flex;
+    flex-direction: row;
+    vertical-align: middle;
+    margin: 16px;
+    width: calc(100% - 32px);
+}
+
+#reportSectionImage {
+    
+}
+
+#reportSectionContent {
+    margin-left: 12px;
+    font-size: 16px;
+    vertical-align: middle;
+    line-height: 120%;
+    font-family: 'Lato';
+}
