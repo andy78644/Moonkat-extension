@@ -16,14 +16,15 @@ const Assets = (props: Props) => {
         symbol, operator, title, type,
         totalToken, collectionIconUrl,
         tokenLength } = useContext(TokenContext)
-    const [imgSource, setImgSource] = useState(tokenURL)
+    const [imgSource, setImgSource] = useState("")
     const { expand } = props
 
     useEffect(() => {
         if (type === "ERC20" || type === "NATIVE" || !type)
             setImgSource(tokenURL)
-        else setImgSource(collectionIconUrl)
-    }, [])
+        else if (collectionIconUrl !== null) setImgSource(collectionIconUrl)
+        else setImgSource(tokenURL)
+    }, [tokenURL, collectionIconUrl, type])
 
     if (!sendTokens || !sendTokens[0]) return <></>
 
