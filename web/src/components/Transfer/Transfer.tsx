@@ -21,7 +21,7 @@ const Transfer =  (props: Props) => {
     }
 
     const getAssetsApproveInfo = {
-        assetsApprove: [transaction.approve],
+        assetsApprove: [transaction.approve], // backend pass an object (should be an array)
         assetsOut: transaction.out,
         gas: transaction.gas,
         gasPrice: transaction.gasPrice
