@@ -4,6 +4,7 @@ import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
 import ReportForm from './ReportForm';
 import Prompt from './Prompt'
+import TagForm from './TagForm'
 import SectionHeader from './SectionHeader'
 import Campaign from '../../assets/campaign.png'
 import PriceTag from '../../assets/pricetag.png'
@@ -16,21 +17,6 @@ const params = new URLSearchParams(window.location.search);
 // createRoot is an experiment feature so it doesn't have type
 // @ts-ignore
 const root = ReactDOM.createRoot(document.getElementById("root"))
-
-const tagExample1: any[] = [
-    {
-        name: "BAYC token",
-        color: "red",
-    },
-    {
-        name: "Monkey token",
-        color: "red",
-    },
-    {
-        name: "Bored Ape",
-        color: "red",
-    },
-]
 
 const Report = () => {
 
@@ -66,67 +52,86 @@ const Report = () => {
                     <div></div>
             }
             <div id="reportTitle"> Report Contract & Address </div>
-            <ReportForm onTextValue={handleReportName} placeholder="What's the address name?" formHeight={50} />
-            <SectionHeader icon={Campaign} content={"Is this a malicious contract?"}/>
-            <Stack sx={{ marginLeft: 0.5, marginRight: 0.5 }} spacing={3} direction="row">
-                <Button sx={()=>(
-                    selected === 'yes' ? 
-                    {
-                        color: 'white', '&:hover, &:focus': { color: 'white', backgroundColor: '#77736A' },
-                        borderRadius: 5,
-                        backgroundColor: "#77736A",
-                        fontWeight: "500",
-                        width: '50%'
-                    } :
-                    {
-                        color: '#434343', '&:hover, &:focus': { color: 'white', backgroundColor: '#77736A' },
-                        borderRadius: 5,
-                        backgroundColor: "#DFD8C9",
-                        fontWeight: "500",
-                        width: '50%'
-                    }
+            <ReportForm onTextValue={handleReportName} placeholder="What's the address name?" formHeight={40} />
+            <SectionHeader icon={Campaign} content={"Is this a malicious contract?"} />
+            <Stack sx={{ margin: "0px 16px 16px 16px" }} spacing={3} direction="row">
+                <Button sx={() => (
+                    selected === 'yes' ?
+                        {
+                            color: '#FFF8EA', '&:hover, &:focus': { color: 'white', backgroundColor: '#77736A' },
+                            borderRadius: 5,
+                            backgroundColor: "#77736A",
+                            fontWeight: "500",
+                            width: '50%',
+                            height: '27px',
+                            textTransform: 'none'
+                        } :
+                        {
+                            color: '#77736A', '&:hover, &:focus': { color: 'white', backgroundColor: '#77736A' },
+                            borderRadius: 5,
+                            backgroundColor: "#FFF8EA",
+                            fontWeight: "500",
+                            width: '50%',
+                            height: '27px',
+                            textTransform: 'none'
+                        }
                 )} onClick={() => { setReportFlow(1); setSelected('yes'); }} variant="text">Yes</Button>
-                <Button sx={()=>(
-                    selected === 'no' ? 
-                    {
-                        color: 'white', '&:hover, &:focus': { color: 'white', backgroundColor: '#77736A' },
-                        borderRadius: 5,
-                        backgroundColor: "#77736A",
-                        fontWeight: "500",
-                        width: '50%'
-                    } :
-                    {
-                        color: '#434343', '&:hover, &:focus': { color: 'white', backgroundColor: '#77736A' },
-                        borderRadius: 5,
-                        backgroundColor: "#DFD8C9",
-                        fontWeight: "500",
-                        width: '50%'
-                    }
+                <Button sx={() => (
+                    selected === 'no' ?
+                        {
+                            color: '#FFF8EA', '&:hover, &:focus': { color: 'white', backgroundColor: '#77736A' },
+                            borderRadius: 5,
+                            backgroundColor: "#77736A",
+                            fontWeight: "500",
+                            width: '50%',
+                            height: '27px',
+                            textTransform: 'none'
+                        } :
+                        {
+                            color: '#77736A', '&:hover, &:focus': { color: 'white', backgroundColor: '#77736A' },
+                            borderRadius: 5,
+                            backgroundColor: "#FFF8EA",
+                            fontWeight: "500",
+                            width: '50%',
+                            height: '27px',
+                            textTransform: 'none'
+                        }
                 )} onClick={() => { setReportFlow(1); setSelected('no'); }} variant="text">No</Button>
             </Stack>
             {
                 reportFlow == 1 &&
                 <div>
-                    <SectionHeader icon={PriceTag} content={"More related tags about the contract"}/>
-                    <SectionHeader icon={Notification} content={"More detail about this smart contract"}/>
-                    <ReportForm onTextValue={handleDescription} placeholder="Share more detail with the community" formHeight={130} />
-                    <Stack sx={{ mx: 0.5, mt: 4 }}>
-                        <Button sx={{
-                                    color: '#434343',
-                                    '&:hover, &:focus': { color: 'white', backgroundColor: '#77736A', },
-                                    height: 40,
-                                    borderRadius: 5,
-                                    backgroundColor: "#DFD8C9",
-                                    fontSize: 15,
-                                    fontWeight: "500",
-                                    width: '100%'
-                                }}
-                            onClick={handleSubmit}
-                            variant="text">Send
-                        </Button>
-                    </Stack>
+                    <SectionHeader icon={PriceTag} content={"More related tags about the contract"} />
+                    <TagForm />
+                    <SectionHeader icon={Notification} content={"More detail about this smart contract"} />
+                    <ReportForm onTextValue={handleDescription} placeholder="Share more detail with the community!" formHeight={92} />
                 </div>
             }
+            <Stack sx={{ width: 'calc(100% - 32px)', margin: "16px", position: "fixed", left: 0, bottom: 0 }} spacing={3} direction="row">
+                <Button sx={
+                    {
+                        color: '#77736A',
+                        borderRadius: 5,
+                        border: "2px solid #77736A",
+                        backgroundColor: "#FFF8EA",
+                        fontWeight: "500",
+                        width: '50%',
+                        height: '27px',
+                        textTransform: 'none'
+                    }
+                } onClick={() => { setPrompt(true) }} variant="text">Cancel</Button>
+                <Button sx={
+                    {
+                        color: '#FFF8EA', '&:hover, &:focus': { backgroundColor: "#77736A", opacity: 0.75 },
+                        borderRadius: 5,
+                        backgroundColor: "#77736A",
+                        fontWeight: "500",
+                        width: '50%',
+                        height: '27px',
+                        textTransform: 'none'
+                    }
+                } onClick={() => { setPrompt(true) }} variant="text">Send</Button>
+            </Stack>
         </div>
     );
 };

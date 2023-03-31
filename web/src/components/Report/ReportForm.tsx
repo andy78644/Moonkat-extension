@@ -5,21 +5,25 @@ import './ReportForm.css'
 
 interface Props {
     placeholder: any,
-    formHeight: any,
+    formHeight: number,
     onTextValue: any,
 }
 
 const ReportForm = (props: Props) => {
-    const { placeholder } = props;
+    const { placeholder, onTextValue, formHeight } = props;
+    console.log(formHeight)
     const [textValue, setTextValue] = useState('');
     return (
         <div id="reportForm">
-            <input
+            <textarea
                 id="reportFormInput"
+                style={{ height: `${formHeight}px` }}
                 value={textValue}
                 placeholder={placeholder}
-                // onKeyDown={onKeyDown}
-                onChange={(e) => setTextValue(e.target.value)}
+                onChange={(e) => {
+                    setTextValue(e.target.value)
+                    onTextValue(e.target.value)
+                }}
             />
         </div>
     );
