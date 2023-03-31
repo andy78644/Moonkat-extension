@@ -316,6 +316,108 @@ async function blurAssetHandler(order, type){
       return asset;
 
     }
+}
+
+exports.signatureParsing = async (req, res) => {
+  let transactionInfo = "";
+  //console.log(req.body)
+  let payload = req.body.payload;
+  //console.log(payload)
+  const openseaContract = '0x00000000000001ad428e4906aE43D8F9852d0dD6'
+  const blurContract = '0x000000000000ad05ccc4f10045630fb830b95127'
+  if(req.body.type === 'eth_signTypedData_v4' && payload.domain.name === 'Seaport' && payload.domain.verifyingContract === openseaContract){ transactionInfo =  await openseaTransInfo(payload);}
+  else if(req.body.type === 'eth_signTypedData_v4' && payload.domain.name === 'Blur Exchange' && payload.domain.verifyingContract === blurContract){ transactionInfo =  await blurTransInfo(payload);}
+
+  //console.log(transactionInfo);payload.signatureVersion === '"signature-712' && 
+  res.status(200).send(transactionInfo);
+
+}
+
+async function openseaTransInfo(payload){
+  if(payload.primaryType === 'OrderComponents') return await seaSingleList(payload);
+  else if(payload.primaryType === 'BulkOrder') return seaMultipleList(payload);
+  else return "error";
+  //return payload.tree;
+}
+
+async function blurTransInfo(payload){
+  // side = 1 sell NFT
+  // side = 0 buy NFT
+  if(payload.message.side === '1') return await bulrSellOrder(payload.message);
+  else if(payload.message.side === '0') return bulrBuyOrder(payload.message);
+  else return "error";
+  //return payload.tree;
+}
+
+
+async function bulrSellOrder(order){
+  var asset = {
+    changeType:"",
+    gas: "",
+    in:[],
+    out:[],
+    approve:null
+  }
+  let assetIn = await blurAssetHandler(order, 'Token')
+  asset.in.push(assetIn);
+  let assetOut = await blurAssetHandler(order, 'NFT')
+  asset.out.push(assetOut);
+  return asset;
+}
+
+async function bulrBuyOrder(payload){
+  var asset = {
+    changeType:"",
+    gas: "",
+    in:[],
+    out:[],
+    approve:null
+  }
+  let assetIn = await blurAssetHandler(order, 'NFT')
+  asset.in.push(assetIn);
+  let assetOut = await blurAssetHandler(order, 'TOKEN')
+  asset.out.push(assetOut);
+  return asset;
+}
+
+async function blurAssetHandler(order, type){
+  let asset = {
+    amount:"",
+    type: '',
+    symbol: '',
+    tokenURL: '',
+    collectionName: '',
+    collectionIconUrl: "",
+    title:"",
+    osVerified:"",
+    tokenId:null,
+  }
+  try{
+    if(type === 'Token'){
+      const itemData = {
+        token: order.paymentToken,
+      }
+      asset.amount = order.price
+      var rate = 0
+      console.log(order.fees)
+      await Promise.all(order.fees.map(async fee => {
+        console.log(rate)
+        rate += Number(fee.rate)
+      }))
+      rate = 100 - rate/100;
+      asset.amount = (Number(asset.amount)*rate/100).toString();
+      asset.amount = web3.utils.fromWei( asset.amount, "ether");
+      if(order.paymentToken === '0x0000000000000000000000000000000000000000'){ //ETH
+        asset.type = 'NATIVE'
+        asset.symbol = 'ETH'
+        asset.tokenURL = 'https://static.alchemyapi.io/images/network-assets/eth.png'
+        asset.collectionName = 'Ethereum'
+        return asset
+      }
+      await erc20Metadata(asset, itemData);
+      return asset;
+
+    }
     else if(type === 'NFT'){
       const itemData = {
         token: order.collection,
@@ -334,16 +436,16 @@ async function blurAssetHandler(order, type){
 
 async function seaSingleList(payload){
   var asset = {
-    changeType: "",
+    changeType:"",
     gas: "",
-    in: [],
-    out: [],
-    approve: null
+    in:[],
+    out:[],
+    approve:null
   }
   const order = payload.message
   const address = order.offerer
   await Promise.all(order.consideration.map(async item => {
-    if (address === item.recipient) {
+    if(address === item.recipient){
       let Asset_in = await SeaportAssetHandler(item)
       asset.in.push(Asset_in);
     }
@@ -356,19 +458,19 @@ async function seaSingleList(payload){
   return asset;
 }
 
-async function seaMultipleList(payload) {
+async function seaMultipleList(payload){
   var asset = {
-    changeType: "",
+    changeType:"",
     gas: "",
-    in: [],
-    out: [],
-    approve: null
+    in:[],
+    out:[],
+    approve:null
   }
   //const address = payload.tree.offerer
   for (const order of payload.message.tree) {
     const address = order.offerer
     await Promise.all(order.consideration.map(async item => {
-      if (address === item.recipient) {
+      if(address === item.recipient){
         let Asset_in = await SeaportAssetHandler(item)
         asset.in.push(Asset_in);
       }
@@ -381,20 +483,20 @@ async function seaMultipleList(payload) {
   }
   //console.log(asset)
   return asset
-
+  
 }
 
-async function SeaportAssetHandler(item) {
+async function SeaportAssetHandler (item){
   let asset = {
-    amount: "",
+    amount:"",
     type: '',
     symbol: '',
     tokenURL: '',
     collectionName: '',
     collectionIconUrl: "",
-    title: "",
-    osVerified: "",
-    tokenId: null,
+    title:"",
+    osVerified:"",
+    tokenId:null,
   }
   const itemData = {
     token: item.token,
@@ -431,10 +533,10 @@ async function SeaportAssetHandler(item) {
   }
 }
 
-const erc20Metadata = async (asset, item) => {
+const erc20Metadata = async(asset, item) =>{
   const options = {
     method: 'POST',
-    headers: { accept: 'application/json', 'content-type': 'application/json' },
+    headers: {accept: 'application/json', 'content-type': 'application/json'},
     body: JSON.stringify({
       id: 1,
       jsonrpc: '2.0',
@@ -458,11 +560,11 @@ const erc20Metadata = async (asset, item) => {
   }
 }
 
-const NFTMetadata = async (asset, item) => {
-  // single NFT
+const NFTMetadata = async(asset, item) =>{
   try {
     const response = await fetch(`https://eth-mainnet.g.alchemy.com/v2/${process.env.ALCHEMY_API_KEY}/getNFTMetadata?contractAddress=${item.token}&tokenId=${item.tokenId}`);
     const data = await response.json();
+    //console.log(data)
     asset.type = data.contractMetadata.tokenType;
     asset.symbol = data.contractMetadata.symbol ?  data.contractMetadata.symbol: "NFT";
     asset.tokenURL = data.media[0].gateway;
@@ -477,11 +579,11 @@ const NFTMetadata = async (asset, item) => {
   }
 }
 
-const ContractMetadata = async (asset, item) => {
-  // series NFT
+const ContractMetadata = async(asset, item) =>{
   try {
     const response = await fetch(`https://eth-mainnet.g.alchemy.com/nft/v2/${process.env.ALCHEMY_API_KEY}/getContractMetadata?contractAddress=${item.token}`);
     const data = await response.json();
+    //console.log(data);
     asset.type = data.contractMetadata.tokenType;
     asset.symbol = data.contractMetadata.symbol ?  data.contractMetadata.symbol: "NFT";
     asset.tokenURL = data.contractMetadata.openSea.imageUrl;
