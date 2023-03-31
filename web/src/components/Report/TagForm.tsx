@@ -3,6 +3,8 @@ import Tag from './Tag'
 
 import './TagForm.css'
 
+const mockTags: Array<string> = ["Uniswap", "Uniswap v3", "Unicorn"]
+
 const TagForm = () => {
     const [input, setInput] = useState('');
     const [tags, setTags] = useState<string[]>([]);
@@ -41,18 +43,26 @@ const TagForm = () => {
     }
 
     return (
-        <div id="tagForm">
-            {tags.map((tag, index) => (
-                <Tag index={index} text={tag} setDeleteTag={deleteTag} />
-            ))}
-            <input
-                id="tagFormInput"
-                value={input}
-                onKeyDown={onKeyDown}
-                onKeyUp={onKeyUp}
-                onChange={onChange}
-            />
-        </div>
+        <>
+            <div id="tagForm">
+                {tags.map((tag, index) => (
+                    <Tag index={index} text={tag} setDeleteTag={deleteTag} />
+                ))}
+                <input
+                    id="tagFormInput"
+                    value={input}
+                    onKeyDown={onKeyDown}
+                    onKeyUp={onKeyUp}
+                    onChange={onChange}
+                />
+            </div>
+            <div id="tagSection">
+                {mockTags.map((tag, index) => (
+                    <Tag index={index} text={tag} setDeleteTag={deleteTag} />
+                ))}
+            </div>
+        </>
+
     )
 }
 

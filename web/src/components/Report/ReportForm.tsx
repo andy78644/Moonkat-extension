@@ -11,7 +11,6 @@ interface Props {
 
 const ReportForm = (props: Props) => {
     const { placeholder, onTextValue, formHeight } = props;
-    console.log(formHeight)
     const [textValue, setTextValue] = useState('');
     return (
         <div id="reportForm">

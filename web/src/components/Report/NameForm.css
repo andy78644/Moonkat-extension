@@ -1,5 +1,4 @@
-#tagForm {
-    display: flex;
+#nameForm {
     box-sizing: border-box;
     margin: 0px 16px;
     margin-top: 8px;
@@ -10,13 +9,19 @@
     overflow: scroll;
 }
 
-#tagFormInput {
+#nameFormInput {
     width: 100%;
     min-width: 50%;
     border: none;
     background-color: #FFF8EA;
     padding: 8px 16px;
     font-size: 16px;
+}
+
+#nameFormTagSection {
+    display: flex;
+    box-sizing: border-box;
+    margin: 0px 8px;
 }
 
 #tagFormInput:focus, #tagFormInput:hover {
@@ -28,10 +33,4 @@
     outline: none;
     border: 2px solid rgba(67, 67, 67, 0.5);
     transition: 0.15s;
-}
-
-#tagSection {
-    display: flex;
-    box-sizing: border-box;
-    margin: 0px 8px;
 }

@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
-import ReactDOM from 'react-dom/client';
-import Button from '@mui/material/Button';
-import Stack from '@mui/material/Stack';
-import ReportForm from './ReportForm';
+import React, { useState } from 'react'
+import ReactDOM from 'react-dom/client'
+import Button from '@mui/material/Button'
+import Stack from '@mui/material/Stack'
+import ReportForm from './ReportForm'
+import NameForm from './NameForm'
 import Prompt from './Prompt'
 import TagForm from './TagForm'
 import SectionHeader from './SectionHeader'
@@ -52,7 +53,7 @@ const Report = () => {
                     <div></div>
             }
             <div id="reportTitle"> Report Contract & Address </div>
-            <ReportForm onTextValue={handleReportName} placeholder="What's the address name?" formHeight={40} />
+            <NameForm onTextValue={handleReportName} placeholder="What's the address name?" formHeight={40} />
             <SectionHeader icon={Campaign} content={"Is this a malicious contract?"} />
             <Stack sx={{ margin: "0px 16px 16px 16px" }} spacing={3} direction="row">
                 <Button sx={() => (
