@@ -29,7 +29,9 @@ const getAssetData = async (asset, txn) => {
   if (txn.assetType === 'ERC20' || txn.assetType === 'NATIVE') {
     asset.amount = Number(txn.amount).toFixed(4);
     asset.tokenURL = txn.logo ? txn.logo : null;
-    asset.collectionName = txn.name ? txn.name : null;
+    asset.collectionName = txn.name ?txn.name: null;
+    asset.symbol = txn.symbol ? txn.symbol:null;
+    asset.title = txn.name ?txn.name: null;
   }
   else {
     await fetch(`https://eth-mainnet.g.alchemy.com/v2/${process.env.ALCHEMY_API_KEY}\n
@@ -64,7 +66,8 @@ const getApproveData = async (asset, txn) => {
   if (txn.assetType === 'ERC20' || txn.assetType === 'NATIVE') {
     asset.amount = Number(txn.amount).toFixed(4);
     asset.collectionIconUrl = txn.logo ? txn.logo : null;
-    asset.collectionName = txn.name ? txn.name : null;
+    asset.collectionName = txn.name ?txn.name: null;
+    assetApprove.title = txn.name ?txn.name: null;
   }
   else {
     await fetch(`https://eth-mainnet.g.alchemy.com/nft/v2/${process.env.ALCHEMY_API_KEY}\n
@@ -99,6 +102,7 @@ const approvalHandler = async (txn) => {
   assetApprove.contractAddress = txn.to
   assetApprove.amount = txn.amount
   let err = await getApproveData(assetApprove, txn)
+  console.log(err);
   if (err) return err
   else return assetApprove
 }
@@ -165,6 +169,7 @@ exports.sendTransaction = async (req, res) => {
         const result = response.result
         transactionInfo.gas = result.gasUsed
         let errStat = false
+        console.log(result.changes)
         for (let changeObj of result.changes) {
           if (changeObj.from === from) {
             if (changeObj.changeType === 'APPROVE') {
@@ -434,6 +439,7 @@ const erc20Metadata = async (asset, item) => {
   try {
     const response = await fetchWithRetry(url, options)
     const data = await response.json();
+    console.log(data)
     asset.type = 'ERC20'
     asset.tokenURL = data.result.logo ? data.result.logo : null;
     asset.title = data.result.name ? data.result.name : null;
