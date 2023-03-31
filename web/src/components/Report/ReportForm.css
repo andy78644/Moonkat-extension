@@ -1,6 +1,6 @@
 #reportForm {
     box-sizing: border-box;
-    margin: 0px 16px;
+    margin: 8px 16px;
     width: calc(100% - 32px);
 }
 #reportFormInput {
@@ -21,6 +21,7 @@
 }
 
 #reportFormInput::placeholder {
+    font-family: 'Lato';
     font-weight: 500;
     color: rgba(67, 67, 67, 0.5);
 }
