@@ -27,11 +27,16 @@ const Assets = (props: Props) => {
 
     if (!sendTokens || !sendTokens[0]) return <></>
 
+    console.log("[Assets.tsx]: expand ", expand)
+    console.log("[Assets.tsx]: tokenLength ", tokenLength)
+    console.log("[Assets.tsx]: tokenLength > 1 ", tokenLength > 1)
+    console.log("[Assets.tsx]: expand && tokenLength > 1 ", expand && tokenLength > 1)
+
     return (
         <>
             {
                 expand && tokenLength > 1 ?
-                    <Collapse id="assetsComponentScroll" className="scroll" in={!expand} timeout="auto" unmountOnExit sx={{ width: '100%', display: 'flex', justifyContent: 'flex-end' }}>
+                    <Collapse id="assetsComponentScroll" className="scroll" in={expand} timeout="auto" unmountOnExit sx={{ width: '100%', display: 'flex', justifyContent: 'flex-end' }}>
                         {
                             sendTokens.map((token: any) => {
                                 if (!token.symbol) token.symbol = "NFT"

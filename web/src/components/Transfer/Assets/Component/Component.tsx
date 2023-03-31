@@ -39,7 +39,7 @@ const Component = (props: Props) => {
 
     // State Variables
     const { sendTokens, gasFee, mode } = props
-    const [expand, setExpand] = useState(false)
+    const [expand, setExpand] = useState(true)
     const [tokenInfo, setTokenInfo] = useState<TokenContextType>(defaultTokenInfoType)
 
     // Handle different mode
