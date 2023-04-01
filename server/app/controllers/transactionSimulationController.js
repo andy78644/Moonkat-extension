@@ -67,7 +67,7 @@ const getApproveData = async (asset, txn) => {
     asset.amount = Number(txn.amount).toFixed(4);
     asset.collectionIconUrl = txn.logo ? txn.logo : null;
     asset.collectionName = txn.name ?txn.name: null;
-    assetApprove.title = txn.symbol ? txn.symbol:null;
+    asset.title = txn.symbol ? txn.symbol:null;
   }
   else {
     await fetch(`https://eth-mainnet.g.alchemy.com/nft/v2/${process.env.ALCHEMY_API_KEY}\n
