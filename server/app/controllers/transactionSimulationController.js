@@ -31,7 +31,7 @@ const getAssetData = async (asset, txn) => {
     asset.tokenURL = txn.logo ? txn.logo : null;
     asset.collectionName = txn.name ?txn.name: null;
     asset.symbol = txn.symbol ? txn.symbol:null;
-    asset.title = txn.name ?txn.name: null;
+    asset.title = txn.symbol ? txn.symbol:null;
   }
   else {
     await fetch(`https://eth-mainnet.g.alchemy.com/v2/${process.env.ALCHEMY_API_KEY}\n
@@ -67,7 +67,7 @@ const getApproveData = async (asset, txn) => {
     asset.amount = Number(txn.amount).toFixed(4);
     asset.collectionIconUrl = txn.logo ? txn.logo : null;
     asset.collectionName = txn.name ?txn.name: null;
-    assetApprove.title = txn.name ?txn.name: null;
+    assetApprove.title = txn.symbol ? txn.symbol:null;
   }
   else {
     await fetch(`https://eth-mainnet.g.alchemy.com/nft/v2/${process.env.ALCHEMY_API_KEY}\n
@@ -169,7 +169,6 @@ exports.sendTransaction = async (req, res) => {
         const result = response.result
         transactionInfo.gas = result.gasUsed
         let errStat = false
-        console.log(result.changes)
         for (let changeObj of result.changes) {
           if (changeObj.from === from) {
             if (changeObj.changeType === 'APPROVE') {
@@ -218,7 +217,6 @@ exports.sendTransaction = async (req, res) => {
 exports.signatureParsing = async (req, res) => {
   let transactionInfo = null;
   let payload = req.body.payload;
-  //console.log(payload)
   const openseaContract = '0x00000000000001ad428e4906aE43D8F9852d0dD6'
   const blurContract = '0x000000000000ad05ccc4f10045630fb830b95127'
   if (req.body.type === 'eth_signTypedData_v4' && payload.domain.name === 'Seaport' && payload.domain.verifyingContract === openseaContract) { transactionInfo = await openseaTransInfo(payload); }
@@ -292,9 +290,7 @@ async function blurAssetHandler(order, type) {
       }
       asset.amount = order.price
       var rate = 0
-      console.log(order.fees)
       await Promise.all(order.fees.map(async fee => {
-        console.log(rate)
         rate += Number(fee.rate)
       }))
       rate = 100 - rate / 100;
@@ -402,7 +398,8 @@ async function SeaportAssetHandler(item) {
       asset.type = 'NATIVE'
       asset.symbol = 'ETH'
       asset.tokenURL = 'https://static.alchemyapi.io/images/network-assets/eth.png'
-      asset.title = 'Ethereum'
+      asset.title = 'ETH'
+      asset.collectionName = 'Ethereum'
       return asset
     case '1': //erc20
       asset.amount = Number(asset.amount).toFixed(4);
@@ -439,11 +436,11 @@ const erc20Metadata = async (asset, item) => {
   try {
     const response = await fetchWithRetry(url, options)
     const data = await response.json();
-    console.log(data)
     asset.type = 'ERC20'
     asset.tokenURL = data.result.logo ? data.result.logo : null;
-    asset.title = data.result.name ? data.result.name : null;
+    asset.title = data.result.symbol ? data.result.symbol : null;
     asset.symbol = data.result.symbol ? data.result.symbol : null;
+    asset.collectionName = data.result.name ? data.result.name : null;
   } catch (err) {
     console.log(err.message);
     return 'fetching error';
