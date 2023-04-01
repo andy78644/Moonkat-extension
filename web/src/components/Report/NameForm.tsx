@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import Tag from './Tag'
+import TagSection from './TagSection'
 
 import './NameForm.css'
 
@@ -32,11 +32,7 @@ const NameForm = (props: Props) => {
                     }}
                 />
             </div>
-            <div id="nameFormTagSection">
-                {tags.map((tag, index) => (
-                    <Tag index={index} text={tag} setDeleteTag={deleteTag} />
-                ))}
-            </div>
+            <TagSection mode="NameForm" tags={tags} operation={deleteTag}/>
         </>
 
     );

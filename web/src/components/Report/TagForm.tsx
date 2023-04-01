@@ -1,9 +1,10 @@
 import React, { useState } from 'react'
 import Tag from './Tag'
+import TagSection from './TagSection'
 
 import './TagForm.css'
 
-const mockTags: Array<string> = ["Uniswap", "Uniswap v3", "Unicorn"]
+const mockTags: Array<string> = ["ajsdklfjasdlkfjaksldfjalksdf", "Uniswap v3", "Unicorn"]
 
 const TagForm = () => {
     const [input, setInput] = useState('');
@@ -44,10 +45,8 @@ const TagForm = () => {
 
     return (
         <>
-            <div id="tagForm">
-                {tags.map((tag, index) => (
-                    <Tag index={index} text={tag} setDeleteTag={deleteTag} />
-                ))}
+            <div id="tagForm" tabIndex={1}>
+                <TagSection mode="DynamicTagForm" tags={tags} operation={deleteTag} />
                 <input
                     id="tagFormInput"
                     value={input}
@@ -56,11 +55,7 @@ const TagForm = () => {
                     onChange={onChange}
                 />
             </div>
-            <div id="tagSection">
-                {mockTags.map((tag, index) => (
-                    <Tag index={index} text={tag} setDeleteTag={deleteTag} />
-                ))}
-            </div>
+            <TagSection mode="StaticTagForm" tags={mockTags} operation={deleteTag} />
         </>
 
     )

@@ -16,8 +16,8 @@
 
 #reportFormInput:focus, #reportFormInput:hover {
     outline: none;
-    border:2px solid rgba(67, 67, 67, 0.5);
-    transition: 0.15s;
+    border: 2px solid rgba(67, 67, 67, 0.5);
+    transition: 0.1s;
 }
 
 #reportFormInput::placeholder {
