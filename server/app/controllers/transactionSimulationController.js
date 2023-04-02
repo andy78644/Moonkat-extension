@@ -29,7 +29,9 @@ const getAssetData = async (asset, txn) => {
   if (txn.assetType === 'ERC20' || txn.assetType === 'NATIVE') {
     asset.amount = Number(txn.amount).toFixed(4);
     asset.tokenURL = txn.logo ? txn.logo : null;
-    asset.collectionName = txn.name ? txn.name : null;
+    asset.collectionName = txn.name ?txn.name: null;
+    asset.symbol = txn.symbol ? txn.symbol:null;
+    asset.title = txn.symbol ? txn.symbol:null;
   }
   else {
     await fetch(`https://eth-mainnet.g.alchemy.com/v2/${process.env.ALCHEMY_API_KEY}\n
@@ -64,7 +66,8 @@ const getApproveData = async (asset, txn) => {
   if (txn.assetType === 'ERC20' || txn.assetType === 'NATIVE') {
     asset.amount = Number(txn.amount).toFixed(4);
     asset.collectionIconUrl = txn.logo ? txn.logo : null;
-    asset.collectionName = txn.name ? txn.name : null;
+    asset.collectionName = txn.name ?txn.name: null;
+    asset.title = txn.symbol ? txn.symbol:null;
   }
   else {
     await fetch(`https://eth-mainnet.g.alchemy.com/nft/v2/${process.env.ALCHEMY_API_KEY}\n
@@ -99,6 +102,7 @@ const approvalHandler = async (txn) => {
   assetApprove.contractAddress = txn.to
   assetApprove.amount = txn.amount
   let err = await getApproveData(assetApprove, txn)
+  console.log(err);
   if (err) return err
   else return assetApprove
 }
@@ -213,10 +217,15 @@ exports.sendTransaction = async (req, res) => {
 exports.signatureParsing = async (req, res) => {
   let transactionInfo = null;
   let payload = req.body.payload;
-  //console.log(payload)
-  const openseaContract = '0x00000000000001ad428e4906aE43D8F9852d0dD6'
+  const openseaContract = [
+    '0x00000000006cee72100d161c57ada5bb2be1ca79',
+    '0x00000000006c3852cbef3e08e8df289169ede581',
+    '0x00000000000006c7676171937c444f6bde3d6282',
+    '0x0000000000000ad24e80fd803c6ac37206a45f15',
+    '0x00000000000001ad428e4906aE43D8F9852d0dD6',
+  ]
   const blurContract = '0x000000000000ad05ccc4f10045630fb830b95127'
-  if (req.body.type === 'eth_signTypedData_v4' && payload.domain.name === 'Seaport' && payload.domain.verifyingContract === openseaContract) { transactionInfo = await openseaTransInfo(payload); }
+  if (req.body.type === 'eth_signTypedData_v4' && payload.domain.name === 'Seaport' && openseaContract.includes(payload.domain.verifyingContract)) { transactionInfo = await openseaTransInfo(payload); }
   else if (req.body.type === 'eth_signTypedData_v4' && payload.domain.name === 'Blur Exchange' && payload.domain.verifyingContract === blurContract) { transactionInfo = await blurTransInfo(payload); }
   if (transactionInfo === "error") res.status(500).send("error");
   res.status(200).send(transactionInfo);
@@ -287,9 +296,7 @@ async function blurAssetHandler(order, type) {
       }
       asset.amount = order.price
       var rate = 0
-      console.log(order.fees)
       await Promise.all(order.fees.map(async fee => {
-        console.log(rate)
         rate += Number(fee.rate)
       }))
       rate = 100 - rate / 100;
@@ -397,7 +404,8 @@ async function SeaportAssetHandler(item) {
       asset.type = 'NATIVE'
       asset.symbol = 'ETH'
       asset.tokenURL = 'https://static.alchemyapi.io/images/network-assets/eth.png'
-      asset.title = 'Ethereum'
+      asset.title = 'ETH'
+      asset.collectionName = 'Ethereum'
       return asset
     case '1': //erc20
       asset.amount = Number(asset.amount).toFixed(4);
@@ -436,8 +444,9 @@ const erc20Metadata = async (asset, item) => {
     const data = await response.json();
     asset.type = 'ERC20'
     asset.tokenURL = data.result.logo ? data.result.logo : null;
-    asset.title = data.result.name ? data.result.name : null;
+    asset.title = data.result.symbol ? data.result.symbol : null;
     asset.symbol = data.result.symbol ? data.result.symbol : null;
+    asset.collectionName = data.result.name ? data.result.name : null;
   } catch (err) {
     console.log(err.message);
     return 'fetching error';
