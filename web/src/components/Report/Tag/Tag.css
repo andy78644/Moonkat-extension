@@ -12,10 +12,9 @@
 }
 
 .tag > button {
-    display: inline-block;
+    flex-direction: row;
     border: none;
     background-color: unset;
-    align-items: center;
     cursor: pointer;
     color: #77736A;
 }

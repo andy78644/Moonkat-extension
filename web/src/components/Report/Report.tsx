@@ -2,10 +2,10 @@ import React, { useState } from 'react'
 import ReactDOM from 'react-dom/client'
 import Button from '@mui/material/Button'
 import Stack from '@mui/material/Stack'
-import ReportForm from './ReportForm'
-import NameForm from './NameForm'
+import ReportForm from './Form/ReportForm'
+import NameForm from './Form/NameForm'
+import TagForm from './Form/TagForm'
 import Prompt from './Prompt'
-import TagForm from './TagForm'
 import SectionHeader from './SectionHeader'
 import Campaign from '../../assets/campaign.png'
 import PriceTag from '../../assets/pricetag.png'
@@ -50,10 +50,10 @@ const Report = () => {
                         submit={isPrompt}
                         onSubmit={setPrompt}
                     /> :
-                    <div></div>
+                    null
             }
             <div id="reportTitle"> Report Contract & Address </div>
-            <NameForm onTextValue={handleReportName} placeholder="What's the address name?" formHeight={40} />
+            <NameForm onTextValue={handleReportName} formHeight={40} />
             <SectionHeader icon={Campaign} content={"Is this a malicious contract?"} />
             <Stack sx={{ margin: "0px 16px 16px 16px" }} spacing={3} direction="row">
                 <Button sx={() => (
@@ -105,7 +105,7 @@ const Report = () => {
                     <SectionHeader icon={PriceTag} content={"More related tags about the contract"} />
                     <TagForm />
                     <SectionHeader icon={Notification} content={"More detail about this smart contract"} />
-                    <ReportForm onTextValue={handleDescription} placeholder="Share more detail with the community!" formHeight={92} />
+                    <ReportForm onTextValue={handleDescription} formHeight={92} />
                 </div>
             }
             <Stack sx={{ width: 'calc(100% - 32px)', margin: "16px", position: "fixed", left: 0, bottom: 0 }} spacing={3} direction="row">
