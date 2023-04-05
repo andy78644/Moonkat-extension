@@ -24,10 +24,11 @@ interface Props {
 
 
 const Main = (props: Props) => {
-    const { id, mode, browserMsg, userAddress, gasPrice} = props;
+    const { id, mode, browserMsg, userAddress, gasPrice } = props;
     // This address is to pass the server restriction
     // Need to be edited to develop the sign feature
-    const [transactionResult, settransactionResultState] = useState({to:'Default To'})
+    const [transactionResult, settransactionResultState] = useState({ to: 'Default To' })
+    const [signatureResult, setSignatureResultState] = useState({ to: 'Default To' })
     const [renderMode, setRenderMode] = useState('')
     const [hasLoaded, setHasLoaded] = useState(false);
     useEffect(() => {
@@ -40,7 +41,7 @@ const Main = (props: Props) => {
             const getPreview = async (transaction: any) => {
                 await dataService.postTransactionSimulation(transaction)
                     .then(res => {
-                        recordUpdate(id, res, "simulate").then((res)=>{console.log(res)})
+                        recordUpdate(id, res, "simulate").then((res) => { console.log(res) })
                         res.gasPrice = gasPrice
                         res.to = transaction.to
                         settransactionResultState(res)
@@ -49,7 +50,7 @@ const Main = (props: Props) => {
                         setHasLoaded(true)
                     })
                     .catch((err) => {
-                        console.log('Simulation Failed: ', err.message)
+                        console.log('[Main.tsx]: Simulation Failed because', err.message)
                         setRenderMode("debug-end")
                         setHasLoaded(true)
                     })
@@ -57,7 +58,36 @@ const Main = (props: Props) => {
                 delete transaction.maxPriorityFeePerGas
             }
             getPreview(transaction)
+        }
+        else if (mode === 'signature-712') {
+            const signature = JSON.parse(browserMsg)
+            const signatureAddress = signature.signAddress
+            const type = signature.signMethod ?? ''
+            if (type !== 'eth_signTypedData_v4') {
+                setRenderMode('signature-no-risk-safe')
+                setHasLoaded(true)
             }
+            else {
+                const payload = signature.payLoad ?? ''
+                const getsignature = async (type: any, payload: any) => {
+                    await dataService.postSignature({ type, payload }, "signature")
+                        .then(res => {
+                            console.log("[Main.tsx] -- Signature Success", res)
+                            // recordUpdate(id, res, "signature").then((res)=>{console.log(res)})
+                            res.to = signatureAddress
+                            setSignatureResultState(res)
+                            setRenderMode('signature-712')
+                            setHasLoaded(true)
+                        })
+                        .catch((err) => {
+                            console.log('[Main.tsx] -- Signature Failed because', err.message)
+                            setRenderMode("debug-end")
+                            setHasLoaded(true)
+                        })
+                }
+                getsignature(type, payload)
+            }
+        }
         else {
             setRenderMode(mode)
             setHasLoaded(true)
@@ -67,31 +97,31 @@ const Main = (props: Props) => {
 
     const recordUpdate = async (msgId: any, data: any, method: string) => {
         let recordData = {}
-        if(method === "behavior"){
+        if (method === "behavior") {
             recordData = {
                 msgId: msgId,
                 Behavior: data,
             }
-        }   
-        if(method === "simulate"){
+        }
+        if (method === "simulate") {
             recordData = {
                 msgId: msgId,
                 SimulationResult: data,
             }
-        }   
-        const result = await dataService.postURL(recordData, method)
-        .catch((err)=>{
-            console.log('PostURL error:', err)
-            return err
-        })
-        if(result) return false
+        }
+        const result = await dataService.postRecordDataURL(recordData, method)
+            .catch((err) => {
+                console.log('PostURL error:', err)
+                return err
+            })
+        if (result) return false
         else return true
     }
 
     // Close extension
     const extensionResponse = async (data: boolean) => {
         await Browser.runtime.sendMessage(undefined, { id, data });
-        if(data) await recordUpdate(id, "accept", "behavior")
+        if (data) await recordUpdate(id, "accept", "behavior")
         else await recordUpdate(id, "reject", "behavior")
         window.close();
     }
@@ -99,7 +129,7 @@ const Main = (props: Props) => {
     const reject = () => extensionResponse(false);
 
     const renderCurrentSelection = (renderMode: string | null) => {
-        console.log('renderMode: ', renderMode)
+        console.log('[Main.tsx]: RenderMode is', renderMode)
         switch (renderMode) {
             case 'transaction-assets-exchange': {
                 return (
@@ -138,13 +168,13 @@ const Main = (props: Props) => {
                         <Footer onAccept={accept} onReject={reject} />
                     </div>
                 )
-
             }
             case 'signature-712': {
                 return (
                     <div>
-                        <MainHeader contractAddress={transactionResult.to} userAddress={userAddress}></MainHeader>
-                        <EIP712 />
+                        <MainHeader contractAddress={signatureResult.to} userAddress={userAddress}></MainHeader>
+                        <ContractInfo mode={renderMode} transaction={signatureResult.to} />
+                        <Transfer mode={renderMode} transaction={signatureResult} />
                         <Footer onAccept={accept} onReject={reject} />
                     </div>
                 )

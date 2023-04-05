@@ -1,8 +1,7 @@
-import React,{useState} from 'react';
+import React from 'react';
 import TransferHeader from './TransferHeader';
-import AssetsIn from './AssetsIn';
-import AssetsOut from './AssetsOut';
-import AssetsApprove from './AssetsApprove';
+import Change from './Assets/Change'
+import Approve from './Assets/Approve';
 import './Transfer.css';
 
 interface Props {
@@ -12,47 +11,26 @@ interface Props {
 
 const Transfer =  (props: Props) => {
     const {mode, transaction} = props;
-    console.log('transaction: ',transaction)
-    const getAssetsSendInfo = {
-        contractType: 'ERC-20',
-        //todo: multiple asset
-        sendTokens: 
-            //{
-            //     amount: ,
-            //     type: 'NATIVE/ERC20/ERC1155',
-            //     symbol: 'ETH',
-            //     tokenURL: 'https://static.alchemyapi.io/images/network-assets/eth.png',
-            //     osVerified: ''
-            //     
-            // }
-            transaction.out,
-        NFTCategoryName: '',
+    console.log('[Transfer.tsx]: transaction is ',transaction)
+
+    const getAssetsChangeInfo = {
+        assetsIn: transaction.in,
+        assetsOut: transaction.out,
         gas: transaction.gas,
         gasPrice: transaction.gasPrice
     }
 
-    const getAssetsReceiveInfo = {
-        contractType: 'NFT',
-        sendTokens:
-            //{
-            //     amount: ,
-            //     type: 'NATIVE/ERC20/ERC1155',
-            //     symbol: 'ETH',
-            //     tokenURL: 'https://static.alchemyapi.io/images/network-assets/eth.png',
-            //     osVerified: ''
-            //     
-            // }
-            transaction.in,
-        NFTCategoryName: "",
-        gas: 0,
+    const getAssetsApproveInfo = {
+        assetsApprove: [transaction.approve], // backend pass an object (should be an array)
+        assetsOut: transaction.out,
+        gas: transaction.gas,
         gasPrice: transaction.gasPrice
     }
 
-    const getAssetsApproveInfo = {
-        contractType: 'NFT',
-        sendTokens: transaction.approve,
-        NFTCategoryName: "",
-        gas: 0,
+    const getSignatureInfo = {
+        assetsIn: transaction.in,
+        assetsOut: transaction.out,
+        gas: transaction.gas,
         gasPrice: transaction.gasPrice
     }
 
@@ -62,8 +40,7 @@ const Transfer =  (props: Props) => {
                 return (
                     <>
                         <TransferHeader mode={mode}></TransferHeader>
-                        <AssetsOut {...getAssetsSendInfo} />
-                        <AssetsIn {...getAssetsReceiveInfo} />
+                        <Change {...getAssetsChangeInfo}/>
                     </>
                 )
             }
@@ -71,8 +48,15 @@ const Transfer =  (props: Props) => {
                 return (
                     <>
                         <TransferHeader mode={mode}></TransferHeader>
-                        <AssetsOut {...getAssetsSendInfo} />
-                        <AssetsApprove {...getAssetsApproveInfo} />
+                        <Approve {...getAssetsApproveInfo} />
+                    </>
+                )
+            }
+            case 'signature-712': {
+                return (
+                    <>
+                        <TransferHeader mode={mode}></TransferHeader>
+                        <Change {...getSignatureInfo} />
                     </>
                 )
             }
