@@ -1,7 +1,8 @@
-import React, { useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import Browser from "webextension-polyfill";
 import dataService from "../../dataService";
 import Success from "../../assets/reportSuccess.png"
+import Fail from "../../assets/reportFail.png"
 
 import './Prompt.css'
 
@@ -19,6 +20,8 @@ const Prompt = (props: Props) => {
         return await Browser.windows.getCurrent()
     }
     let reportInfo: string = '';
+    const [open, setOpen] = useState(false)
+    const [status, setStatus] = useState(false)
 
     useEffect(() => {
         console.log('Prompt Name is: ' + props.name);
@@ -35,9 +38,16 @@ const Prompt = (props: Props) => {
         reportInfo = JSON.parse(reportInfo)
         console.log(reportInfo)
 
+        const handlePrompt = (status: boolean) => {
+            if (status) setStatus(true)
+            else setStatus(false)
+            setOpen(true)
+        }
+
         const postReport = async (reportInfo: any) => {
             await dataService.postFeedBackByAddress(reportInfo)
                 .then(res => {
+                    handlePrompt(true)
                     console.log(`Successfully sumbit the report! ${res}`);
                     const windowId = getWindowId()
                     setTimeout(async () => {
@@ -47,7 +57,7 @@ const Prompt = (props: Props) => {
                     }, 3000)
                 })
                 .catch((err) => {
-                    // todo solve the report fail situation
+                    handlePrompt(false)
                     console.log(`Fail to sumbit the report! ${err}`)
                     const windowId = getWindowId()
                     setTimeout(async () => {
@@ -67,12 +77,24 @@ const Prompt = (props: Props) => {
     };
 
     return (
-        <dialog id="reportDialog" open={props.submit} onClose={handleClose}>
+        <dialog style={{ backgroundColor: `${status ? "#EEFBF6" : "#FBEEEE"}` }} id="reportDialog" open={open} onClose={handleClose}>
             <div id="dialogContainer">
-                <img src={Success} width="26.67px" height="24px"/>
+                <img src={status ? Success : Fail} width="26.67px" height="24px" />
                 <div id="dialogContent">
-                    <p style={{fontWeight: 900, fontSize: 16, color: '#434343', margin: 0, marginBottom: 4}}>Report Successfully</p>
-                    <p style={{fontSize: 14, color: '#77736A', margin: 0}}>Thanks for your contribution</p>
+                    <p style={{ fontWeight: 900, fontSize: 16, color: '#434343', margin: 0, marginBottom: 4 }}>
+                        {
+                            status ?
+                                <span>Report Successfully</span> :
+                                <span>Report Failed</span>
+                        }
+                    </p>
+                    <p style={{ fontSize: 14, color: '#77736A', margin: 0 }}>
+                        {
+                            status ?
+                                <span>Thanks for your contribution</span> :
+                                <span>Please contract us if it happen again</span>
+                        }
+                    </p>
                 </div>
                 <form id="dialogButton" method="dialog">
                     <button>Close</button>

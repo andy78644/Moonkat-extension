@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import Browser from "webextension-polyfill";
 import ReactDOM from 'react-dom/client'
 import Button from '@mui/material/Button'
 import Stack from '@mui/material/Stack'
@@ -29,8 +30,12 @@ const Report = () => {
     const [isPrompt, setPrompt] = useState(false);
     const [reportName, setReportName] = useState('DefaultName')
     const [reportDescription, setReportDescription] = useState('DefaultDescription')
-    const handleSubmit = async () => {
-        setPrompt(true)
+    const handleSubmit = async (isSubmit: boolean) => {
+        if (isSubmit) setPrompt(true)
+        else {
+            const windowId = await Browser.windows.getCurrent()
+            if (windowId) Browser.windows.remove((await windowId).id!)
+        }
     }
     const handleReportName = async (name: string) => {
         setReportName(name)
@@ -120,7 +125,7 @@ const Report = () => {
                         height: '27px',
                         textTransform: 'none'
                     }
-                } onClick={() => { setPrompt(true) }} variant="text">Cancel</Button>
+                } onClick={() => { handleSubmit(false) }} variant="text">Cancel</Button>
                 <Button sx={
                     {
                         color: '#FFF8EA', '&:hover, &:focus': { backgroundColor: "#77736A", opacity: 0.75 },
@@ -131,7 +136,7 @@ const Report = () => {
                         height: '27px',
                         textTransform: 'none'
                     }
-                } onClick={() => { setPrompt(true) }} variant="text">Send</Button>
+                } onClick={() => { handleSubmit(true) }} variant="text">Send</Button>
             </Stack>
         </div>
     );
