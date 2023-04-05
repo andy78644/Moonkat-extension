@@ -1,8 +1,9 @@
 import React, { useEffect } from "react";
 import Browser from "webextension-polyfill";
-import Dialog from '@mui/material/Dialog';
-import DialogTitle from '@mui/material/DialogTitle';
 import dataService from "../../dataService";
+import Success from "../../assets/reportSuccess.png"
+
+import './Prompt.css'
 
 interface Props {
     name: string,
@@ -43,7 +44,7 @@ const Prompt = (props: Props) => {
                         if (windowId) {
                             Browser.windows.remove((await windowId).id!)
                         }
-                    }, 2000)
+                    }, 3000)
                 })
                 .catch((err) => {
                     // todo solve the report fail situation
@@ -53,7 +54,7 @@ const Prompt = (props: Props) => {
                         if (windowId) {
                             Browser.windows.remove((await windowId).id!)
                         }
-                    }, 2000)
+                    }, 3000)
                 })
         }
         postReport(reportInfo)
@@ -66,21 +67,18 @@ const Prompt = (props: Props) => {
     };
 
     return (
-        <div>
-            <Dialog
-                PaperProps={{ style: { backgroundColor: '#EFE8DB', boxShadow: 'none', } }}
-                open={props.submit}
-                onClose={handleClose}
-                disableEscapeKeyDown={true}
-                aria-labelledby="alert-dialog-title"
-                aria-describedby="alert-dialog-description"
-            >
-                <DialogTitle sx={{ mx: 5, color: '#434343', fontSize: 18 }}
-                    id="alert-dialog-title">
-                    {"Report Submitted!"}
-                </DialogTitle>
-            </Dialog>
-        </div>
+        <dialog id="reportDialog" open={props.submit} onClose={handleClose}>
+            <div id="dialogContainer">
+                <img src={Success} width="26.67px" height="24px"/>
+                <div id="dialogContent">
+                    <p style={{fontWeight: 900, fontSize: 16, color: '#434343', margin: 0, marginBottom: 4}}>Report Successfully</p>
+                    <p style={{fontSize: 14, color: '#77736A', margin: 0}}>Thanks for your contribution</p>
+                </div>
+                <form id="dialogButton" method="dialog">
+                    <button>Close</button>
+                </form>
+            </div>
+        </dialog>
     )
 }
 
