@@ -1,8 +1,10 @@
-import React, { useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import Browser from "webextension-polyfill";
-import Dialog from '@mui/material/Dialog';
-import DialogTitle from '@mui/material/DialogTitle';
 import dataService from "../../dataService";
+import Success from "../../assets/reportSuccess.png"
+import Fail from "../../assets/reportFail.png"
+
+import './Prompt.css'
 
 interface Props {
     name: string,
@@ -18,6 +20,8 @@ const Prompt = (props: Props) => {
         return await Browser.windows.getCurrent()
     }
     let reportInfo: string = '';
+    const [open, setOpen] = useState(false)
+    const [status, setStatus] = useState(false)
 
     useEffect(() => {
         console.log('Prompt Name is: ' + props.name);
@@ -34,26 +38,33 @@ const Prompt = (props: Props) => {
         reportInfo = JSON.parse(reportInfo)
         console.log(reportInfo)
 
+        const handlePrompt = (status: boolean) => {
+            if (status) setStatus(true)
+            else setStatus(false)
+            setOpen(true)
+        }
+
         const postReport = async (reportInfo: any) => {
             await dataService.postFeedBackByAddress(reportInfo)
                 .then(res => {
+                    handlePrompt(true)
                     console.log(`Successfully sumbit the report! ${res}`);
                     const windowId = getWindowId()
                     setTimeout(async () => {
                         if (windowId) {
                             Browser.windows.remove((await windowId).id!)
                         }
-                    }, 2000)
+                    }, 3000)
                 })
                 .catch((err) => {
-                    // todo solve the report fail situation
+                    handlePrompt(false)
                     console.log(`Fail to sumbit the report! ${err}`)
                     const windowId = getWindowId()
                     setTimeout(async () => {
                         if (windowId) {
                             Browser.windows.remove((await windowId).id!)
                         }
-                    }, 2000)
+                    }, 3000)
                 })
         }
         postReport(reportInfo)
@@ -66,21 +77,30 @@ const Prompt = (props: Props) => {
     };
 
     return (
-        <div>
-            <Dialog
-                PaperProps={{ style: { backgroundColor: '#EFE8DB', boxShadow: 'none', } }}
-                open={props.submit}
-                onClose={handleClose}
-                disableEscapeKeyDown={true}
-                aria-labelledby="alert-dialog-title"
-                aria-describedby="alert-dialog-description"
-            >
-                <DialogTitle sx={{ mx: 5, color: '#434343', fontSize: 18 }}
-                    id="alert-dialog-title">
-                    {"Report Submitted!"}
-                </DialogTitle>
-            </Dialog>
-        </div>
+        <dialog style={{ backgroundColor: `${status ? "#EEFBF6" : "#FBEEEE"}` }} id="reportDialog" open={open} onClose={handleClose}>
+            <div id="dialogContainer">
+                <img src={status ? Success : Fail} width="26.67px" height="24px" />
+                <div id="dialogContent">
+                    <p style={{ fontWeight: 900, fontSize: 16, color: '#434343', margin: 0, marginBottom: 4 }}>
+                        {
+                            status ?
+                                <span>Report Successfully</span> :
+                                <span>Report Failed</span>
+                        }
+                    </p>
+                    <p style={{ fontSize: 14, color: '#77736A', margin: 0 }}>
+                        {
+                            status ?
+                                <span>Thanks for your contribution</span> :
+                                <span>Please contract us if it happen again</span>
+                        }
+                    </p>
+                </div>
+                <form id="dialogButton" method="dialog">
+                    <button>Close</button>
+                </form>
+            </div>
+        </dialog>
     )
 }
 

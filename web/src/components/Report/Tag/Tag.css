@@ -1,7 +1,7 @@
 .tag {
-    display: flex;
     align-items: center;
-    margin: 8px 8px;
+    text-align: center;
+    margin: 8px 8px 0px 0px;
     padding: 4px 8px;
     border-radius: 4px;
     background-color: #DFD8CA;
@@ -9,11 +9,10 @@
     height: 16px;
     font-size: 16px;
     line-height: 100%;
-    text-align: center;
 }
 
-.tag button {
-    display: flex;
+.tag > button {
+    flex-direction: row;
     border: none;
     background-color: unset;
     cursor: pointer;

@@ -1,0 +1,66 @@
+#tagForm {
+    display: flex;
+    box-sizing: border-box;
+    margin: 0px 16px;
+    margin-top: 8px;
+    width: calc(100% - 32px);
+    border-radius: 8px;
+    border: 2px solid #DFD8CA;
+    background-color: #FFF8EA;
+    overflow: scroll;
+}
+
+#tagFormInput {
+    display: inline;
+    width: 100%;
+    /* min-width: 50%; */
+    border: none;
+    background-color: #FFF8EA;
+    box-sizing: border-box;
+    padding: 8px 0px;
+    font-size: 16px;
+}
+
+#tagFormInput:focus, #tagFormInput:hover {
+    outline: none;
+    border: none;
+}
+
+#tagFormInput::placeholder {
+    font-family: 'Lato';
+    font-weight: 500;
+    color: rgba(67, 67, 67, 0.5);
+}
+
+#tagFormInputPopOver > .MuiPaper-root {
+    background-color: #FFF8EA !important;
+    border: 2px solid rgba(67, 67, 67, 0.5);
+    height: 19px !important;
+    padding-top: 2px;
+    padding-bottom: 1px;
+    box-shadow: none;
+}
+
+#tagFormDanger {
+    border-radius: 999rem;
+    border: none;
+    margin: 12px 6px 12px 0px;
+    margin-left: auto;
+    min-height: 16px;
+    min-width: 16px;
+    cursor: pointer;
+    align-items: center;
+    background-color: #B8463D;
+}
+
+#tagFormDanger > img {
+    min-height: 9px;
+    min-width: 2px;
+}
+
+#tagForm:focus, #tagForm:hover {
+    outline: none;
+    border: 2px solid rgba(67, 67, 67, 0.5);
+    transition: 0.1s;
+}
+
