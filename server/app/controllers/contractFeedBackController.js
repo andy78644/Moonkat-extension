@@ -11,7 +11,6 @@ exports.reportFeedback = async (req, res) => {
     if (!errors.isEmpty()) {
         return res.status(422).json({ errors: errors.array() });
     }
-    
     const report = {
         Provider: req.body.Provider,
         ReportedContract: req.body.Address,
