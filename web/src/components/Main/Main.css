@@ -10,7 +10,12 @@
 
 @font-face {
     font-family: Lato-thin;
-    src: url(../../assets/Lato/Lato-Light.ttf);
+    src: url(../../assets/Lato/Lato-thin.ttf);
+}
+
+@font-face {
+    font-family: Lato-bold;
+    src: url(../../assets/Lato/Lato-Bold.ttf);
 }
 
 html, body {
@@ -19,7 +24,9 @@ html, body {
 }
 
 #root {
-    height: 120%;
+    padding-top: 70px;
+    min-height: 100%;
+    padding-bottom: 70px;
     color: #434343;
     background: linear-gradient(180deg, #D2C9AA 0%, rgba(239, 232, 219, 0.75) 48.96%, #D2C9AA 100%);
     box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.25);

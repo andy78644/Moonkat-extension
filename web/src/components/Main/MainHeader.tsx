@@ -7,6 +7,7 @@ import MenuIcon from '@mui/icons-material/Menu';
 import Popover from '@mui/material/Popover';
 import Button from '@mui/material/Button';
 import Browser from 'webextension-polyfill';
+import extensionGTM from '../../gtm/test';
 
 import './MainHeader.css';
 
@@ -19,7 +20,6 @@ const MainHeader = (props: Props) => {
 
     const { contractAddress, userAddress } = props;
 
-    console.log()
     const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null);
 
     const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -40,10 +40,12 @@ const MainHeader = (props: Props) => {
                 contractAddress: contractAddress ?? 'Error',
                 userAddress: userAddress ?? 'Error',
             }).toString();
-            const width = 360;
-            const height = 600;
+            const width = 400;
+            const height = 700;
             const left = window.left! + Math.round((window.width! - width) * 0.5);
             const top = window.top! + Math.round((window.height! - height) * 0.2);
+
+            await extensionGTM.postEvent();
 
             await Browser.windows.create({
                 url: `report.html?${queryString}`,
@@ -74,7 +76,7 @@ const MainHeader = (props: Props) => {
                     transformOrigin={{ vertical: 'top', horizontal: 'left' }}
                 >
                     <Button
-                        sx={{ "&:hover": { backgroundColor: '#DFD8CA' }, fontFamily: 'Kiona', fontWeight: 300, fontSize: "20px", color: "#434343", px: '13px' }}
+                        sx={{ "&:hover": { backgroundColor: '#DFD8CA' }, fontFamily: 'Kiona', fontWeight: 300, fontSize: "20px", color: "#434343", px: '15px' }}
                         startIcon={<img src={Union} alt="union" />}
                         onClick={handleReportPopOut}
                     >
@@ -83,7 +85,7 @@ const MainHeader = (props: Props) => {
                     <br />
                     <hr className='mainHeaderHorizontalLine'></hr>
                     <Button
-                        sx={{ "&:hover": { backgroundColor: '#DFD8CA' }, fontFamily: 'Kiona', fontWeight: 300, fontSize: "20px", color: "#434343", paddingLeft: '13px', paddingRight: '18px' }}
+                        sx={{ "&:hover": { backgroundColor: '#DFD8CA' }, fontFamily: 'Kiona', fontWeight: 300, fontSize: "20px", color: "#434343", paddingLeft: '17px', paddingRight: '18px' }}
                         startIcon={<img src={Setting} alt="setting" />}
                     >
                         &nbsp; Setting

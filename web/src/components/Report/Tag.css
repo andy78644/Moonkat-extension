@@ -1,0 +1,21 @@
+.tag {
+    display: flex;
+    align-items: center;
+    margin: 8px 8px;
+    padding: 4px 8px;
+    border-radius: 4px;
+    background-color: #DFD8CA;
+    color: #77736A;
+    height: 16px;
+    font-size: 16px;
+    line-height: 100%;
+    text-align: center;
+}
+
+.tag button {
+    display: flex;
+    border: none;
+    background-color: unset;
+    cursor: pointer;
+    color: #77736A;
+}

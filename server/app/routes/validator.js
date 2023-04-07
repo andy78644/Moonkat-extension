@@ -3,7 +3,7 @@ const { body } = require('express-validator');
 exports.reportContract = [
     body('Provider').notEmpty().isEthereumAddress().escape(),
     body('Address').notEmpty().isEthereumAddress().escape(),
-    body('isMalicious').notEmpty().escape().isString(),
+    body('isMalicious').notEmpty().escape().isBoolean(),
     body('Name').notEmpty().escape().isString(),
     body('Tag[0]').escape().isString(),
     body('Tag[1]').escape().isString(),

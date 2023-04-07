@@ -1,20 +1,30 @@
-#assetsIn {
+#assetsComponent {
     margin: 16px;
     border-radius: 8px;
-    background-color: #FFF8EA;
+    background-color: #FFF8EAFF;
     border: 2px #DFDBCA solid;
 }
 
-#assetsInTitle {
+#assetsComponentTitle {
     font-family: Lato, sans-serif;
     font-size: 20px;
-    padding-top: 4px;
-    padding-bottom: 10px;
+    padding-top: 8px;
+    padding-bottom: 16px;
+    line-height: 100%;
 }
 
-#assetsInScroll {
-    max-height: 135px;
-    overflow-y: scroll;
+#assetsComponentTitle > .css-ahj2mt-MuiTypography-root {
+    line-height: 100%;
+}
+
+#assetsComponentPopover > .MuiPaper-root {
+    background-color: #FFF8EA !important;
+    border: 2px solid #DFD8CA;
+}
+
+#assetsComponentScroll {
+    /* max-height: 200%; */
+    /* overflow-y: scroll; */
 }
 
 .scroll::-webkit-scrollbar {
@@ -32,12 +42,7 @@
     -webkit-box-shadow: inset 0 0 2px #77736A; 
 }
 
-#assetInUnitComponent {
-    display: 'flex';
-    justify-content: 'space-between';
-}
-
-#assetsInPopOver > .MuiPopover-paper {
+#assetsComponentPopOver > .MuiPopover-paper {
     object-fit: fill;
     width: 200px;
     background-color: #FFF8EA !important;

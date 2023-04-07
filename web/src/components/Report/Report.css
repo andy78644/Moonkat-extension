@@ -1,11 +1,19 @@
-html, body {
-    height: 100%;
-    background: linear-gradient(180deg, #D2C9AA 0%, rgba(239, 232, 219, 0.75) 48.96%, #D2C9AA 100%);
-    min-height: 700px;
+@font-face {
+    font-family: Lato;
+    src: url(../../assets/Lato/Lato-Regular.ttf);
 }
 
-#report {
+html, body {
+    height: 100%;
+    margin: 0;
+    min-height: 700px;
+    font-family: 'Lato';
+}
+
+#root {
+    min-height: 100%;
     color: #434343;
+    background: #EBE7DA;
     border-radius: 0px;
 }
 
@@ -20,14 +28,11 @@ html::-webkit-scrollbar {
 }
 
 #reportTitle {
-    padding: 0.3rem 0rem 0.4rem 0rem;
+    padding: 16px 16px 0px 16px;
     text-align: center;
-    font-size: 1.1rem;
+    font-size: 20px;
     font-weight: 500;
-}
-
-#reportMalicious {
-    padding: 0.8rem 0.5rem 0.5rem 0.5rem;
+    line-height: 120%;
 }
 
 #reportCampaignIcon {

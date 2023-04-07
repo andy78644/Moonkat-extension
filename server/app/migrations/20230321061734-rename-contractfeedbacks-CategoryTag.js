@@ -4,28 +4,17 @@
 module.exports = {
   async up (queryInterface, Sequelize) {
     const transaction = await queryInterface.sequelize.transaction();
-    try {
-      await queryInterface.addColumn(
-        'UserRecords',
-        'ContractAddress',
-        {
-          type: Sequelize.DataTypes.STRING,
-        },
+    try{
+      await queryInterface.removeColumn(
+        'ContractFeedBacks',
+        'CategoryTag',
         { transaction }
       );
       await queryInterface.addColumn(
-        'UserRecords',
-        'Behavior',
+        'ContractFeedBacks',
+        'isMalicious',
         {
-          type: Sequelize.DataTypes.STRING,
-        },
-        { transaction }
-      );
-      await queryInterface.addColumn(
-        'UserRecords',
-        'SimulationResult',
-        {
-          type: Sequelize.DataTypes.JSON,
+          type: Sequelize.DataTypes.BOOLEAN,
         },
         { transaction }
       );
@@ -44,10 +33,20 @@ module.exports = {
 
   async down (queryInterface, Sequelize) {
     const transaction = await queryInterface.sequelize.transaction();
-    try {
-      await queryInterface.removeColumn('UserRecords', 'ContractAddress', { transaction });
-      await queryInterface.removeColumn('UserRecords', 'Behavior', { transaction });
-      await queryInterface.removeColumn('UserRecords', 'SimulationResult', { transaction });
+    try{
+      await queryInterface.addColumn(
+        'ContractFeedBacks',
+        'CategoryTag',
+        {
+          type: Sequelize.DataTypes.STRING,
+        },
+        { transaction }
+      );
+      await queryInterface.removeColumn(
+        'ContractFeedBacks',
+        'isMalicious',
+        { transaction }
+      )
       await transaction.commit();
     } catch (err) {
       await transaction.rollback();
@@ -61,4 +60,3 @@ module.exports = {
      */
   }
 };
-
