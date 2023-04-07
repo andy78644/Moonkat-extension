@@ -6,6 +6,7 @@ import './Tag.css'
 
 interface Props {
     index: number
+    tagLength: number
     mode: string
     text: string
     display: string
@@ -15,10 +16,11 @@ interface Props {
 }
 
 const Tag = (props: Props) => {
-    const { index, mode, text, display, selected, onDeleteTag, onSelectTag } = props
+    const { index, tagLength, mode, text, display, selected, onDeleteTag, onSelectTag } = props
     const [isSelected, setIsSelected] = useState(false)
     const [showBefore, setShowBefore] = useState(false)
     const [showAfter, setShowAfter] = useState(false)
+    const [margin, setMargin] = useState("8px")
     const [textColor, setTextColor] = useState("#77736A")
     const [tagColor, setTagColor] = useState("#FFF8EA")
     useEffect(() => {
@@ -31,6 +33,7 @@ const Tag = (props: Props) => {
                 setShowBefore(false)
                 setShowAfter(true)
                 setTagColor("#DFD8CA")
+                setMargin("16px")
                 break;
             case "StaticTagForm":
                 setShowBefore(true)
@@ -54,24 +57,24 @@ const Tag = (props: Props) => {
                 setTextColor("#77736A")
                 onDeleteTag(text)
             }
-        } 
+        }
     }, [isSelected])
     return (
-        <div key={index} className="tag" style={{ display: display, backgroundColor: tagColor }}>
+        <div key={index} className="tag" style={{ display: display, backgroundColor: tagColor, marginRight: margin }}>
             {showBefore ? <button
                 style={{ paddingLeft: 0, display: `${display}` }}
-                onClick={() => { setIsSelected(!isSelected) }}>
-                <img src={isSelected ? Select : Add}></img>
+                onClick={() => { if (tagLength <= 3 || isSelected) setIsSelected(!isSelected) }}>
+                <img src={isSelected ? Select : Add} width="12px" height="12px"></img>
             </button> : null}
             <button
                 style={{ whiteSpace: 'nowrap', color: textColor, padding: 0, fontSize: '16px', cursor: 'pointer', backgroundColor: tagColor }}
-                onClick={() => { setIsSelected(!isSelected) }}>
+                onClick={() => { if (tagLength <= 3 || isSelected) setIsSelected(!isSelected) }}>
                 {text}
             </button>
             {showAfter ? <button
                 style={{ paddingRight: 0, display: display, backgroundColor: tagColor }}
                 onClick={() => onDeleteTag(text)}>
-                <img src={Close}></img>
+                <img src={Close} width="12px" height="12px"></img>
             </button> : null}
         </div>
     )

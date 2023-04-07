@@ -8,7 +8,7 @@ interface Props {
     onTextValue: any,
 }
 
-const tags: Array<string> = ["NFT", "Defi", "GameFi"]
+const tags: Array<string> = ["NFT", "DeFi", "GameFi"]
 
 const NameForm = (props: Props) => {
     const { onTextValue, formHeight } = props

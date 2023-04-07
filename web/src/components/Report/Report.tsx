@@ -60,47 +60,39 @@ const Report = () => {
             <div id="reportTitle"> Report Contract & Address </div>
             <NameForm onTextValue={handleReportName} formHeight={40} />
             <SectionHeader icon={Campaign} content={"Is this a malicious contract?"} />
-            <Stack sx={{ margin: "0px 16px 16px 16px" }} spacing={3} direction="row">
+            <Stack sx={{ margin: "0px 16px 16px 16px" }} spacing={'16px'} direction="row">
                 <Button sx={() => (
                     selected === 'yes' ?
                         {
                             color: '#FFF8EA', '&:hover, &:focus': { color: 'white', backgroundColor: '#77736A' },
-                            borderRadius: 5,
                             backgroundColor: "#77736A",
                             fontWeight: "500",
                             width: '50%',
                             height: '27px',
-                            textTransform: 'none'
                         } :
                         {
                             color: '#77736A', '&:hover, &:focus': { color: 'white', backgroundColor: '#77736A' },
-                            borderRadius: 5,
                             backgroundColor: "#FFF8EA",
                             fontWeight: "500",
                             width: '50%',
                             height: '27px',
-                            textTransform: 'none'
                         }
                 )} onClick={() => { setReportFlow(1); setSelected('yes'); }} variant="text">Yes</Button>
                 <Button sx={() => (
                     selected === 'no' ?
                         {
                             color: '#FFF8EA', '&:hover, &:focus': { color: 'white', backgroundColor: '#77736A' },
-                            borderRadius: 5,
                             backgroundColor: "#77736A",
                             fontWeight: "500",
                             width: '50%',
                             height: '27px',
-                            textTransform: 'none'
                         } :
                         {
                             color: '#77736A', '&:hover, &:focus': { color: 'white', backgroundColor: '#77736A' },
-                            borderRadius: 5,
                             backgroundColor: "#FFF8EA",
                             fontWeight: "500",
                             width: '50%',
                             height: '27px',
-                            textTransform: 'none'
                         }
                 )} onClick={() => { setReportFlow(1); setSelected('no'); }} variant="text">No</Button>
             </Stack>
@@ -113,27 +105,31 @@ const Report = () => {
                     <ReportForm onTextValue={handleDescription} formHeight={92} />
                 </div>
             }
-            <Stack sx={{ width: 'calc(100% - 32px)', margin: "16px", position: "fixed", left: 0, bottom: 0 }} spacing={3} direction="row">
+            <Stack sx={{ width: 'calc(100% - 32px)', margin: "16px", position: "fixed", left: 0, bottom: 0 }} spacing={'16px'} direction="row">
                 <Button sx={
                     {
+                        padding: '8px',
                         color: '#77736A',
-                        borderRadius: 5,
                         border: "2px solid #77736A",
                         backgroundColor: "#FFF8EA",
                         fontWeight: "500",
                         width: '50%',
-                        height: '27px',
+                        lineHeight: '120%',
+                        height: '35px',
+                        fontSize: '16px',
                         textTransform: 'none'
                     }
                 } onClick={() => { handleSubmit(false) }} variant="text">Cancel</Button>
                 <Button sx={
                     {
+                        padding: '8px',
                         color: '#FFF8EA', '&:hover, &:focus': { backgroundColor: "#77736A", opacity: 0.75 },
-                        borderRadius: 5,
                         backgroundColor: "#77736A",
                         fontWeight: "500",
                         width: '50%',
-                        height: '27px',
+                        height: '35px',
+                        lineHeight: '120%',
+                        fontSize: '16px',
                         textTransform: 'none'
                     }
                 } onClick={() => { handleSubmit(true) }} variant="text">Send</Button>

@@ -1,7 +1,7 @@
 import React from 'react';
 import Logo from '../../assets/logo.png';
 import Union from '../../assets/Union.png';
-import Setting from '../../assets/setting.png';
+import Feedback from '../../assets/feedback.png';
 import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
 import Popover from '@mui/material/Popover';
@@ -76,19 +76,21 @@ const MainHeader = (props: Props) => {
                     transformOrigin={{ vertical: 'top', horizontal: 'left' }}
                 >
                     <Button
-                        sx={{ "&:hover": { backgroundColor: '#DFD8CA' }, fontFamily: 'Kiona', fontWeight: 300, fontSize: "20px", color: "#434343", px: '15px' }}
-                        startIcon={<img src={Union} alt="union" />}
+                        sx={{ "&:hover": { backgroundColor: '#DFD8CA' }, fontFamily: 'Kiona', fontWeight: 300, fontSize: "20px", color: "#434343", paddingLeft: '16px', paddingRight: '19.85px'  }}
+                        startIcon={<img style={{marginRight: '8px'}} src={Union} alt="union" />}
                         onClick={handleReportPopOut}
                     >
-                        &nbsp; Report &nbsp;
+                         Report &nbsp;
                     </Button>
                     <br />
                     <hr className='mainHeaderHorizontalLine'></hr>
                     <Button
-                        sx={{ "&:hover": { backgroundColor: '#DFD8CA' }, fontFamily: 'Kiona', fontWeight: 300, fontSize: "20px", color: "#434343", paddingLeft: '17px', paddingRight: '18px' }}
-                        startIcon={<img src={Setting} alt="setting" />}
+                        sx={{ "&:hover": { backgroundColor: '#DFD8CA' }, fontFamily: 'Kiona', fontWeight: 300, fontSize: "20px", color: "#434343", paddingLeft: '16px', paddingRight: '8px' }}
+                        href={"https://tally.so/r/w4QLG5"}
+                        target={'_blank'}
+                        startIcon={<img style={{marginRight: '8px'}} src={Feedback} alt="feedback" width="20px" height="20px" />}
                     >
-                        &nbsp; Setting
+                         Feedback
                     </Button>
                 </Popover>
             </div>

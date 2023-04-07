@@ -15,7 +15,7 @@ const ReportForm = (props: Props) => {
         <div id="reportForm">
             <textarea
                 id="reportFormInput"
-                style={{ height: `${formHeight}px` }}
+                style={{ height: `${formHeight}px`, resize: 'none', minHeight: '130px'  }}
                 value={textValue}
                 placeholder={placeholder}
                 onChange={(e) => {

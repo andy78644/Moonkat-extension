@@ -3,6 +3,7 @@ import TagSection from '../Tag/TagSection'
 import Popover from '@mui/material/Popover'
 import Typography from '@mui/material/Typography'
 import Danger from '../../../assets/danger.png'
+import { IconButton } from '@mui/material'
 
 import './TagForm.css'
 
@@ -58,12 +59,14 @@ const TagForm = () => {
     }
 
     const handleTagInput = (newTag: string) => {
-        const newTagsCopy = [...tags, newTag]
-        setTags(newTagsCopy)
-        let newTotalInput: string = ""
-        newTagsCopy.map((tag: string) => newTotalInput += tag + ',')
-        setTotalInput(newTotalInput)
-        setInput('')
+        if (tags.length < 3) {
+            const newTagsCopy = [...tags, newTag]
+            setTags(newTagsCopy)
+            let newTotalInput: string = ""
+            newTagsCopy.map((tag: string) => newTotalInput += tag + ',')
+            setTotalInput(newTotalInput)
+            setInput('')
+        }
     }
 
     const handleDeleteTag = (delText: string) => {
@@ -90,12 +93,12 @@ const TagForm = () => {
                     /> : null
                 }
                 {tags.length === 3 ?
-                    <button
+                    <IconButton
                         id="tagFormDanger"
                         onMouseEnter={handlePopoverOpen}
                         onMouseLeave={handlePopoverClose}
                     >
-                        <img src={Danger} />
+                        <img src={Danger} width="16px" height="16px" />
                         <Popover
                             id="tagFormInputPopOver"
                             sx={{ pointerEvents: 'none' }}
@@ -108,7 +111,7 @@ const TagForm = () => {
                         >
                             &nbsp; You can only input up to three tags. &nbsp;
                         </Popover>
-                    </button> : null
+                    </IconButton> : null
                 }
             </div>
             <TagSection input={totalInput} mode="StaticTagForm" tags={defaultTags} onDeleteTag={handleDeleteTag} onInput={handleTagInput} />

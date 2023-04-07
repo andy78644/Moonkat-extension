@@ -62,6 +62,10 @@ const TagSection = (props: Props) => {
         const inputTags = input?.split(',')
         if (!inputTags.includes(newTag)) onInput(newTag)
     }
+    const handleInputLength = () => {
+        const inputTags = input?.split(',')
+        return inputTags.length
+    }
     return (
         <div
             id="tagSection"
@@ -77,6 +81,7 @@ const TagSection = (props: Props) => {
                         <div style={{display: `${layout}`}} key={index}>
                             <Tag
                                 key={index}
+                                tagLength={handleInputLength()}
                                 selected={selectedList[index]}
                                 index={index} text={tag}
                                 display={display} mode={mode}
