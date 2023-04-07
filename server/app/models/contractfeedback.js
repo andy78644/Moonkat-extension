@@ -28,7 +28,7 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       allowNull: false
     },
-    CategoryTag: DataTypes.STRING,
+    isMalicious: DataTypes.BOOLEAN,
     NameTag: DataTypes.STRING,
     Description: DataTypes.STRING,
     FeatureTagOne: DataTypes.STRING,
