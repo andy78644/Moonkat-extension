@@ -22,7 +22,6 @@ exports.reportFeedback = async (req, res) => {
         FeatureTagThree: req.body.Tag[2]
     };
   
-
     ContractFeedBack.create(report)
     .then(data => {
         const report = {

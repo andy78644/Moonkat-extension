@@ -7,11 +7,15 @@ import { IconButton } from '@mui/material'
 
 import './TagForm.css'
 
+interface Props {
+    onSetTags: any
+}
+
 const defaultTags: Array<string> = ["NFT", "DeFi", "GameFi"]
 
-const TagForm = () => {
+const TagForm = (props: Props) => {
+    const { onSetTags } = props
     const [input, setInput] = useState('');
-    const [expand, setExpand] = useState(true)
     const [totalInput, setTotalInput] = useState('')
     const [tags, setTags] = useState<string[]>([])
     const [isKeyReleased, setIsKeyReleased] = useState(false)
@@ -20,7 +24,6 @@ const TagForm = () => {
     // PopOver
     const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null)
     const hover = Boolean(anchorEl)
-    const handleClick = () => { setExpand(!expand) }
     const handlePopoverOpen = (event: React.MouseEvent<HTMLElement>) => { setAnchorEl(event.currentTarget) }
     const handlePopoverClose = () => { setAnchorEl(null) }
 
@@ -37,6 +40,7 @@ const TagForm = () => {
             e.preventDefault()
             const tagsCopy = [...tags, trimmedInput]
             setTags(tagsCopy)
+            onSetTags(tagsCopy)
             let newTotalInput: string = ""
             tagsCopy.map((tag: string) => newTotalInput += tag + ',')
             setTotalInput(newTotalInput)
@@ -49,6 +53,7 @@ const TagForm = () => {
             let newTotalInput: string = ""
             tagsCopy.map((tag: string) => newTotalInput += tag + ',')
             setTags(tagsCopy)
+            onSetTags(tagsCopy)
             setInput('')
             setTotalInput(newTotalInput)
         }
@@ -62,6 +67,7 @@ const TagForm = () => {
         if (tags.length < 3) {
             const newTagsCopy = [...tags, newTag]
             setTags(newTagsCopy)
+            onSetTags(newTagsCopy)
             let newTotalInput: string = ""
             newTagsCopy.map((tag: string) => newTotalInput += tag + ',')
             setTotalInput(newTotalInput)
@@ -70,7 +76,9 @@ const TagForm = () => {
     }
 
     const handleDeleteTag = (delText: string) => {
-        setTags(prevState => prevState.filter((tag: string) => tag !== delText))
+        const newTagsCopy = tags.filter((tag: string) => tag !== delText)
+        setTags(newTagsCopy)
+        onSetTags(newTagsCopy)
         const newTotalInput: string = totalInput
         setTotalInput(newTotalInput.split(',').filter((tag: string) => tag !== delText).join(','))
     }

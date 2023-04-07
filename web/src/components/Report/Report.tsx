@@ -26,10 +26,11 @@ const Report = () => {
     const userAddress = params.get('userAddress');
 
     const [reportFlow, setReportFlow] = useState(0);
-    const [selected, setSelected] = useState('');
+    const [isMalicious, setIsMalicious] = useState<boolean>();
     const [isPrompt, setPrompt] = useState(false);
     const [reportName, setReportName] = useState('DefaultName')
     const [reportDescription, setReportDescription] = useState('DefaultDescription')
+    const [tags, setTags] = useState<Array<string>>([]);
     const handleSubmit = async (isSubmit: boolean) => {
         if (isSubmit) setPrompt(true)
         else {
@@ -48,9 +49,11 @@ const Report = () => {
             {
                 isPrompt ?
                     <Prompt
-                        name={reportName}
-                        contractAddress={contractAddress}
                         userAddress={userAddress}
+                        contractAddress={contractAddress}
+                        isMalicious={isMalicious}
+                        name={reportName}
+                        tags={tags}
                         description={reportDescription}
                         submit={isPrompt}
                         onSubmit={setPrompt}
@@ -62,7 +65,7 @@ const Report = () => {
             <SectionHeader icon={Campaign} content={"Is this a malicious contract?"} />
             <Stack sx={{ margin: "0px 16px 16px 16px" }} spacing={'16px'} direction="row">
                 <Button sx={() => (
-                    selected === 'yes' ?
+                    isMalicious === true ?
                         {
                             color: '#FFF8EA', '&:hover, &:focus': { color: 'white', backgroundColor: '#77736A' },
                             backgroundColor: "#77736A",
@@ -77,9 +80,9 @@ const Report = () => {
                             width: '50%',
                             height: '27px',
                         }
-                )} onClick={() => { setReportFlow(1); setSelected('yes'); }} variant="text">Yes</Button>
+                )} onClick={() => { setReportFlow(1); setIsMalicious(true); }} variant="text">Yes</Button>
                 <Button sx={() => (
-                    selected === 'no' ?
+                    isMalicious === false ?
                         {
                             color: '#FFF8EA', '&:hover, &:focus': { color: 'white', backgroundColor: '#77736A' },
                             backgroundColor: "#77736A",
@@ -94,13 +97,13 @@ const Report = () => {
                             width: '50%',
                             height: '27px',
                         }
-                )} onClick={() => { setReportFlow(1); setSelected('no'); }} variant="text">No</Button>
+                )} onClick={() => { setReportFlow(1); setIsMalicious(false); }} variant="text">No</Button>
             </Stack>
             {
                 reportFlow == 1 &&
                 <div>
                     <SectionHeader icon={PriceTag} content={"More related tags about the contract"} />
-                    <TagForm />
+                    <TagForm onSetTags={setTags}/>
                     <SectionHeader icon={Notification} content={"More detail about this smart contract"} />
                     <ReportForm onTextValue={handleDescription} formHeight={92} />
                 </div>

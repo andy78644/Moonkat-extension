@@ -17,6 +17,7 @@ const NameForm = (props: Props) => {
 
     const handleTagInput = (newTag: string) => {
         setTextValue(newTag)
+        onTextValue(newTag)
     }
 
     const deleteTag = (index: string) => {

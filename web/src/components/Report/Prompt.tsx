@@ -7,10 +7,12 @@ import Fail from "../../assets/reportFail.png"
 import './Prompt.css'
 
 interface Props {
-    name: string,
-    description: string,
-    contractAddress: string | null,
     userAddress: string | null,
+    contractAddress: string | null,
+    isMalicious: boolean | undefined,
+    name: string,
+    tags: Array<string>,
+    description: string,
     submit: any,
     onSubmit: any
 }
@@ -19,23 +21,20 @@ const Prompt = (props: Props) => {
     const getWindowId = async () => {
         return await Browser.windows.getCurrent()
     }
-    let reportInfo: string = '';
+    const { userAddress, contractAddress, isMalicious, name, tags, description } = props
+    let reportInfo = {
+        Provider: userAddress,
+        Address: contractAddress,
+        isMalicious: isMalicious,
+        Name: name,
+        Tag: tags,
+        Description: description
+    };
     const [open, setOpen] = useState(false)
     const [status, setStatus] = useState(false)
 
     useEffect(() => {
-        console.log('Prompt Name is: ' + props.name);
-        console.log('Prompt Description is: ' + props.description);
 
-        reportInfo += "{"
-        reportInfo += `"Provider":"${props.userAddress}",`
-        reportInfo += `"Address":"${props.contractAddress}",`
-        reportInfo += `"Category":"hi",`
-        reportInfo += `"Name":"${props.name}",`
-        reportInfo += `"Description":"${props.description}",`
-        reportInfo += `"Tag":["a","b","c"]`
-        reportInfo += "}"
-        reportInfo = JSON.parse(reportInfo)
         console.log(reportInfo)
 
         const handlePrompt = (status: boolean) => {
@@ -54,7 +53,7 @@ const Prompt = (props: Props) => {
                         if (windowId) {
                             Browser.windows.remove((await windowId).id!)
                         }
-                    }, 3000)
+                    }, 3000000)
                 })
                 .catch((err) => {
                     handlePrompt(false)
@@ -64,7 +63,7 @@ const Prompt = (props: Props) => {
                         if (windowId) {
                             Browser.windows.remove((await windowId).id!)
                         }
-                    }, 3000)
+                    }, 3000000)
                 })
         }
         postReport(reportInfo)
