@@ -3,13 +3,12 @@ const { body } = require('express-validator');
 exports.reportContract = [
     body('Provider').notEmpty().isEthereumAddress().escape(),
     body('Address').notEmpty().isEthereumAddress().escape(),
-    body('Category').notEmpty().escape().isString(),
+    body('isMalicious').notEmpty().escape().isString(),
     body('Name').notEmpty().escape().isString(),
-    body('Tag').notEmpty(),
-    body('Tag[0]').notEmpty().escape().isString(),
+    body('Tag[0]').escape().isString(),
     body('Tag[1]').escape().isString(),
     body('Tag[2]').escape().isString(),
-    body('Description').notEmpty().escape().isString()
+    body('Description').escape().isString()
 ];
 
 exports.simualtionResult = [
