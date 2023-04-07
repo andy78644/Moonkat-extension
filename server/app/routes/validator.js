@@ -5,11 +5,10 @@ exports.reportContract = [
     body('Address').notEmpty().isEthereumAddress().escape(),
     body('isMalicious').notEmpty().escape().isBoolean(),
     body('Name').notEmpty().escape().isString(),
-    body('Tag').notEmpty(),
-    body('Tag[0]').notEmpty().escape().isString(),
+    body('Tag[0]').escape().isString(),
     body('Tag[1]').escape().isString(),
     body('Tag[2]').escape().isString(),
-    body('Description').notEmpty().escape().isString()
+    body('Description').escape().isString()
 ];
 
 exports.simualtionResult = [
