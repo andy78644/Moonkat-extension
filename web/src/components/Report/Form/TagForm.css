@@ -28,10 +28,10 @@
 }
 
 #tagFormInput::placeholder {
-    font-family: 'Lato';
     font-weight: 500;
+    font-family: Lato-Semibold;
     color: rgba(67, 67, 67, 0.5);
-    padding-left: 8px;
+    padding-left: 0px;
     padding-right: 16px;
 }
 

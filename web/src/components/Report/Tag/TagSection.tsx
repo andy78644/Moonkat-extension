@@ -33,18 +33,19 @@ const TagSection = (props: Props) => {
         switch (mode) {
             case "NameForm":
                 setMargin(16)
-                setDisplay("inline-block")
+                setDisplay("flex")
                 setLayout("inline-block")
                 break;
             case "DynamicTagForm":
                 setMargin(0)
                 setDisplay("flex")
-                setPadding(8)
+                setPadding(16)
                 setLayout("inline-block")
                 break;
             case "StaticTagForm":
                 setMargin(16)
                 setDisplay("inline-block")
+                setLayout("flex")
                 break;
             default:
                 setMargin(16)

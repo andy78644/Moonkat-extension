@@ -41,7 +41,7 @@ const MainHeader = (props: Props) => {
                 userAddress: userAddress ?? 'Error',
             }).toString();
             const width = 400;
-            const height = 700;
+            const height = 650;
             const left = window.left! + Math.round((window.width! - width) * 0.5);
             const top = window.top! + Math.round((window.height! - height) * 0.2);
 

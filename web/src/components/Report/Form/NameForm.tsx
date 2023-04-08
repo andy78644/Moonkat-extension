@@ -30,18 +30,22 @@ const NameForm = (props: Props) => {
                 <input
                     id="nameFormInput"
                     type="text"
-                    style={{ height: `${formHeight}px` }}
+                    style={{
+                        height: `${formHeight}px`,
+                        color: '#434343',
+                        fontFamily: 'Lato-Semibold'
+                    }}
                     value={textValue}
                     placeholder={placeholder}
                     onChange={(e) => {
                         setTextValue(e.target.value)
                         onTextValue(e.target.value)
                     }}
-                    onFocus={()=>{setPlaceholder('')}}
-                    onBlur={()=>{setPlaceholder("What's the address name?")}}
+                    onFocus={() => { setPlaceholder('') }}
+                    onBlur={() => { setPlaceholder("What's the address name?") }}
                 />
             </div>
-            <TagSection input={textValue} mode="NameForm" tags={tags} onDeleteTag={deleteTag} onInput={handleTagInput}/>
+            <TagSection input={textValue} mode="NameForm" tags={tags} onDeleteTag={deleteTag} onInput={handleTagInput} />
         </>
 
     );

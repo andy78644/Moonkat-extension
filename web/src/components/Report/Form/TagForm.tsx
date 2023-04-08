@@ -32,6 +32,11 @@ const TagForm = (props: Props) => {
         setInput(value)
     };
 
+    useEffect(() => {
+        if (tags.length >= 1) setPlaceholder('')
+        else setPlaceholder('Enter the tags...')
+    }, [tags])
+
     const onKeyDown = (e: any) => {
         const { key } = e;
         const trimmedInput = input.trim();
@@ -90,6 +95,10 @@ const TagForm = (props: Props) => {
                 {tags.length < 3 ?
                     <input
                         id="tagFormInput"
+                        style={{
+                            color: '#434343',
+                            fontFamily: 'Lato-Semibold'
+                        }}
                         type="text"
                         value={input}
                         placeholder={placeholder}

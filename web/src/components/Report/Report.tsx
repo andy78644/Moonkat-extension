@@ -61,7 +61,7 @@ const Report = () => {
                     null
             }
             <div id="reportTitle"> Report Contract & Address </div>
-            <NameForm onTextValue={handleReportName} formHeight={40} />
+            <NameForm onTextValue={handleReportName} formHeight={24} />
             <SectionHeader icon={Campaign} content={"Is this a malicious contract?"} />
             <Stack sx={{ margin: "0px 16px 16px 16px" }} spacing={'16px'} direction="row">
                 <Button sx={() => (
@@ -72,6 +72,8 @@ const Report = () => {
                             fontWeight: "500",
                             width: '50%',
                             height: '27px',
+                            lineHeight: '120%',
+                            fontFamily: 'Lato-Semibold'
                         } :
                         {
                             color: '#77736A', '&:hover, &:focus': { color: 'white', backgroundColor: '#77736A' },
@@ -79,6 +81,8 @@ const Report = () => {
                             fontWeight: "500",
                             width: '50%',
                             height: '27px',
+                            lineHeight: '120%',
+                            fontFamily: 'Lato-Semibold'
                         }
                 )} onClick={() => { setReportFlow(1); setIsMalicious(true); }} variant="text">Yes</Button>
                 <Button sx={() => (
@@ -89,6 +93,8 @@ const Report = () => {
                             fontWeight: "500",
                             width: '50%',
                             height: '27px',
+                            lineHeight: '120%',
+                            fontFamily: 'Lato-Semibold'
                         } :
                         {
                             color: '#77736A', '&:hover, &:focus': { color: 'white', backgroundColor: '#77736A' },
@@ -96,6 +102,8 @@ const Report = () => {
                             fontWeight: "500",
                             width: '50%',
                             height: '27px',
+                            lineHeight: '120%',
+                            fontFamily: 'Lato-Semibold'
                         }
                 )} onClick={() => { setReportFlow(1); setIsMalicious(false); }} variant="text">No</Button>
             </Stack>
@@ -120,7 +128,8 @@ const Report = () => {
                         lineHeight: '120%',
                         height: '35px',
                         fontSize: '16px',
-                        textTransform: 'none'
+                        textTransform: 'none',
+                        fontFamily: 'Lato-Bold'
                     }
                 } onClick={() => { handleSubmit(false) }} variant="text">Cancel</Button>
                 <Button sx={
@@ -133,7 +142,8 @@ const Report = () => {
                         height: '35px',
                         lineHeight: '120%',
                         fontSize: '16px',
-                        textTransform: 'none'
+                        textTransform: 'none',
+                        fontFamily: 'Lato-Bold'
                     }
                 } onClick={() => { handleSubmit(true) }} variant="text">Send</Button>
             </Stack>

@@ -67,7 +67,7 @@ const Tag = (props: Props) => {
                 <img src={isSelected ? Select : Add} width="12px" height="12px"></img>
             </button> : null}
             <button
-                style={{ whiteSpace: 'nowrap', color: textColor, padding: 0, fontSize: '16px', cursor: 'pointer', backgroundColor: tagColor }}
+                style={{ fontFamily: 'Lato-Semibold', whiteSpace: 'nowrap', color: textColor, padding: 0, fontSize: '16px', cursor: 'pointer', backgroundColor: tagColor }}
                 onClick={() => { if (tagLength <= 3 || isSelected) setIsSelected(!isSelected) }}>
                 {text}
             </button>

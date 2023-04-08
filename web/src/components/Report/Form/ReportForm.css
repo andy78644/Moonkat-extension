@@ -18,7 +18,6 @@
 }
 
 #reportFormInput::placeholder {
-    font-family: 'Lato';
     font-weight: 500;
     color: rgba(67, 67, 67, 0.5);
 }
