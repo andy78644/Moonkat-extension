@@ -11,7 +11,7 @@ const SectionHeader = (props: Props) => {
     const { icon, content } = props
     return (
         <div id="reportSectionHeader">
-            <img id="reportSectionImage" src={icon} width="17px" height="17px"/> &nbsp;
+            <img id="reportSectionImage" src={icon} width="24px" height="24px"/> &nbsp;
             <div id="reportSectionContent">{content}</div>
         </div>
     )

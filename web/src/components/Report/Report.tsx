@@ -1,10 +1,12 @@
-import React, { useState } from 'react';
-import ReactDOM from 'react-dom/client';
-import Button from '@mui/material/Button';
-import Stack from '@mui/material/Stack';
-import ReportForm from './ReportForm';
+import React, { useState } from 'react'
+import Browser from "webextension-polyfill";
+import ReactDOM from 'react-dom/client'
+import Button from '@mui/material/Button'
+import Stack from '@mui/material/Stack'
+import ReportForm from './Form/ReportForm'
+import NameForm from './Form/NameForm'
+import TagForm from './Form/TagForm'
 import Prompt from './Prompt'
-import TagForm from './TagForm'
 import SectionHeader from './SectionHeader'
 import Campaign from '../../assets/campaign.png'
 import PriceTag from '../../assets/pricetag.png'
@@ -24,12 +26,17 @@ const Report = () => {
     const userAddress = params.get('userAddress');
 
     const [reportFlow, setReportFlow] = useState(0);
-    const [selected, setSelected] = useState('');
+    const [isMalicious, setIsMalicious] = useState<boolean>();
     const [isPrompt, setPrompt] = useState(false);
     const [reportName, setReportName] = useState('DefaultName')
     const [reportDescription, setReportDescription] = useState('DefaultDescription')
-    const handleSubmit = async () => {
-        setPrompt(true)
+    const [tags, setTags] = useState<Array<string>>([]);
+    const handleSubmit = async (isSubmit: boolean) => {
+        if (isSubmit) setPrompt(true)
+        else {
+            const windowId = await Browser.windows.getCurrent()
+            if (windowId) Browser.windows.remove((await windowId).id!)
+        }
     }
     const handleReportName = async (name: string) => {
         setReportName(name)
@@ -42,95 +49,103 @@ const Report = () => {
             {
                 isPrompt ?
                     <Prompt
-                        name={reportName}
-                        contractAddress={contractAddress}
                         userAddress={userAddress}
+                        contractAddress={contractAddress}
+                        isMalicious={isMalicious}
+                        name={reportName}
+                        tags={tags}
                         description={reportDescription}
                         submit={isPrompt}
                         onSubmit={setPrompt}
                     /> :
-                    <div></div>
+                    null
             }
             <div id="reportTitle"> Report Contract & Address </div>
-            <ReportForm onTextValue={handleReportName} placeholder="What's the address name?" formHeight={40} />
+            <NameForm onTextValue={handleReportName} formHeight={24} />
             <SectionHeader icon={Campaign} content={"Is this a malicious contract?"} />
-            <Stack sx={{ margin: "0px 16px 16px 16px" }} spacing={3} direction="row">
+            <Stack sx={{ margin: "0px 16px 16px 16px" }} spacing={'16px'} direction="row">
                 <Button sx={() => (
-                    selected === 'yes' ?
+                    isMalicious === true ?
                         {
                             color: '#FFF8EA', '&:hover, &:focus': { color: 'white', backgroundColor: '#77736A' },
-                            borderRadius: 5,
                             backgroundColor: "#77736A",
                             fontWeight: "500",
                             width: '50%',
                             height: '27px',
-                            textTransform: 'none'
+                            lineHeight: '120%',
+                            fontFamily: 'Lato-Semibold'
                         } :
                         {
                             color: '#77736A', '&:hover, &:focus': { color: 'white', backgroundColor: '#77736A' },
-                            borderRadius: 5,
                             backgroundColor: "#FFF8EA",
                             fontWeight: "500",
                             width: '50%',
                             height: '27px',
-                            textTransform: 'none'
+                            lineHeight: '120%',
+                            fontFamily: 'Lato-Semibold'
                         }
-                )} onClick={() => { setReportFlow(1); setSelected('yes'); }} variant="text">Yes</Button>
+                )} onClick={() => { setReportFlow(1); setIsMalicious(true); }} variant="text">Yes</Button>
                 <Button sx={() => (
-                    selected === 'no' ?
+                    isMalicious === false ?
                         {
                             color: '#FFF8EA', '&:hover, &:focus': { color: 'white', backgroundColor: '#77736A' },
-                            borderRadius: 5,
                             backgroundColor: "#77736A",
                             fontWeight: "500",
                             width: '50%',
                             height: '27px',
-                            textTransform: 'none'
+                            lineHeight: '120%',
+                            fontFamily: 'Lato-Semibold'
                         } :
                         {
                             color: '#77736A', '&:hover, &:focus': { color: 'white', backgroundColor: '#77736A' },
-                            borderRadius: 5,
                             backgroundColor: "#FFF8EA",
                             fontWeight: "500",
                             width: '50%',
                             height: '27px',
-                            textTransform: 'none'
+                            lineHeight: '120%',
+                            fontFamily: 'Lato-Semibold'
                         }
-                )} onClick={() => { setReportFlow(1); setSelected('no'); }} variant="text">No</Button>
+                )} onClick={() => { setReportFlow(1); setIsMalicious(false); }} variant="text">No</Button>
             </Stack>
             {
                 reportFlow == 1 &&
                 <div>
                     <SectionHeader icon={PriceTag} content={"More related tags about the contract"} />
-                    <TagForm />
+                    <TagForm onSetTags={setTags}/>
                     <SectionHeader icon={Notification} content={"More detail about this smart contract"} />
-                    <ReportForm onTextValue={handleDescription} placeholder="Share more detail with the community!" formHeight={92} />
+                    <ReportForm onTextValue={handleDescription} formHeight={92} />
                 </div>
             }
-            <Stack sx={{ width: 'calc(100% - 32px)', margin: "16px", position: "fixed", left: 0, bottom: 0 }} spacing={3} direction="row">
+            <Stack sx={{ width: 'calc(100% - 32px)', margin: "16px", position: "fixed", left: 0, bottom: 0 }} spacing={'16px'} direction="row">
                 <Button sx={
                     {
+                        padding: '8px',
                         color: '#77736A',
-                        borderRadius: 5,
                         border: "2px solid #77736A",
                         backgroundColor: "#FFF8EA",
                         fontWeight: "500",
                         width: '50%',
-                        height: '27px',
-                        textTransform: 'none'
+                        lineHeight: '120%',
+                        height: '35px',
+                        fontSize: '16px',
+                        textTransform: 'none',
+                        fontFamily: 'Lato-Bold'
                     }
-                } onClick={() => { setPrompt(true) }} variant="text">Cancel</Button>
+                } onClick={() => { handleSubmit(false) }} variant="text">Cancel</Button>
                 <Button sx={
                     {
+                        padding: '8px',
                         color: '#FFF8EA', '&:hover, &:focus': { backgroundColor: "#77736A", opacity: 0.75 },
-                        borderRadius: 5,
                         backgroundColor: "#77736A",
                         fontWeight: "500",
                         width: '50%',
-                        height: '27px',
-                        textTransform: 'none'
+                        height: '35px',
+                        lineHeight: '120%',
+                        fontSize: '16px',
+                        textTransform: 'none',
+                        fontFamily: 'Lato-Bold'
                     }
-                } onClick={() => { setPrompt(true) }} variant="text">Send</Button>
+                } onClick={() => { handleSubmit(true) }} variant="text">Send</Button>
             </Stack>
         </div>
     );
