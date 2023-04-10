@@ -74,9 +74,15 @@ const Main = (props: Props) => {
                             console.log("[Main.tsx] -- Signature Success", res)
                             // recordUpdate(id, res, "signature").then((res)=>{console.log(res)})
                             res.to = signatureAddress
-                            setSignatureResultState(res)
-                            setRenderMode('signature-712')
-                            setHasLoaded(true)
+                            if (res === null) {
+                                setSignatureResultState(res)
+                                setRenderMode('signature-move-assets')
+                                setHasLoaded(true)
+                            } else {
+                                setSignatureResultState(res)
+                                setRenderMode('signature-712')
+                                setHasLoaded(true)
+                            }
                         })
                         .catch((err) => {
                             console.log('[Main.tsx] -- Signature Failed because', err.message)
@@ -198,8 +204,7 @@ const Main = (props: Props) => {
                 return (
                     <div>
                         <MainHeader contractAddress={transactionResult.to} userAddress={userAddress}></MainHeader>
-                        <ContractInfo mode={renderMode} transaction={transactionResult.to} />
-                        <Transfer mode={mode} transaction={transactionResult} />
+                        <EIP712 />
                         <Footer onAccept={accept} onReject={reject} />
                     </div>
                 )
