@@ -34,9 +34,6 @@ const Prompt = (props: Props) => {
     const [status, setStatus] = useState(false)
 
     useEffect(() => {
-
-        console.log(reportInfo)
-
         const handlePrompt = (status: boolean) => {
             if (status) setStatus(true)
             else setStatus(false)
@@ -47,7 +44,6 @@ const Prompt = (props: Props) => {
             await dataService.postFeedBackByAddress(reportInfo)
                 .then(res => {
                     handlePrompt(true)
-                    console.log(`Successfully sumbit the report! ${res}`);
                     const windowId = getWindowId()
                     setTimeout(async () => {
                         if (windowId) {
@@ -57,7 +53,6 @@ const Prompt = (props: Props) => {
                 })
                 .catch((err) => {
                     handlePrompt(false)
-                    console.log(`Fail to sumbit the report! ${err}`)
                     const windowId = getWindowId()
                     setTimeout(async () => {
                         if (windowId) {

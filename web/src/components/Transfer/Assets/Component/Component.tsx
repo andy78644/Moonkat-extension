@@ -77,9 +77,6 @@ const Component = (props: Props) => {
                 InfoContainer.operator = "X"
                 break
         }
-
-        console.log(`[Component.tsx]: The token info for ${InfoContainer.mode} is : `, InfoContainer)
-
         setTokenInfo(InfoContainer)
     }, [])
 

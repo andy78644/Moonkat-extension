@@ -1,6 +1,6 @@
 import React from 'react';
 import Logo from '../../assets/logo.png';
-import Union from '../../assets/Union.png';
+import Union from '../../assets/campaign.png';
 import Feedback from '../../assets/feedback.png';
 import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';

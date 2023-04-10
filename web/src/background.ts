@@ -19,7 +19,6 @@ const record = async (
         SimulationResult: simulationResult,
     };
     const result = await dataService.postRecordDataURL(recordData, "info").catch((err) => {
-        console.log("[background.ts] [record error]: ", err);
         return err;
     });
     if (result) return false;
@@ -44,13 +43,7 @@ let mode: string = "";
 const init = async (remotePort: Browser.Runtime.Port) => {
     let opWinId = 0;
     remotePort.onMessage.addListener((msg) => {
-        console.log("[background.ts]: dApp Message: ", msg);
         if (msg.data.signatureData) {
-            console.log(
-                "[background.ts]: This is the signature request: ",
-                msg.data.signatureData
-            );
-            //let signatureData  = JSON.stringify(msg.data.signatureData)
             record(
                 msg.data.signatureData.signAddress ?? "signature error",
                 remotePort.sender?.tab?.url ?? "signature error",
@@ -66,10 +59,6 @@ const init = async (remotePort: Browser.Runtime.Port) => {
                         (await processSignatureRequest(msg, remotePort, false)) ?? -1;
             });
         } else if (msg.data.transaction) {
-            console.log(
-                "[background.ts]: This is the transaction request: ",
-                msg.data.transaction
-            );
             if (msg.data.type === RequestType.REGULAR) {
                 record(
                     msg.data.transaction.from,
@@ -148,13 +137,10 @@ const createSignatureMention = async (msg: any, alive: boolean) => {
     const window = await Browser.windows.getCurrent();
     const width = 400;
     let height = 700;
-    console.log("[background.ts]: mode", msg.data.signatureData)
-    console.log("[background.ts]: mode", msg.data.signatureData.signatureVersion)
     if (!alive) mode = "debug-end";
     else if (msg.data.signatureData.signatureVersion)
         mode = msg.data.signatureData.signatureVersion;
     else mode = "signature-no-risk-safe";
-    console.log("[background.ts]: signature mention ", mode);
     const left = window.left! + Math.round((window.width! - width) * 0.5);
     const top = window.top! + Math.round((window.height! - height) * 0.2);
     const queryString = new URLSearchParams({
