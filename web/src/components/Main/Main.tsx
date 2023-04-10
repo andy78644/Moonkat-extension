@@ -22,7 +22,6 @@ interface Props {
     userAddress: string | null;
 };
 
-
 const Main = (props: Props) => {
     const { id, mode, browserMsg, userAddress, gasPrice } = props;
     // This address is to pass the server restriction
@@ -94,7 +93,6 @@ const Main = (props: Props) => {
         }
     }, [mode])
 
-
     const recordUpdate = async (msgId: any, data: any, method: string) => {
         let recordData = {}
         if (method === "behavior") {
@@ -117,7 +115,6 @@ const Main = (props: Props) => {
         if (result) return false
         else return true
     }
-
     // Close extension
     const extensionResponse = async (data: boolean) => {
         await Browser.runtime.sendMessage(undefined, { id, data });
@@ -127,7 +124,6 @@ const Main = (props: Props) => {
     }
     const accept = () => extensionResponse(true);
     const reject = () => extensionResponse(false);
-
     const renderCurrentSelection = (renderMode: string | null) => {
         console.log('[Main.tsx]: RenderMode is', renderMode)
         switch (renderMode) {
