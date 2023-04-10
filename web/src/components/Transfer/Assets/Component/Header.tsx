@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react"
+import React, { useState, useContext, useEffect } from "react"
 import Popover from '@mui/material/Popover'
 import Typography from '@mui/material/Typography'
 import ListItemText from '@mui/material/ListItemText'
@@ -17,7 +17,15 @@ interface Props {
 const Header = (props: Props) => {
 
     const { expand, setExpand } = props
-    const { mode, verbForPopOverText, tokenLength } = useContext(TokenContext)
+    const { type, mode, verbForPopOverText, tokenLength } = useContext(TokenContext)
+
+    const [isNFT, setIsNFT] = useState(false)
+    useEffect(() => {
+        if (type === "ERC20" || type === "NATIVE" || !type) {
+            setIsNFT(false)
+        } else setIsNFT(true)
+    }, [type])
+    
 
     // PopOver
     const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null)
@@ -57,7 +65,7 @@ const Header = (props: Props) => {
                 </Popover>
                 <ListItemText />
                 {
-                    tokenLength > 1
+                    tokenLength > 1 && isNFT
                         ?
                         expand ?
                             <ExpandLess sx={{ fontSize: '20px' }} /> :

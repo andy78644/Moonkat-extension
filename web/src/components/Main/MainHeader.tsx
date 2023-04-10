@@ -58,7 +58,6 @@ const MainHeader = (props: Props) => {
         })
         return true;
     }
-
     return (
         <div id="mainHeader">
             <a href="https://moonkats.webflow.io/" target="_blank"><img id="logo" src={Logo} alt="logo" /></a>
@@ -76,7 +75,7 @@ const MainHeader = (props: Props) => {
                     transformOrigin={{ vertical: 'top', horizontal: 'left' }}
                 >
                     <Button
-                        sx={{ "&:hover": { backgroundColor: '#DFD8CA' }, fontFamily: 'Kiona', fontWeight: 300, fontSize: "20px", color: "#434343", paddingLeft: '11px', paddingRight: '22px'  }}
+                        sx={{ "&:hover": { backgroundColor: '#DFD8CA' }, fontFamily: 'Kiona', fontWeight: 300, fontSize: "20px", color: "#434343", paddingLeft: '11px', paddingRight: '21.3px'  }}
                         startIcon={<img style={{marginRight: '5.5px'}} src={Campaign} alt="campaign" width="26px" height="26px"/>}
                         onClick={handleReportPopOut}
                     >
