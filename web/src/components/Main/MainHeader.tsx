@@ -58,7 +58,6 @@ const MainHeader = (props: Props) => {
         })
         return true;
     }
-
     return (
         <div id="mainHeader">
             <a href="https://moonkats.webflow.io/" target="_blank"><img id="logo" src={Logo} alt="logo" /></a>
