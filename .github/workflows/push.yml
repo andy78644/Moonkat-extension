@@ -4,7 +4,7 @@ on:
     branches:
       - web-develop
       - master
-      - mvp
+      - dev
       - feat/githubAction
 jobs:
   # example with Workload Identity Federation
