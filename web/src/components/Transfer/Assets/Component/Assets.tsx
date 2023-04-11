@@ -63,7 +63,7 @@ const Assets = (props: Props) => {
                                         <ListItemText sx={{ textAlign: 'right', color: (theme) => (theme.palette.secondary.main) }}
                                             primary={
                                                 <Typography sx={{ fontFamily: 'Lato', fontSize: '20px', fontWeight: 100 }}>
-                                                    {operator}{token.amount} {token.symbol.length > 5 ? token.symbol.substring(0, 5) + "..." : token.symbol}
+                                                    {token.amount < 0.0001 ? '<' : operator}{token.amount < 0.0001 ? 0.0001 : token.amount} {token.symbol.length > 5 ? token.symbol.substring(0, 5) + "..." : token.symbol}
                                                 </Typography>
                                             }
                                         />
@@ -86,7 +86,7 @@ const Assets = (props: Props) => {
                                 <ListItemText sx={{ fontSize: '20px', textAlign: 'right' , color: '#509A57' }}
                                     primary={
                                         <Typography sx={{ fontFamily: 'Lato', fontSize: '20px', fontWeight: 100, color: (theme) => (theme.palette.secondary.main) }}>
-                                            {operator}{token.amount} {token.symbol.length > 5 ? token.symbol.substring(0, 5) + "..." : token.symbol}
+                                            {token.amount < 0.0001 ? '<' : operator}{token.amount < 0.0001 ? 0.0001 : token.amount} {token.symbol.length > 5 ? token.symbol.substring(0, 5) + "..." : token.symbol}
                                         </Typography>
                                     }
                                 />
