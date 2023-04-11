@@ -12,7 +12,7 @@ document.documentElement.setAttribute("lang", 'zh-Hant');
 if (process.env.WORK_ENV === 'prod') {
     console.log = function () {};
 }
-  
+
 root.render(
     
     <Main

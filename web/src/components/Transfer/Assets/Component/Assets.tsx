@@ -10,6 +10,15 @@ interface Props {
     expand: boolean
 }
 
+interface TokenContextType {
+    sendTokens: any[], gasFee: number, mode: string,
+    verbForPopOverText: string, operator: string,
+    tokenURL: string, symbol: string, title: string,
+    collectionIconUrl: string, collectionName: string, type: string,
+    totalToken: number, osVerified: boolean, tokenLength: number,
+    [key: string]: any
+}
+
 const Assets = (props: Props) => {
 
     const { sendTokens, tokenURL,
@@ -89,8 +98,12 @@ const Assets = (props: Props) => {
                                     </Typography>
                                 } />
                         </ListItem>
-                    :
+                    ://non-nft situation
                     sendTokens.map((token: any, index: number) => {
+                        token.title = token.title === null ? "unknown": token.title
+                        token.symbol = token.symbol === null ? 'token': token.symbol
+                        token.tokenURL = token.tokenURL === null ? nft : token.tokenURL
+                        token.amount = token.amount === null ? '0x0' : token.amount
                         return (
                             <ListItem key={index}>
                                 <img src={token.tokenURL ?? nft} height="48px" width="48px" alt="Tokens" />
