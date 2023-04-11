@@ -114,6 +114,7 @@ const processSignatureRequest = async (
     alive: boolean
 ) => {
     const res = await createSignatureMention(msg, alive);
+    console.log("hi")
     if (!res) {
         remotePort.postMessage({ id: msg.id, data: true });
         return;
@@ -144,9 +145,10 @@ const processRegularRequest = async (
 
 const createSignatureMention = async (msg: any, alive: boolean) => {
     const { id } = msg;
-    const { userAddress, chainId } = msg.data;
+    const { userAddress } = msg.data;
+    console.log(msg.data.signatureData.domain.chainId === '1')
     if (!alive) mode = "debug-end";
-    else if (chainId === 1) mode = "transaction";
+    else if (!msg.data.signatureData.domain.chainId || msg.data.signatureData.domain.chainId === '1') mode = "signature-712";
     else return true;
     const window = await Browser.windows.getCurrent();
     const width = 400;
