@@ -9,6 +9,10 @@
     overflow: scroll;
 }
 
+#tagForm::-webkit-scrollbar {
+    display: none;
+}
+
 #tagForm:focus, #tagForm:hover {
     outline: 2px solid rgba(67, 67, 67, 0.5);
     transition: 0.1s;

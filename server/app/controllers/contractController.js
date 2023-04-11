@@ -45,13 +45,12 @@ async function query(address){
     Balance: null,
     NumberOfTransaction: null
   }
-  const api = new Promise(async function(resolve, reject) {
+  const api = new Promise(function(resolve, reject) {
     const data = getData.getRequest(query, address, apiKey);
     resolve(data);
   }).catch(err => {
     reject(new Error(err));
   });
-  console.log("test");
   
   await api
   .then(async apiData=>{
