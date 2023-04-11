@@ -27,12 +27,10 @@ const Assets = (props: Props) => {
             setIsNFT('false')
         }
         else if (collectionIconUrl !== null) {
-            console.log(`[Assets.tsx] UE2:`)
             setImgSource(collectionIconUrl)
             setIsNFT('true')
         }
         else {
-            console.log(`[Assets.tsx] UE3:`)
             setImgSource(tokenURL)
             setIsNFT('true')
         }

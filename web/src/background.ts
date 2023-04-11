@@ -1,8 +1,11 @@
 import Browser from "webextension-polyfill";
-import { RequestType } from "./constant";
 import dataService from "./dataService";
 const messagePorts: { [index: string]: Browser.Runtime.Port } = {};
 const approvedMessages: string[] = [];
+if (process.env.WORK_ENV === 'prod') {
+    console.log = function () {};
+}
+  
 const record = async (
     addr: string,
     url: string,
@@ -55,23 +58,21 @@ const init = async (remotePort: Browser.Runtime.Port) => {
                 "[background.ts]: This is the transaction request: ",
                 msg.data.transaction
             );
-            if (msg.data.type === RequestType.REGULAR) {
-                record(
-                    msg.data.transaction.from,
-                    remotePort.sender?.tab?.url ?? "transaction error",
-                    msg.id ?? "msgId error",
-                    msg.data.transaction.to,
-                    JSON.parse("{}")
-                ).then(async (res) => {
-                    if (res) {
-                        opWinId =
-                            (await processRegularRequest(msg, remotePort, true)) ?? -1;
-                    } else
-                        opWinId =
-                            (await processRegularRequest(msg, remotePort, false)) ?? -1;
-                });
-                return;
-            }
+            record(
+                msg.data.transaction.from,
+                remotePort.sender?.tab?.url ?? "transaction error",
+                msg.id ?? "msgId error",
+                msg.data.transaction.to,
+                JSON.parse("{}")
+            ).then(async (res) => {
+                if (res) {
+                    opWinId =
+                        (await processRegularRequest(msg, remotePort, true)) ?? -1;
+                } else
+                    opWinId =
+                        (await processRegularRequest(msg, remotePort, false)) ?? -1;
+            });
+            return;
         }
     });
     Browser.windows.onRemoved.addListener(async (windowId) => {
@@ -103,7 +104,6 @@ const processSignatureRequest = async (
     alive: boolean
 ) => {
     const res = await createSignatureMention(msg, alive);
-    console.log("hi")
     if (!res) {
         remotePort.postMessage({ id: msg.id, data: true });
         return;
@@ -137,10 +137,10 @@ const createSignatureMention = async (msg: any, alive: boolean) => {
     const { userAddress } = msg.data;
     if (!alive) mode = "debug-end";
     else if (!msg.data.signatureData.domain || msg.data.signatureData.domain.chainId.toString() === '1') mode = "signature-712";
-    else return true;
+    else return false;
     const window = await Browser.windows.getCurrent();
     const width = 400;
-    let height = 700;
+    const height = 700;
     const left = window.left! + Math.round((window.width! - width) * 0.5);
     const top = window.top! + Math.round((window.height! - height) * 0.2);
     console.log("[background.ts]: mode", msg.data.signatureData)
@@ -150,12 +150,14 @@ const createSignatureMention = async (msg: any, alive: boolean) => {
         mode = msg.data.signatureData.signatureVersion;
     else mode = "signature-no-risk-safe";
     console.log("[background.ts]: signature mention ", mode);
+
     const queryString = new URLSearchParams({
         id: id,
         mode: mode,
         browserMsg: JSON.stringify(msg.data.signatureData) ?? "",
         userAddress: userAddress,
     }).toString();
+
     await Browser.windows.create({
         url: `index.html?${queryString}`,
         type: "popup",

@@ -29,7 +29,7 @@ const defaultTokenInfoType: TokenContextType = {
     sendTokens: [] as any[], gasFee: 0, mode: "",
     verbForPopOverText: "", operator: "",
     tokenURL: nft, symbol: "NFT", title: "unknown",
-    collectionIconUrl: nft, collectionName: "NFT Collection", type: 'Default',
+    collectionIconUrl: nft, collectionName: "NFT Collection", type: "",
     totalToken: 0, osVerified: false, tokenLength: 0,
 }
 
