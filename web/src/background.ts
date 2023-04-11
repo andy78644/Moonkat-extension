@@ -131,9 +131,8 @@ const processRegularRequest = async (
 const createSignatureMention = async (msg: any, alive: boolean) => {
     const { id } = msg;
     const { userAddress } = msg.data;
-    console.log(msg.data.signatureData.domain.chainId === '1')
     if (!alive) mode = "debug-end";
-    else if (!msg.data.signatureData.domain.chainId || msg.data.signatureData.domain.chainId === '1') mode = "signature-712";
+    else if (!msg.data.signatureData.domain || msg.data.signatureData.domain.chainId.toString() === '1') mode = "signature-712";
     else return true;
     const window = await Browser.windows.getCurrent();
     const width = 400;
