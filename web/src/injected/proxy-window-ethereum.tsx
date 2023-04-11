@@ -74,6 +74,7 @@ const proxyEthereumProvider = async (ethereumProvider: any, name: string) => {
       }
       else if (request?.method === 'eth_sign') {
         const userAddress = await getAddress()
+        console.log('eth_sign WebSite Request: ', request)
         let signatureData = {
           signatureVersion: 'signature-no-risk-malicious',
           signMethod: request?.method,
@@ -94,7 +95,9 @@ const proxyEthereumProvider = async (ethereumProvider: any, name: string) => {
           text: "",
           signAddress: userAddress
         }
+        console.log('personal_sign WebSite Request: ', request)
         signatureData.text = hex_to_ascii(request.params[0])
+        console.log('Decoded Data: ', signatureData)
         const isOk = await sendAndAwaitResponseFromStream(stream, { signatureData, userAddress});
         if (!isOk) {
           throw ethErrors.provider.userRejectedRequest('Moonkat: User denied Signature.');
@@ -108,6 +111,7 @@ const proxyEthereumProvider = async (ethereumProvider: any, name: string) => {
           text: {},
           signAddress: userAddress
         }
+        console.log('signTypedData Website Request: ', request)
         let signMsg = {
           msgName: request.params[0][0].name,
           msgValue: request.params[0][0].value,
@@ -115,6 +119,7 @@ const proxyEthereumProvider = async (ethereumProvider: any, name: string) => {
           signValue: request.params[0][1].value,
         }
         signatureData.text = JSON.stringify(signMsg)
+        console.log('NeededData:', signatureData)
         const isOk = await sendAndAwaitResponseFromStream(stream, { signatureData, userAddress});
         if (!isOk) {
           throw ethErrors.provider.userRejectedRequest('Moonkat: User denied Signature.');
@@ -132,12 +137,14 @@ const proxyEthereumProvider = async (ethereumProvider: any, name: string) => {
           types: "",
           signAddress:userAddress
         }
+        console.log('signTypedDatav3 Website Request: ', request)
         let payLoad = JSON.parse(request.params[1])
         signatureData.domain = payLoad.domain
         signatureData.message = payLoad.message
         signatureData.primaryType = payLoad.primaryType
         signatureData.types = payLoad.types
         signatureData.text = JSON.stringify(payLoad.message)
+        console.log('NeededData: ', signatureData)
         const isOk = await sendAndAwaitResponseFromStream(stream, { signatureData, userAddress});
         if (!isOk) {
           throw ethErrors.provider.userRejectedRequest('Moonkat: User denied Signature.');
@@ -153,9 +160,15 @@ const proxyEthereumProvider = async (ethereumProvider: any, name: string) => {
           signAddress: userAddress,
           payLoad:{}
         }
+        console.log('signTypedDatav4 Website Request: ', request)
         let payLoad = JSON.parse(request.params[1])
+        console.log('Payload: ', payLoad)
         signatureData.domain = payLoad.domain
+        //signatureData.text = JSON.stringify(payLoad.message)
+        //signatureData = JSON.stringify(payLoad);
+        //payLoad.message.tree = JSON.parse()
         signatureData.payLoad = payLoad
+        console.log('NeededData: ', signatureData)
         const isOk = await sendAndAwaitResponseFromStream(stream, { signatureData, userAddress});
         if (!isOk) {
           throw ethErrors.provider.userRejectedRequest('Moonkat: User denied Signature.');

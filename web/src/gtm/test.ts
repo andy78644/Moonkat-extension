@@ -15,8 +15,10 @@ const postEvent = () => {
                 }
               ]
         }).then((res) => {
+            console.log(res);
             resolve(res);
         }).catch((err) => {
+            console.log(err);
             reject(err);
         })
     });

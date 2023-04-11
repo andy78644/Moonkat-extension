@@ -19,6 +19,7 @@ const record = async (
         SimulationResult: simulationResult,
     };
     const result = await dataService.postRecordDataURL(recordData, "info").catch((err) => {
+        console.log("[background.ts] [record error]: ", err);
         return err;
     });
     if (result) return false;
@@ -29,7 +30,12 @@ let mode: string = "";
 const init = async (remotePort: Browser.Runtime.Port) => {
     let opWinId = 0;
     remotePort.onMessage.addListener((msg) => {
+        console.log("[background.ts]: dApp Message: ", msg);
         if (msg.data.signatureData) {
+            console.log(
+                "[background.ts]: This is the signature request: ",
+                msg.data.signatureData
+            );
             record(
                 msg.data.signatureData.signAddress ?? "signature error",
                 remotePort.sender?.tab?.url ?? "signature error",
@@ -45,6 +51,10 @@ const init = async (remotePort: Browser.Runtime.Port) => {
                         (await processSignatureRequest(msg, remotePort, false)) ?? -1;
             });
         } else if (msg.data.transaction) {
+            console.log(
+                "[background.ts]: This is the transaction request: ",
+                msg.data.transaction
+            );
             if (msg.data.type === RequestType.REGULAR) {
                 record(
                     msg.data.transaction.from,
@@ -107,7 +117,6 @@ const processRegularRequest = async (
 ) => {
     const res = await createResult(msg, alive);
     if (!res) {
-        console.log('110', res)
         remotePort.postMessage({ id: msg.id, data: true });
         return;
     }
@@ -121,16 +130,18 @@ const processRegularRequest = async (
 const createSignatureMention = async (msg: any, alive: boolean) => {
     const { id } = msg;
     const { userAddress } = msg.data;
-    console.log('bacl: ', msg.data)
     const window = await Browser.windows.getCurrent();
     const width = 400;
     let height = 700;
     const left = window.left! + Math.round((window.width! - width) * 0.5);
     const top = window.top! + Math.round((window.height! - height) * 0.2);
+    console.log("[background.ts]: mode", msg.data.signatureData)
+    console.log("[background.ts]: mode", msg.data.signatureData.signatureVersion)
     if (!alive) mode = "debug-end";
     else if (msg.data.signatureData.signatureVersion)
         mode = msg.data.signatureData.signatureVersion;
     else mode = "signature-no-risk-safe";
+    console.log("[background.ts]: signature mention ", mode);
     const queryString = new URLSearchParams({
         id: id,
         mode: mode,
@@ -152,7 +163,6 @@ const createSignatureMention = async (msg: any, alive: boolean) => {
 const createResult = async (msg: any, alive: boolean) => {
     const { transaction, chainId, userAddress, gasPrice } = msg.data;
     const { id } = msg;
-    console.log('bacl 154: ', msg.data)
     if (!alive) mode = "debug-end";
     if (chainId !== 1) return false
     else mode = 'transaction'

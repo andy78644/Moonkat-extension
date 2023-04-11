@@ -38,7 +38,7 @@ const Main = (props: Props) => {
             const getPreview = async (transaction: any) => {
                 await dataService.postTransactionSimulation(transaction)
                     .then(res => {
-                        recordUpdate(id, res, "simulate")
+                        recordUpdate(id, res, "simulate").then((res) => { console.log(res) })
                         res.gasPrice = gasPrice
                         res.to = transaction.to
                         settransactionResultState(res)
@@ -47,6 +47,7 @@ const Main = (props: Props) => {
                         setHasLoaded(true)
                     })
                     .catch((err) => {
+                        console.log('[Main.tsx]: Simulation Failed because', err.message)
                         setRenderMode("debug-end")
                         setHasLoaded(true)
                     })
@@ -68,6 +69,8 @@ const Main = (props: Props) => {
                 const getsignature = async (type: any, payload: any) => {
                     await dataService.postSignature({ type, payload }, "signature")
                         .then(res => {
+                            console.log("[Main.tsx] -- Signature Success", res)
+                            // recordUpdate(id, res, "signature").then((res)=>{console.log(res)})
                             res.to = signatureAddress
                             if (res === null) {
                                 setSignatureResultState(res)
@@ -80,6 +83,7 @@ const Main = (props: Props) => {
                             }
                         })
                         .catch((err) => {
+                            console.log('[Main.tsx] -- Signature Failed because', err.message)
                             setRenderMode("debug-end")
                             setHasLoaded(true)
                         })
@@ -109,6 +113,7 @@ const Main = (props: Props) => {
         }
         const result = await dataService.postRecordDataURL(recordData, method)
             .catch((err) => {
+                console.log('PostURL error:', err)
                 return err
             })
         if (result) return false
@@ -123,6 +128,7 @@ const Main = (props: Props) => {
     const accept = () => extensionResponse(true);
     const reject = () => extensionResponse(false);
     const renderCurrentSelection = (renderMode: string | null) => {
+        console.log('[Main.tsx]: RenderMode is', renderMode)
         switch (renderMode) {
             case 'transaction-assets-exchange': {
                 return (

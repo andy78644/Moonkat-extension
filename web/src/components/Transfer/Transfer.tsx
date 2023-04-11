@@ -11,6 +11,7 @@ interface Props {
 
 const Transfer =  (props: Props) => {
     const {mode, transaction} = props;
+    console.log('[Transfer.tsx]: transaction is ',transaction)
 
     const getAssetsChangeInfo = {
         assetsIn: transaction.in,
