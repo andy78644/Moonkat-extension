@@ -227,7 +227,7 @@ exports.signatureParsing = async (req, res) => {
   const blurContract = '0x000000000000ad05ccc4f10045630fb830b95127'
   if (req.body.type === 'eth_signTypedData_v4' && payload.domain.name === 'Seaport' && openseaContract.includes(payload.domain.verifyingContract)) { transactionInfo = await openseaTransInfo(payload); }
   else if (req.body.type === 'eth_signTypedData_v4' && payload.domain.name === 'Blur Exchange' && payload.domain.verifyingContract === blurContract) { transactionInfo = await blurTransInfo(payload); }
-  if (transactionInfo === "error") res.status(500).send("error");
+  if (transactionInfo === "error") transactionInfo = null; 
   res.status(200).send(transactionInfo);
 
 }
@@ -235,7 +235,7 @@ exports.signatureParsing = async (req, res) => {
 async function openseaTransInfo(payload) {
   console.log("[transactionSimulationController.js] [openseaTransInfo]: payload.primaryType is ", payload.primaryType)
   if (payload.primaryType === 'OrderComponents') return await seaSingleList(payload);
-  else if (payload.primaryType === 'BulkOrder') return seaMultipleList(payload);
+  else if (payload.primaryType === 'BulkOrder') return null;
   else return "error";
 }
 async function blurTransInfo(payload) {
