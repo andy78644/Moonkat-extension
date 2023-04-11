@@ -23,7 +23,7 @@ const Extension = () => {
                 <div id="extensionImages">
                     <a href="https://twitter.com/Moonkat_io" target="_blank"><img id="twitter" className="extensionImage" src={Twitter} alt="Twitter" /></a>
                     <a href="https://discord.gg/pK5bUfB2" target="_blank"><img id="discord" className="extensionImage" src={Discord} alt="Discord" /></a>
-                    <a href="https://www.youtube.com/watch?v=mx86-rTclzA" target="_blank"><img id="contact" className="extensionImage" src={Contact} alt="Contact" /></a>
+                    <a href="https://tally.so/r/w4QLG5" target="_blank"><img id="contact" className="extensionImage" src={Contact} alt="Contact" /></a>
                 </div>
                 <div id="extensionImagesDescription">
                     <div>Twitter</div>

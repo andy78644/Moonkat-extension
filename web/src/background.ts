@@ -133,7 +133,10 @@ const processRegularRequest = async (
 
 const createSignatureMention = async (msg: any, alive: boolean) => {
     const { id } = msg;
-    const { userAddress } = msg.data;
+    const { userAddress, chainId } = msg.data;
+    if (!alive) mode = "debug-end";
+    else if (chainId === 1) mode = "transaction";
+    else return true;
     const window = await Browser.windows.getCurrent();
     const width = 400;
     let height = 700;
@@ -166,7 +169,7 @@ const createResult = async (msg: any, alive: boolean) => {
     const { id } = msg;
     if (!alive) mode = "debug-end";
     else if (chainId === 1) mode = "transaction";
-    else mode = "wrong-chain";
+    else return true;
     Promise.all([Browser.windows.getCurrent()]).then(async ([window]) => {
         const queryString = new URLSearchParams({
             id: id,

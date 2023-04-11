@@ -61,8 +61,9 @@ const Main = (props: Props) => {
             const signature = JSON.parse(browserMsg)
             const signatureAddress = signature.signAddress
             const type = signature.signMethod ?? ''
-            if (type !== 'eth_signTypedData_v4') {
-                setRenderMode('signature-no-risk-safe')
+            console.log(type)
+            if (type ===  'eth_signTypedData' || type === 'eth_signTypedData_v3') {
+                setRenderMode('signature-move-assets')
                 setHasLoaded(true)
             }
             else {
