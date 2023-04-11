@@ -24,8 +24,6 @@ interface Props {
 
 const Main = (props: Props) => {
     const { id, mode, browserMsg, userAddress, gasPrice } = props;
-    // This address is to pass the server restriction
-    // Need to be edited to develop the sign feature
     const [transactionResult, settransactionResultState] = useState({ to: 'Default To' })
     const [signatureResult, setSignatureResultState] = useState({ to: 'Default To' })
     const [renderMode, setRenderMode] = useState('')
@@ -61,7 +59,6 @@ const Main = (props: Props) => {
             const signature = JSON.parse(browserMsg)
             const signatureAddress = signature.signAddress
             const type = signature.signMethod ?? ''
-            console.log(type)
             if (type ===  'eth_signTypedData' || type === 'eth_signTypedData_v3') {
                 setRenderMode('signature-move-assets')
                 setHasLoaded(true)
@@ -117,7 +114,6 @@ const Main = (props: Props) => {
         if (result) return false
         else return true
     }
-    // Close extension
     const extensionResponse = async (data: boolean) => {
         await Browser.runtime.sendMessage(undefined, { id, data });
         if (data) await recordUpdate(id, "accept", "behavior")
@@ -218,14 +214,6 @@ const Main = (props: Props) => {
                     <div>
                         <MainHeader contractAddress={transactionResult.to} userAddress={userAddress}></MainHeader>
                         <SimulationError />
-                        <Footer onAccept={accept} onReject={reject} />
-                    </div>
-                )
-            }
-            case 'wrong-chain': {
-                return (
-                    <div>
-                        <h1> Moonkat does not support this chain</h1>
                         <Footer onAccept={accept} onReject={reject} />
                     </div>
                 )

@@ -37,11 +37,6 @@ const Assets = (props: Props) => {
 
     if (!sendTokens || !sendTokens[0]) return <></>
 
-    console.log(`[Assets.tsx] expand: ${expand}`)
-    console.log(`[Assets.tsx] tokenLength : ${tokenLength}`)
-    console.log(`[Assets.tsx] tokenLength > 1 : ${tokenLength > 1}`)
-    console.log(`[Assets.tsx] expand && tokenLength > 1 : ${expand && tokenLength > 1 && isNFT}`)
-
     return (
         <>
             {
@@ -93,22 +88,6 @@ const Assets = (props: Props) => {
                             </ListItem>
                         )
                     })
-                    // <ListItem>
-                    //     <img src={imgSource} height="48px" width="48px" alt="Tokens" />
-                    //     <ListItemText sx={{ maxWidth: '30%', fontSize: '20px', paddingLeft: '8px' }}
-                    //         primary={
-                    //             <Typography sx={{ fontFamily: 'Lato', fontSize: '20px', fontWeight: 100 }}>
-                    //                 {title.length > 7 ? title.substring(0, 7) + "..." : title}
-                    //             </Typography>
-                    //         }
-                    //     />
-                    //     <ListItemText sx={{ fontSize: '20px', textAlign: 'right', color: '#509A57' }}
-                    //         primary={
-                    //             <Typography sx={{ fontFamily: 'Lato', fontSize: '20px', fontWeight: 100, color: (theme) => (theme.palette.secondary.main) }}>
-                    //                 {operator}{totalToken} {symbol.length > 5 ? symbol.substring(0, 5) + "..." : symbol}
-                    //             </Typography>
-                    //         } />
-                    // </ListItem>
             }
         </>
     )

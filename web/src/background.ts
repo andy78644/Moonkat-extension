@@ -25,20 +25,6 @@ const record = async (
     else return true;
 };
 
-/*
-1. transaction
-    1. transaction-assets-exchange
-    // Only transaction, we can only know the status after simu
-    2. transaction-assets-approval
-    3. transaction-not-configured
-2. signature
-    1. signature-no-risk-safe
-    2. signature-no-risk-malicious
-    3. signature-token-approval
-    4. signature-move-assets
-    5. transaction-not-configured
-*/
-
 let mode: string = "";
 const init = async (remotePort: Browser.Runtime.Port) => {
     let opWinId = 0;
@@ -121,6 +107,7 @@ const processRegularRequest = async (
 ) => {
     const res = await createResult(msg, alive);
     if (!res) {
+        console.log('110', res)
         remotePort.postMessage({ id: msg.id, data: true });
         return;
     }
@@ -133,19 +120,17 @@ const processRegularRequest = async (
 
 const createSignatureMention = async (msg: any, alive: boolean) => {
     const { id } = msg;
-    const { userAddress, chainId } = msg.data;
-    if (!alive) mode = "debug-end";
-    else if (chainId === 1) mode = "transaction";
-    else return true;
+    const { userAddress } = msg.data;
+    console.log('bacl: ', msg.data)
     const window = await Browser.windows.getCurrent();
     const width = 400;
     let height = 700;
+    const left = window.left! + Math.round((window.width! - width) * 0.5);
+    const top = window.top! + Math.round((window.height! - height) * 0.2);
     if (!alive) mode = "debug-end";
     else if (msg.data.signatureData.signatureVersion)
         mode = msg.data.signatureData.signatureVersion;
     else mode = "signature-no-risk-safe";
-    const left = window.left! + Math.round((window.width! - width) * 0.5);
-    const top = window.top! + Math.round((window.height! - height) * 0.2);
     const queryString = new URLSearchParams({
         id: id,
         mode: mode,
@@ -167,30 +152,31 @@ const createSignatureMention = async (msg: any, alive: boolean) => {
 const createResult = async (msg: any, alive: boolean) => {
     const { transaction, chainId, userAddress, gasPrice } = msg.data;
     const { id } = msg;
+    console.log('bacl 154: ', msg.data)
     if (!alive) mode = "debug-end";
-    else if (chainId === 1) mode = "transaction";
-    else return true;
-    Promise.all([Browser.windows.getCurrent()]).then(async ([window]) => {
-        const queryString = new URLSearchParams({
-            id: id,
-            mode: mode,
-            browserMsg: JSON.stringify(transaction) ?? "",
-            userAddress: userAddress,
-            gasPrice: gasPrice ?? "",
-        }).toString();
-        const width = 400;
-        const height = 700;
-        const left = window.left! + Math.round((window.width! - width) * 0.5);
-        const top = window.top! + Math.round((window.height! - height) * 0.2);
+    if (chainId !== 1) return false
+    else mode = 'transaction'
+    const window = await Browser.windows.getCurrent();
+    const width = 400;
+    const height = 700;
+    const left = window.left! + Math.round((window.width! - width) * 0.5);
+    const top = window.top! + Math.round((window.height! - height) * 0.2);
 
-        await Browser.windows.create({
-            url: `index.html?${queryString}`,
-            type: "popup",
-            width: width,
-            height: height,
-            left: left,
-            top: top,
-        });
+    const queryString = new URLSearchParams({
+        id: id,
+        mode: mode,
+        browserMsg: JSON.stringify(transaction) ?? "",
+        userAddress: userAddress,
+        gasPrice: gasPrice ?? "",
+    }).toString();
+
+    await Browser.windows.create({
+        url: `index.html?${queryString}`,
+        type: "popup",
+        width: width,
+        height: height,
+        left: left,
+        top: top,
     });
     await Browser.windows.getCurrent();
     return true;
