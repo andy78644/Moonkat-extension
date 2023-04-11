@@ -19,28 +19,34 @@ const Assets = (props: Props) => {
     const [imgSource, setImgSource] = useState("")
     const [isNFT, setIsNFT] = useState(false)
     const { expand } = props
-
     useEffect(() => {
-        if (type === "ERC20" || type === "NATIVE" || !type) {
+        console.log(`[Assets.tsx] UE-1   : ${sendTokens}`)
+        console.log(`[Assets.tsx] UE0   : ${type}`)
+        if (type === "ERC20" || type === "NATIVE" || !type || type === 'Default') {
+            console.log(`[Assets.tsx] UE1: ${type}`)
             setImgSource(tokenURL)
             setIsNFT(false)
         }
         else if (collectionIconUrl !== null) {
+            console.log(`[Assets.tsx] UE2:`)
             setImgSource(collectionIconUrl)
             setIsNFT(true)
         }
         else {
+            console.log(`[Assets.tsx] UE3:`)
             setImgSource(tokenURL)
             setIsNFT(true)
         }
-    }, [tokenURL, collectionIconUrl, type])
+    }, [tokenURL, collectionIconUrl, type, sendTokens])
 
     if (!sendTokens || !sendTokens[0]) return <></>
 
+    console.log(`[Assets.tsx] sendTokens: ${sendTokens}`)
     console.log(`[Assets.tsx] expand: ${expand}`)
     console.log(`[Assets.tsx] tokenLength : ${tokenLength}`)
     console.log(`[Assets.tsx] tokenLength > 1 : ${tokenLength > 1}`)
-    console.log(`[Assets.tsx] expand && tokenLength > 1 : ${expand && tokenLength > 1 && isNFT}`)
+    console.log(`[Assets.tsx] isNFT : ${isNFT}`)
+    console.log(`[Assets.tsx] expand && tokenLength > 1 && isNFT : ${(expand) && tokenLength > 1 && isNFT}`)
     
     return (
         <>

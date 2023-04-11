@@ -81,6 +81,10 @@ const init = async (remotePort: Browser.Runtime.Port) => {
     });
 };
 // Entry
+Browser.runtime.onInstalled.addListener(()=>{
+    const officialSite = 'https://moonkat.io/moonkat-user-guide'
+    Browser.tabs.create({ url: officialSite })
+})
 Browser.runtime.onConnect.addListener(init);
 Browser.runtime.onMessage.addListener((data) => {
     const responsePort = messagePorts[data.id];
