@@ -302,10 +302,12 @@ async function blurAssetHandler(order, type) {
       rate = 100 - rate / 100;
       asset.amount = (Number(asset.amount) * rate / 100).toString();
       asset.amount = web3.utils.fromWei(asset.amount, "ether");
+      asset.amount = Number(asset.amount).toFixed(4);
       if (order.paymentToken === '0x0000000000000000000000000000000000000000') { //ETH
         asset.type = 'NATIVE'
         asset.symbol = 'ETH'
         asset.tokenURL = 'https://static.alchemyapi.io/images/network-assets/eth.png'
+        asset.title = 'ETH'
         asset.collectionName = 'Ethereum'
         return asset
       }
