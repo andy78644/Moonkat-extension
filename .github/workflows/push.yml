@@ -5,6 +5,7 @@ on:
       - web-develop
       - master
       - dev
+      - prodNew
       - feat/githubAction
 jobs:
   # example with Workload Identity Federation
