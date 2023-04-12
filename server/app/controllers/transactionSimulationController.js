@@ -227,7 +227,8 @@ exports.signatureParsing = async (req, res) => {
   const blurContract = '0x000000000000ad05ccc4f10045630fb830b95127'
   if (req.body.type === 'eth_signTypedData_v4' && payload.domain.name === 'Seaport' && openseaContract.includes(payload.domain.verifyingContract)) { transactionInfo = await openseaTransInfo(payload); }
   else if (req.body.type === 'eth_signTypedData_v4' && payload.domain.name === 'Blur Exchange' && payload.domain.verifyingContract === blurContract) { transactionInfo = await blurTransInfo(payload); }
-  if (transactionInfo === "error") res.status(500).send("error");
+  if (transactionInfo === "error") transactionInfo = null; 
+  console.log(`simulation info: ${transactionInfo}`)
   res.status(200).send(transactionInfo);
 
 }
@@ -235,7 +236,7 @@ exports.signatureParsing = async (req, res) => {
 async function openseaTransInfo(payload) {
   console.log("[transactionSimulationController.js] [openseaTransInfo]: payload.primaryType is ", payload.primaryType)
   if (payload.primaryType === 'OrderComponents') return await seaSingleList(payload);
-  else if (payload.primaryType === 'BulkOrder') return seaMultipleList(payload);
+  else if (payload.primaryType === 'BulkOrder') return null;
   else return "error";
 }
 async function blurTransInfo(payload) {
@@ -262,7 +263,7 @@ async function bulrSellOrder(order) {
   return asset;
 }
 
-async function bulrBuyOrder(payload) {
+async function bulrBuyOrder(order) {
   var asset = {
     changeType: "SIGNATURE",
     gas: null,
@@ -290,7 +291,7 @@ async function blurAssetHandler(order, type) {
     tokenId: null,
   }
   try {
-    if (type === 'Token') {
+    if (type === 'TOKEN') {
       const itemData = {
         token: order.paymentToken,
       }
@@ -302,16 +303,27 @@ async function blurAssetHandler(order, type) {
       rate = 100 - rate / 100;
       asset.amount = (Number(asset.amount) * rate / 100).toString();
       asset.amount = web3.utils.fromWei(asset.amount, "ether");
+      asset.amount = Number(asset.amount).toFixed(4);
       if (order.paymentToken === '0x0000000000000000000000000000000000000000') { //ETH
         asset.type = 'NATIVE'
         asset.symbol = 'ETH'
         asset.tokenURL = 'https://static.alchemyapi.io/images/network-assets/eth.png'
+        asset.title = 'ETH'
         asset.collectionName = 'Ethereum'
         return asset
       }
+      else if (order.paymentToken === '0x0000000000a39bb272e79075ade125fd351887ac') { //blurtoken
+        asset.type = 'ERC20'
+        asset.symbol = 'BlurETH'
+        asset.tokenURL = 'https://assets-global.website-files.com/614c99cf4f23700c8aa3752a/63c1bbc0ca87e7297c7d155f_public.png'
+        asset.title = 'BlurETH'
+        asset.collectionName = 'BlurETH'
+        console.log(asset)
+        return asset
+      }
+      console.log(asset)
       await erc20Metadata(asset, itemData);
       return asset;
-
     }
     else if (type === 'NFT') {
       const itemData = {

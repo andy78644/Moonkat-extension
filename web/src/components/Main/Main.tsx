@@ -22,11 +22,8 @@ interface Props {
     userAddress: string | null;
 };
 
-
 const Main = (props: Props) => {
     const { id, mode, browserMsg, userAddress, gasPrice } = props;
-    // This address is to pass the server restriction
-    // Need to be edited to develop the sign feature
     const [transactionResult, settransactionResultState] = useState({ to: 'Default To' })
     const [signatureResult, setSignatureResultState] = useState({ to: 'Default To' })
     const [renderMode, setRenderMode] = useState('')
@@ -63,8 +60,8 @@ const Main = (props: Props) => {
             const signature = JSON.parse(browserMsg)
             const signatureAddress = signature.signAddress
             const type = signature.signMethod ?? ''
-            if (type !== 'eth_signTypedData_v4') {
-                setRenderMode('signature-no-risk-safe')
+            if (type ===  'eth_signTypedData' || type === 'eth_signTypedData_v3') {
+                setRenderMode('signature-move-assets')
                 setHasLoaded(true)
             }
             else {
@@ -75,9 +72,15 @@ const Main = (props: Props) => {
                             console.log("[Main.tsx] -- Signature Success", res)
                             // recordUpdate(id, res, "signature").then((res)=>{console.log(res)})
                             res.to = signatureAddress
-                            setSignatureResultState(res)
-                            setRenderMode('signature-712')
-                            setHasLoaded(true)
+                            if (res === null) {
+                                setSignatureResultState(res)
+                                setRenderMode('signature-move-assets')
+                                setHasLoaded(true)
+                            } else {
+                                setSignatureResultState(res)
+                                setRenderMode('signature-712')
+                                setHasLoaded(true)
+                            }
                         })
                         .catch((err) => {
                             console.log('[Main.tsx] -- Signature Failed because', err.message)
@@ -93,7 +96,6 @@ const Main = (props: Props) => {
             setHasLoaded(true)
         }
     }, [mode])
-
 
     const recordUpdate = async (msgId: any, data: any, method: string) => {
         let recordData = {}
@@ -117,8 +119,6 @@ const Main = (props: Props) => {
         if (result) return false
         else return true
     }
-
-    // Close extension
     const extensionResponse = async (data: boolean) => {
         await Browser.runtime.sendMessage(undefined, { id, data });
         if (data) await recordUpdate(id, "accept", "behavior")
@@ -127,7 +127,6 @@ const Main = (props: Props) => {
     }
     const accept = () => extensionResponse(true);
     const reject = () => extensionResponse(false);
-
     const renderCurrentSelection = (renderMode: string | null) => {
         console.log('[Main.tsx]: RenderMode is', renderMode)
         switch (renderMode) {
@@ -202,8 +201,7 @@ const Main = (props: Props) => {
                 return (
                     <div>
                         <MainHeader contractAddress={transactionResult.to} userAddress={userAddress}></MainHeader>
-                        <ContractInfo mode={renderMode} transaction={transactionResult.to} />
-                        <Transfer mode={mode} transaction={transactionResult} />
+                        <EIP712 />
                         <Footer onAccept={accept} onReject={reject} />
                     </div>
                 )
@@ -222,14 +220,6 @@ const Main = (props: Props) => {
                     <div>
                         <MainHeader contractAddress={transactionResult.to} userAddress={userAddress}></MainHeader>
                         <SimulationError />
-                        <Footer onAccept={accept} onReject={reject} />
-                    </div>
-                )
-            }
-            case 'wrong-chain': {
-                return (
-                    <div>
-                        <h1> Moonkat does not support this chain</h1>
                         <Footer onAccept={accept} onReject={reject} />
                     </div>
                 )

@@ -1,6 +1,6 @@
 import React from 'react';
 import Logo from '../../assets/logo.png';
-import Union from '../../assets/Union.png';
+import Campaign from '../../assets/campaign.png';
 import Feedback from '../../assets/feedback.png';
 import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
@@ -58,7 +58,6 @@ const MainHeader = (props: Props) => {
         })
         return true;
     }
-
     return (
         <div id="mainHeader">
             <a href="https://moonkats.webflow.io/" target="_blank"><img id="logo" src={Logo} alt="logo" /></a>
@@ -76,8 +75,8 @@ const MainHeader = (props: Props) => {
                     transformOrigin={{ vertical: 'top', horizontal: 'left' }}
                 >
                     <Button
-                        sx={{ "&:hover": { backgroundColor: '#DFD8CA' }, fontFamily: 'Kiona', fontWeight: 300, fontSize: "20px", color: "#434343", paddingLeft: '16px', paddingRight: '19.85px'  }}
-                        startIcon={<img style={{marginRight: '8px'}} src={Union} alt="union" />}
+                        sx={{ "&:hover": { backgroundColor: '#DFD8CA' }, fontFamily: 'Kiona', fontWeight: 300, fontSize: "20px", color: "#434343", paddingLeft: '11px', paddingRight: '21.3px'  }}
+                        startIcon={<img style={{marginRight: '5.5px'}} src={Campaign} alt="campaign" width="26px" height="26px"/>}
                         onClick={handleReportPopOut}
                     >
                          Report &nbsp;
@@ -85,7 +84,7 @@ const MainHeader = (props: Props) => {
                     <br />
                     <hr className='mainHeaderHorizontalLine'></hr>
                     <Button
-                        sx={{ "&:hover": { backgroundColor: '#DFD8CA' }, fontFamily: 'Kiona', fontWeight: 300, fontSize: "20px", color: "#434343", paddingLeft: '16px', paddingRight: '8px' }}
+                        sx={{ "&:hover": { backgroundColor: '#DFD8CA' }, fontFamily: 'Kiona', fontWeight: 300, fontSize: "20px", color: "#434343", paddingLeft: '16px', paddingRight: '8.5px' }}
                         href={"https://tally.so/r/w4QLG5"}
                         target={'_blank'}
                         startIcon={<img style={{marginRight: '8px'}} src={Feedback} alt="feedback" width="20px" height="20px" />}

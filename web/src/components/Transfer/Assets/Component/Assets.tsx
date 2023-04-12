@@ -10,6 +10,15 @@ interface Props {
     expand: boolean
 }
 
+interface TokenContextType {
+    sendTokens: any[], gasFee: number, mode: string,
+    verbForPopOverText: string, operator: string,
+    tokenURL: string, symbol: string, title: string,
+    collectionIconUrl: string, collectionName: string, type: string,
+    totalToken: number, osVerified: boolean, tokenLength: number,
+    [key: string]: any
+}
+
 const Assets = (props: Props) => {
 
     const { sendTokens, tokenURL,
@@ -17,63 +26,104 @@ const Assets = (props: Props) => {
         totalToken, collectionIconUrl,
         tokenLength } = useContext(TokenContext)
     const [imgSource, setImgSource] = useState("")
+    const [isNFT, setIsNFT] = useState('not_ready')
     const { expand } = props
-
     useEffect(() => {
-        if (type === "ERC20" || type === "NATIVE" || !type)
+        console.log(`[Assets.tsx]: type ${type}`)
+        if (!type) { }
+        else if (type === "ERC20" || type === "NATIVE") {
             setImgSource(tokenURL)
-        else if (collectionIconUrl !== null) setImgSource(collectionIconUrl)
-        else setImgSource(tokenURL)
-    }, [tokenURL, collectionIconUrl, type])
+            setIsNFT('false')
+        }
+        else if (collectionIconUrl !== null) {
+            setImgSource(collectionIconUrl)
+            setIsNFT('true')
+        }
+        else {
+            setImgSource(tokenURL)
+            setIsNFT('true')
+        }
+    }, [tokenURL, collectionIconUrl, type, isNFT])
 
     if (!sendTokens || !sendTokens[0]) return <></>
 
-    return (
+    console.log(`[Assets.tsx] isNFT: ${isNFT}`)
+    console.log(`[Assets.tsx] tokenLength : ${tokenLength}`)
+
+    if (isNFT === 'not_ready') return <></>
+    else return (
         <>
             {
-                expand && tokenLength > 1 ?
-                    <Collapse id="assetsComponentScroll" className="scroll" in={expand} timeout="auto" unmountOnExit sx={{ width: '100%', display: 'flex', justifyContent: 'flex-end' }}>
-                        {
-                            sendTokens.map((token: any) => {
-                                if (!token.symbol) token.symbol = "NFT"
-                                return (
-                                    <ListItem key={token.tokenId}>
-                                        <img src={token.tokenURL ?? nft} height="48px" width="48px" alt="Tokens" />
-                                        <ListItemText sx={{ paddingLeft: '8px' }}
-                                            primary={
-                                                <Typography sx={{ fontFamily: 'Lato', fontSize: '20px', fontWeight: 100 }}>
-                                                    {token.tokenId.length > 9 ? token.tokenId.substring(0, 9) + "..." : token.tokenId}
-                                                </Typography>
-                                            }
-                                        />
-                                        <ListItemText sx={{ textAlign: 'right', color: (theme) => (theme.palette.secondary.main) }}
-                                            primary={
-                                                <Typography sx={{ fontFamily: 'Lato', fontSize: '20px', fontWeight: 100 }}>
-                                                    {operator}{token.amount} {token.symbol.length > 5 ? token.symbol.substring(0, 5) + "..." : token.symbol}
-                                                </Typography>
-                                            }
-                                        />
-                                    </ListItem>
-                                )
-                            })
-                        }
-                    </Collapse> :
-                    <ListItem>
-                        <img src={imgSource} height="48px" width="48px" alt="Tokens" />
-                        <ListItemText sx={{ maxWidth: '30%', fontSize: '20px', paddingLeft: '8px' }}
-                            primary={
-                                <Typography sx={{ fontFamily: 'Lato', fontSize: '20px', fontWeight: 100 }}>
-                                    {title.length > 7 ? title.substring(0, 7) + "..." : title}
-                                </Typography>
+                isNFT === 'true' ?
+                    expand && tokenLength > 1 ?
+                        <Collapse id="assetsComponentScroll" className="scroll" in={expand} timeout="auto" unmountOnExit sx={{ width: '100%', display: 'flex', justifyContent: 'flex-end' }}>
+                            {
+                                sendTokens.map((token: any) => {
+                                    if (!token.symbol) token.symbol = "NFT"
+                                    return (
+                                        <ListItem key={token.tokenId}>
+                                            <img src={token.tokenURL ?? nft} height="48px" width="48px" alt="Tokens" />
+                                            <ListItemText sx={{ paddingLeft: '8px' }}
+                                                primary={
+                                                    <Typography sx={{ fontFamily: 'Lato', fontSize: '20px', fontWeight: 100 }}>
+                                                        {token.tokenId.length > 9 ? token.tokenId.substring(0, 9) + "..." : token.tokenId}
+                                                    </Typography>
+                                                }
+                                            />
+                                            <ListItemText sx={{ textAlign: 'right', color: (theme) => (theme.palette.secondary.main) }}
+                                                primary={
+                                                    <Typography sx={{ fontFamily: 'Lato', fontSize: '20px', fontWeight: 100 }}>
+                                                        {token.amount < 0.0001 ? '<' : operator}{token.amount < 0.0001 ? 0.0001 : token.amount} {token.symbol.length > 5 ? token.symbol.substring(0, 5) + "..." : token.symbol}
+                                                    </Typography>
+                                                }
+                                            />
+                                        </ListItem>
+                                    )
+                                })
                             }
-                        />
-                        <ListItemText sx={{ fontSize: '20px', textAlign: 'right', color: '#509A57' }}
-                            primary={
-                                <Typography sx={{ fontFamily: 'Lato', fontSize: '20px', fontWeight: 100, color: (theme) => (theme.palette.secondary.main) }}>
-                                    {operator}{totalToken} {symbol.length > 5 ? symbol.substring(0, 5) + "..." : symbol}
-                                </Typography>
-                            } />
-                    </ListItem>
+                        </Collapse> :
+                        <ListItem>
+                            <img src={imgSource} height="48px" width="48px" alt="Tokens" />
+                            <ListItemText sx={{ maxWidth: '30%', fontSize: '20px', paddingLeft: '8px' }}
+                                primary={
+                                    <Typography sx={{ fontFamily: 'Lato', fontSize: '20px', fontWeight: 100 }}>
+                                        {title.length > 7 ? title.substring(0, 7) + "..." : title}
+                                    </Typography>
+                                }
+                            />
+                            <ListItemText sx={{ fontSize: '20px', textAlign: 'right', color: '#509A57' }}
+                                primary={
+                                    <Typography sx={{ fontFamily: 'Lato', fontSize: '20px', fontWeight: 100, color: (theme) => (theme.palette.secondary.main) }}>
+                                        {operator}{totalToken} {symbol.length > 5 ? symbol.substring(0, 5) + "..." : symbol}
+                                    </Typography>
+                                } />
+                        </ListItem>
+                    ://non-nft situation
+                    sendTokens.map((token: any, index: number) => {
+                        token.title = token.title === null ? "unknown": token.title
+                        token.symbol = token.symbol === null ? 'token': token.symbol
+                        token.tokenURL = token.tokenURL === null ? nft : token.tokenURL
+                        token.amount = token.amount === null ? '0x0' : token.amount
+                        return (
+                            <ListItem key={index}>
+                                <img src={token.tokenURL ?? nft} height="48px" width="48px" alt="Tokens" />
+                                <ListItemText sx={{ maxWidth: '30%', fontSize: '20px', paddingLeft: '8px' }}
+                                    primary={
+                                        <Typography sx={{ fontFamily: 'Lato', fontSize: '20px', fontWeight: 100 }}>
+                                            {token.title.length > 9 ? token.title.substring(0, 9) + "..." : token.title}
+                                        </Typography>
+                                    }
+                                />
+                                <ListItemText sx={{ fontSize: '20px', textAlign: 'right', color: '#509A57' }}
+                                    primary={
+                                        <Typography sx={{ fontFamily: 'Lato', fontSize: '20px', fontWeight: 100, color: (theme) => (theme.palette.secondary.main) }}>
+                                            {token.amount < 0.0001 ? '<' : operator}{token.amount < 0.0001 ? 0.0001 : token.amount} {token.symbol.length > 5 ? token.symbol.substring(0, 5) + "..." : token.symbol}
+                                        </Typography>
+                                    }
+                                />
+                            </ListItem>
+                        )
+                    })
             }
         </>
     )

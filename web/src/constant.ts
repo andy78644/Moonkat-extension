@@ -5,8 +5,3 @@ export const Identifier = {
     METAMASK_CONTENT_SCRIPT: 'metamask-contentscript',
     METAMASK_PROVIDER: 'metamask-provider',
 }
-
-export const RequestType = {
-    REGULAR: 'regular',
-    BYPASS_CHECK: 'bypass-check'
-}

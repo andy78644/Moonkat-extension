@@ -9,6 +9,10 @@ const params = new URLSearchParams(window.location.search);
 // @ts-ignore
 const root = ReactDOM.createRoot(document.getElementById("root"));
 document.documentElement.setAttribute("lang", 'zh-Hant');
+if (process.env.WORK_ENV === 'prod' || process.env.WORK_ENV === 'test') {
+    console.log = function () {};
+}
+
 root.render(
     
     <Main

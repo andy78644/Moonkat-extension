@@ -1,6 +1,6 @@
 import { WindowPostMessageStream } from '@metamask/post-message-stream';
 import { sendAndAwaitResponseFromPort } from '../utils';
-import { Identifier, RequestType } from '../constant';
+import { Identifier } from '../constant';
 import Browser from "webextension-polyfill";
 
 // Send data from content_script to website
@@ -16,7 +16,7 @@ dataStream.on('data', (data) => {
         name: Identifier.CONTENT_SCRIPT,
     });
     // Send from website to the extension
-    sendAndAwaitResponseFromPort(extensionPort, { ...data.data, type: RequestType.REGULAR})
+    sendAndAwaitResponseFromPort(extensionPort, { ...data.data })
     .then((response) => {
         // Send back to the website
         if(response==='close'){
