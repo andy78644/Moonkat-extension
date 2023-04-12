@@ -8,7 +8,7 @@ image:
   repository: gcr.io/gogolook-compass/moonkat-app
   # pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
-  tag: 3f83086219926b96d4d460827911d0090dea6722
+  tag: 478c87616668d6c711e3f0a34ca7be8b15244231
 
 
 
