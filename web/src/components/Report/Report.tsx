@@ -19,7 +19,9 @@ const params = new URLSearchParams(window.location.search);
 // createRoot is an experiment feature so it doesn't have type
 // @ts-ignore
 const root = ReactDOM.createRoot(document.getElementById("root"))
-
+if (process.env.WORK_ENV === 'prod'|| process.env.WORK_ENV === 'test') {
+    console.log = function () {};
+}
 const Report = () => {
 
     const contractAddress = params.get('contractAddress');

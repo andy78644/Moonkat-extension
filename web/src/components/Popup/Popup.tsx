@@ -10,7 +10,9 @@ import Contact from '../../assets/extensionContact.png';
 const root = ReactDOM.createRoot(document.getElementById("root"));
 
 import './Popup.css';
-
+if (process.env.WORK_ENV === 'prod'|| process.env.WORK_ENV === 'test') {
+    console.log = function () {};
+}
 const Extension = () => {
     return (
         <div>
