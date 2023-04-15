@@ -222,11 +222,11 @@ exports.signatureParsing = async (req, res) => {
     '0x00000000006c3852cbef3e08e8df289169ede581',
     '0x00000000000006c7676171937c444f6bde3d6282',
     '0x0000000000000ad24e80fd803c6ac37206a45f15',
-    '0x00000000000001ad428e4906aE43D8F9852d0dD6',
+    '0x00000000000001ad428e4906ae43d8f9852d0dd6',
   ]
   const blurContract = '0x000000000000ad05ccc4f10045630fb830b95127'
-  if (req.body.type === 'eth_signTypedData_v4' && payload.domain.name === 'Seaport' && openseaContract.includes(payload.domain.verifyingContract)) { transactionInfo = await openseaTransInfo(payload); }
-  else if (req.body.type === 'eth_signTypedData_v4' && payload.domain.name === 'Blur Exchange' && payload.domain.verifyingContract === blurContract) { transactionInfo = await blurTransInfo(payload); }
+  if (req.body.type === 'eth_signTypedData_v4' && payload.domain.name === 'Seaport' && openseaContract.includes(payload.domain.verifyingContract.toLowerCase())) { transactionInfo = await openseaTransInfo(payload); }
+  else if (req.body.type === 'eth_signTypedData_v4' && payload.domain.name === 'Blur Exchange' && payload.domain.verifyingContract.toLowerCase() === blurContract) { transactionInfo = await blurTransInfo(payload); }
   if (transactionInfo === "error") transactionInfo = null; 
   console.log(`simulation info: ${transactionInfo}`)
   res.status(200).send(transactionInfo);
