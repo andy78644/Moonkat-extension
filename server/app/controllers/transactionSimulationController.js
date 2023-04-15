@@ -181,7 +181,9 @@ exports.sendTransaction = async (req, res) => {
               transactionInfo.changeType = 'TRANSFER'
               await transferHandler(changeObj)
                 .then((res) => {
-                  transactionInfo.out.push(res)
+                  if(!changeObj.contractAddress) changeObj.contractAddress = '0x0000000000000000000000000000000000000000'
+                  if(!transactionInfo.out[changeObj.contractAddress]) transactionInfo.out[changeObj.contractAddress] = [];
+                  transactionInfo.out[changeObj.contractAddress].push(res);
                 })
                 .catch((err) => {
                   errStat = true
@@ -193,7 +195,10 @@ exports.sendTransaction = async (req, res) => {
               transactionInfo.changeType = 'TRANSFER'
               await transferHandler(changeObj)
                 .then((res) => {
-                  transactionInfo.in.push(res)
+                  if(!changeObj.contractAddress) changeObj.contractAddress = '0x0000000000000000000000000000000000000000'
+                  if(!transactionInfo.in[changeObj.contractAddress]) transactionInfo.in[changeObj.contractAddress] = [];
+                  transactionInfo.in[changeObj.contractAddress].push(res);
+                  //transactionInfo.in.push(res)
                 })
                 .catch((err) => {
                   errStat = true
@@ -228,7 +233,9 @@ exports.signatureParsing = async (req, res) => {
   if (req.body.type === 'eth_signTypedData_v4' && payload.domain.name === 'Seaport' && openseaContract.includes(payload.domain.verifyingContract.toLowerCase())) { transactionInfo = await openseaTransInfo(payload); }
   else if (req.body.type === 'eth_signTypedData_v4' && payload.domain.name === 'Blur Exchange' && payload.domain.verifyingContract.toLowerCase() === blurContract) { transactionInfo = await blurTransInfo(payload); }
   if (transactionInfo === "error") transactionInfo = null; 
-  console.log(`simulation info: ${transactionInfo}`)
+  console.log("simulation info:", transactionInfo)
+  console.log("simulation info in:",transactionInfo.in)
+  console.log("simulation info out:", transactionInfo.out)
   res.status(200).send(transactionInfo);
 
 }
@@ -236,7 +243,7 @@ exports.signatureParsing = async (req, res) => {
 async function openseaTransInfo(payload) {
   console.log("[transactionSimulationController.js] [openseaTransInfo]: payload.primaryType is ", payload.primaryType)
   if (payload.primaryType === 'OrderComponents') return await seaSingleList(payload);
-  else if (payload.primaryType === 'BulkOrder') return null;
+  else if (payload.primaryType === 'BulkOrder') return await seaMultipleList(payload);
   else return "error";
 }
 async function blurTransInfo(payload) {
@@ -256,10 +263,12 @@ async function bulrSellOrder(order) {
     out: [],
     approve: null
   }
-  let assetIn = await blurAssetHandler(order, 'Token')
-  asset.in.push(assetIn);
+  let assetIn = await blurAssetHandler(order, 'TOKEN')
+  if(!asset.in[order.paymentToken]) asset.in[order.paymentToken] = [];
+  asset.in[order.paymentToken].push(assetIn);
   let assetOut = await blurAssetHandler(order, 'NFT')
-  asset.out.push(assetOut);
+  if(!asset.out[order.collection]) asset.out[order.collection] = [];
+  asset.out[order.collection].push(assetOut);
   return asset;
 }
 
@@ -272,9 +281,11 @@ async function bulrBuyOrder(order) {
     approve: null
   }
   let assetIn = await blurAssetHandler(order, 'NFT')
-  asset.in.push(assetIn);
+  if(!asset.in[order.collection]) asset.in[order.collection] = [];
+  asset.in[order.collection].push(assetIn);
   let assetOut = await blurAssetHandler(order, 'TOKEN')
-  asset.out.push(assetOut);
+  if(!asset.out[order.paymentToken]) asset.out[order.paymentToken] = [];
+  asset.out[order.paymentToken].push(assetOut);
   return asset;
 }
 
@@ -318,10 +329,8 @@ async function blurAssetHandler(order, type) {
         asset.tokenURL = 'https://assets-global.website-files.com/614c99cf4f23700c8aa3752a/63c1bbc0ca87e7297c7d155f_public.png'
         asset.title = 'BlurETH'
         asset.collectionName = 'BlurETH'
-        console.log(asset)
         return asset
       }
-      console.log(asset)
       await erc20Metadata(asset, itemData);
       return asset;
     }
@@ -354,12 +363,14 @@ async function seaSingleList(payload) {
   await Promise.all(order.consideration.map(async item => {
     if (address === item.recipient) {
       let Asset_in = await SeaportAssetHandler(item)
-      asset.in.push(Asset_in);
+      if(!asset.in[item.token]) asset.in[item.token] = [];
+      asset.in[item.token].push(Asset_in);
     }
   }))
   await Promise.all(order.offer.map(async item => {
     let Asset_out = await SeaportAssetHandler(item);
-    asset.out.push(Asset_out);
+    if(!asset.out[item.token]) asset.out[item.token] = [];
+    asset.out[item.token].push(Asset_out);
   }))
   return asset;
 }
@@ -378,12 +389,14 @@ async function seaMultipleList(payload) {
     await Promise.all(order.consideration.map(async item => {
       if (address === item.recipient) {
         let Asset_in = await SeaportAssetHandler(item)
-        asset.in.push(Asset_in);
+        if(!asset.in[item.token]) asset.in[item.token] = [];
+        asset.in[item.token].push(Asset_in);
       }
     }))
     await Promise.all(order.offer.map(async item => {
       let Asset_out = await SeaportAssetHandler(item);
-      asset.out.push(Asset_out);
+      if(!asset.out[item.token]) asset.out[item.token] = [];
+      asset.out[item.token].push(Asset_out);
     }))
   }
   return asset
@@ -401,7 +414,6 @@ async function SeaportAssetHandler(item) {
     title: null,
     osVerified: null,
     tokenId: null,
-
   }
   const itemData = {
     token: item.token,
