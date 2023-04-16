@@ -190,6 +190,8 @@ const proxyEthereumProvider = async (ethereumProvider: any, name: string) => {
   });
 
   (window as any).ethereum.request = requestProxy;
+  (window as any).ethereum.send = requestProxy;
+  (window as any).ethereum.sendAsync = requestProxy;
 
 };
 
