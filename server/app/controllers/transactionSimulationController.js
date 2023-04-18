@@ -136,8 +136,8 @@ exports.sendTransaction = async (req, res) => {
   let transactionInfo = {
     changeType: "",
     gas: "",
-    in: [],
-    out: [],
+    in: null,
+    out: null,
     approve: null
   };
 
@@ -181,11 +181,13 @@ exports.sendTransaction = async (req, res) => {
               transactionInfo.changeType = 'TRANSFER'
               await transferHandler(changeObj)
                 .then((res) => {
-                  if(!changeObj.contractAddress) changeObj.contractAddress = '0x0000000000000000000000000000000000000000'
-                  if(!transactionInfo.out[changeObj.contractAddress]) transactionInfo.out[changeObj.contractAddress] = [];
-                  transactionInfo.out[changeObj.contractAddress].push(res);
+                  const address = changeObj?.contractAddress?changeObj.contractAddress:'0x0000000000000000000000000000000000000000'
+                  transactionInfo.out = transactionInfo.out?transactionInfo.out:{}
+                  if(!transactionInfo.out[address]) transactionInfo.out[address] = [];
+                  transactionInfo.out[address].push(res);
                 })
                 .catch((err) => {
+                  console.log(err);
                   errStat = true
                 })
             }
@@ -195,10 +197,10 @@ exports.sendTransaction = async (req, res) => {
               transactionInfo.changeType = 'TRANSFER'
               await transferHandler(changeObj)
                 .then((res) => {
-                  if(!changeObj.contractAddress) changeObj.contractAddress = '0x0000000000000000000000000000000000000000'
-                  if(!transactionInfo.in[changeObj.contractAddress]) transactionInfo.in[changeObj.contractAddress] = [];
-                  transactionInfo.in[changeObj.contractAddress].push(res);
-                  //transactionInfo.in.push(res)
+                  const address = changeObj.contractAddress?changeObj.contractAddress:'0x0000000000000000000000000000000000000000'
+                  transactionInfo.in = transactionInfo.in?transactionInfo.in:{}
+                  if(!transactionInfo.in[address]) transactionInfo.in[address] = [];
+                  transactionInfo.in[address].push(res);
                 })
                 .catch((err) => {
                   errStat = true
@@ -259,14 +261,16 @@ async function bulrSellOrder(order) {
   var asset = {
     changeType: "SIGNATURE",
     gas: null,
-    in: [],
-    out: [],
+    in: null,
+    out: null,
     approve: null
   }
   let assetIn = await blurAssetHandler(order, 'TOKEN')
+  asset.in = asset.in?asset.in:{}
   if(!asset.in[order.paymentToken]) asset.in[order.paymentToken] = [];
   asset.in[order.paymentToken].push(assetIn);
   let assetOut = await blurAssetHandler(order, 'NFT')
+  asset.out = asset.out?asset.out:{}
   if(!asset.out[order.collection]) asset.out[order.collection] = [];
   asset.out[order.collection].push(assetOut);
   return asset;
@@ -276,14 +280,16 @@ async function bulrBuyOrder(order) {
   var asset = {
     changeType: "SIGNATURE",
     gas: null,
-    in: [],
-    out: [],
+    in: null,
+    out: null,
     approve: null
   }
   let assetIn = await blurAssetHandler(order, 'NFT')
+  asset.in = asset.in?asset.in:{}
   if(!asset.in[order.collection]) asset.in[order.collection] = [];
   asset.in[order.collection].push(assetIn);
   let assetOut = await blurAssetHandler(order, 'TOKEN')
+  asset.out = asset.out?asset.out:{}
   if(!asset.out[order.paymentToken]) asset.out[order.paymentToken] = [];
   asset.out[order.paymentToken].push(assetOut);
   return asset;
@@ -354,8 +360,8 @@ async function seaSingleList(payload) {
   var asset = {
     changeType: "SIGNATURE",
     gas: null,
-    in: [],
-    out: [],
+    in: null,
+    out: null,
     approve: null
   }
   const order = payload.message
@@ -363,12 +369,14 @@ async function seaSingleList(payload) {
   await Promise.all(order.consideration.map(async item => {
     if (address === item.recipient) {
       let Asset_in = await SeaportAssetHandler(item)
+      asset.in = asset.in?asset.in:{}
       if(!asset.in[item.token]) asset.in[item.token] = [];
       asset.in[item.token].push(Asset_in);
     }
   }))
   await Promise.all(order.offer.map(async item => {
     let Asset_out = await SeaportAssetHandler(item);
+    asset.out = asset.out?asset.out:{}
     if(!asset.out[item.token]) asset.out[item.token] = [];
     asset.out[item.token].push(Asset_out);
   }))
@@ -379,8 +387,8 @@ async function seaMultipleList(payload) {
   var asset = {
     changeType: "SIGNATURE",
     gas: null,
-    in: [],
-    out: [],
+    in: null,
+    out: null,
     approve: null
   }
   //const address = payload.tree.offerer
@@ -389,12 +397,14 @@ async function seaMultipleList(payload) {
     await Promise.all(order.consideration.map(async item => {
       if (address === item.recipient) {
         let Asset_in = await SeaportAssetHandler(item)
+        asset.in = asset.in?asset.in:{}
         if(!asset.in[item.token]) asset.in[item.token] = [];
         asset.in[item.token].push(Asset_in);
       }
     }))
     await Promise.all(order.offer.map(async item => {
       let Asset_out = await SeaportAssetHandler(item);
+      asset.out = asset.out?asset.out:{}
       if(!asset.out[item.token]) asset.out[item.token] = [];
       asset.out[item.token].push(Asset_out);
     }))
