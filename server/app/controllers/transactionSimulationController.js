@@ -56,8 +56,7 @@ const getAssetData = async (asset, txn) => {
         asset.osVerified = response.contractMetadata.openSea.safelistRequestStatus ? response.contractMetadata.openSea.safelistRequestStatus : null;
         asset.collectionIconUrl = response.contractMetadata.openSea.imageUrl ? response.contractMetadata.openSea.imageUrl : null;
 
-        console.log('tokenID:', txn.tokenId)
-        asset.tokenURL = txn.contractAddress?`https://opensea.io/zh-TW/assets/ethereum/${txn.contractAddress}/${txn.tokenId}`:null
+        asset.tokenURL = txn.contractAddress?txn.tokenId.length<20?`https://opensea.io/zh-TW/assets/ethereum/${txn.contractAddress}/${txn.tokenId}`:`https://opensea.io/zh-TW/assets/ethereum/${txn.contractAddress}`:null
       })
       .catch(err => {
         console.log(err.message)
@@ -111,6 +110,7 @@ const approvalHandler = async (txn) => {
   }
   assetApprove.symbol = txn.symbol
   assetApprove.amount = txn.amount
+  asset.type = txn.assetType
   let err = await getApproveData(assetApprove, txn)
   console.log(err);
   if (err) return err
