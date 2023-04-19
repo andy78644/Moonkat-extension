@@ -28,10 +28,11 @@ const fetchWithRetry = async (url, options, retries = 3, waitTime = 1000) => {
 const getAssetData = async (asset, txn) => {
   if (txn.assetType === 'ERC20' || txn.assetType === 'NATIVE') {
     asset.amount = Number(txn.amount).toFixed(4);
-    asset.tokenURL = txn.logo ? txn.logo : null;
+    asset.imgURL = txn.logo ? txn.logo : null;
     asset.collectionName = txn.name ?txn.name: null;
     asset.symbol = txn.symbol ? txn.symbol:null;
     asset.title = txn.symbol ? txn.symbol:null;
+    asset.tokenURL = txn.contractAddress ? `https://etherscan.io/token/${txn.contractAddress}` : null
   }
   else {
     await fetch(`https://eth-mainnet.g.alchemy.com/v2/${process.env.ALCHEMY_API_KEY}\n
@@ -49,11 +50,13 @@ const getAssetData = async (asset, txn) => {
         asset.symbol = response.contractMetadata.symbol ? response.contractMetadata.symbol : "NFT";
         asset.collectionName = response.contractMetadata.name ? response.contractMetadata.name : null;
 
-        if (response.error) asset.tokenURL = response.contractMetadata.openSea.imageUrl ? response.contractMetadata.openSea.imageUrl : null;
-        else asset.tokenURL = response.media[0].gateway ? response.media[0].gateway : null;
+        if (response.error) asset.imgURL = response.contractMetadata.openSea.imageUrl ? response.contractMetadata.openSea.imageUrl : null;
+        else asset.imgURL = response.media[0].gateway ? response.media[0].gateway : null;
 
         asset.osVerified = response.contractMetadata.openSea.safelistRequestStatus ? response.contractMetadata.openSea.safelistRequestStatus : null;
         asset.collectionIconUrl = response.contractMetadata.openSea.imageUrl ? response.contractMetadata.openSea.imageUrl : null;
+
+        asset.tokenURL = txn.contractAddress?txn.tokenId.length<20?`https://opensea.io/zh-TW/assets/ethereum/${txn.contractAddress}/${txn.tokenId}`:`https://opensea.io/zh-TW/assets/ethereum/${txn.contractAddress}`:null
       })
       .catch(err => {
         console.log(err.message)
@@ -65,9 +68,11 @@ const getAssetData = async (asset, txn) => {
 const getApproveData = async (asset, txn) => {
   if (txn.assetType === 'ERC20' || txn.assetType === 'NATIVE') {
     asset.amount = Number(txn.amount).toFixed(4);
-    asset.collectionIconUrl = txn.logo ? txn.logo : null;
+    asset.imgUrl = txn.logo ? txn.logo : null;
     asset.collectionName = txn.name ?txn.name: null;
     asset.title = txn.symbol ? txn.symbol:null;
+    asset.symbol = txn.symbol ? txn.symbol:null;
+    asset.tokenURL = txn.contractAddress ? `https://etherscan.io/token/${txn.contractAddress}` : null
   }
   else {
     await fetch(`https://eth-mainnet.g.alchemy.com/nft/v2/${process.env.ALCHEMY_API_KEY}\n
@@ -79,8 +84,10 @@ const getApproveData = async (asset, txn) => {
         console.log('getApproveData: ', response)
         asset.collectionIconUrl = response.contractMetadata.openSea.imageUrl ? response.contractMetadata.openSea.imageUrl : null;
         asset.symbol = response.contractMetadata.symbol ? response.contractMetadata.symbol : "NFT";
+        asset.title = response.contractMetadata.name ? response.contractMetadata.name : null;
         asset.collectionName = response.contractMetadata.name ? response.contractMetadata.name : null;
         asset.osVerified = response.contractMetadata.openSea.safelistRequestStatus ? response.contractMetadata.openSea.safelistRequestStatus : null;
+        asset.tokenURL = txn.contractAddress? `https://opensea.io/zh-TW/assets/ethereum/${txn.contractAddress}`:null
       })
       .catch(err => {
         console.log(err.message)
@@ -90,17 +97,20 @@ const getApproveData = async (asset, txn) => {
 }
 const approvalHandler = async (txn) => {
   let assetApprove = {
-    symbol: null,
-    contractAddress: null,
     amount: null,
+    type: null,
+    symbol: null,
+    imgURL: null,
     tokenURL: null,
     collectionName: null,
+    collectionIconUrl: null,
     title: null,
-    osVerified: null
+    osVerified: null,
+    tokenId: null,
   }
   assetApprove.symbol = txn.symbol
-  assetApprove.contractAddress = txn.to
   assetApprove.amount = txn.amount
+  asset.type = txn.assetType
   let err = await getApproveData(assetApprove, txn)
   console.log(err);
   if (err) return err
@@ -112,6 +122,7 @@ const transferHandler = async (txn) => {
     amount: null,
     type: null,
     symbol: null,
+    imgURL: null,
     tokenURL: null,
     collectionName: null,
     collectionIconUrl: null,
@@ -136,8 +147,8 @@ exports.sendTransaction = async (req, res) => {
   let transactionInfo = {
     changeType: "",
     gas: "",
-    in: [],
-    out: [],
+    in: null,
+    out: null,
     approve: null
   };
 
@@ -181,9 +192,13 @@ exports.sendTransaction = async (req, res) => {
               transactionInfo.changeType = 'TRANSFER'
               await transferHandler(changeObj)
                 .then((res) => {
-                  transactionInfo.out.push(res)
+                  const address = changeObj?.contractAddress?changeObj.contractAddress:'0x0000000000000000000000000000000000000000'
+                  transactionInfo.out = transactionInfo.out?transactionInfo.out:{}
+                  if(!transactionInfo.out[address]) transactionInfo.out[address] = [];
+                  transactionInfo.out[address].push(res);
                 })
                 .catch((err) => {
+                  console.log(err);
                   errStat = true
                 })
             }
@@ -193,7 +208,10 @@ exports.sendTransaction = async (req, res) => {
               transactionInfo.changeType = 'TRANSFER'
               await transferHandler(changeObj)
                 .then((res) => {
-                  transactionInfo.in.push(res)
+                  const address = changeObj.contractAddress?changeObj.contractAddress:'0x0000000000000000000000000000000000000000'
+                  transactionInfo.in = transactionInfo.in?transactionInfo.in:{}
+                  if(!transactionInfo.in[address]) transactionInfo.in[address] = [];
+                  transactionInfo.in[address].push(res);
                 })
                 .catch((err) => {
                   errStat = true
@@ -202,8 +220,9 @@ exports.sendTransaction = async (req, res) => {
           }
         }
         console.log('Transfer: ', transactionInfo)
+        console.log(transactionInfo.in)
         if (errStat) res.status(500).send({ message: "something wrong" })
-        else if (transactionInfo.in.length === 0 && transactionInfo.out.length === 0 && !transactionInfo.approve) res.status(500).send({ message: "something wrong" })
+        else if (!transactionInfo.in && !transactionInfo.out && !transactionInfo.approve) res.status(500).send({ message: "something wrong" })
         else res.status(200).send(transactionInfo)
       })
   } catch (error) {
@@ -228,7 +247,9 @@ exports.signatureParsing = async (req, res) => {
   if (req.body.type === 'eth_signTypedData_v4' && payload.domain.name === 'Seaport' && openseaContract.includes(payload.domain.verifyingContract.toLowerCase())) { transactionInfo = await openseaTransInfo(payload); }
   else if (req.body.type === 'eth_signTypedData_v4' && payload.domain.name === 'Blur Exchange' && payload.domain.verifyingContract.toLowerCase() === blurContract) { transactionInfo = await blurTransInfo(payload); }
   if (transactionInfo === "error") transactionInfo = null; 
-  console.log(`simulation info: ${transactionInfo}`)
+  console.log("simulation info:", transactionInfo)
+  console.log("simulation info in:",transactionInfo.in)
+  console.log("simulation info out:", transactionInfo.out)
   res.status(200).send(transactionInfo);
 
 }
@@ -236,7 +257,7 @@ exports.signatureParsing = async (req, res) => {
 async function openseaTransInfo(payload) {
   console.log("[transactionSimulationController.js] [openseaTransInfo]: payload.primaryType is ", payload.primaryType)
   if (payload.primaryType === 'OrderComponents') return await seaSingleList(payload);
-  else if (payload.primaryType === 'BulkOrder') return null;
+  else if (payload.primaryType === 'BulkOrder') return await seaMultipleList(payload);
   else return "error";
 }
 async function blurTransInfo(payload) {
@@ -252,14 +273,18 @@ async function bulrSellOrder(order) {
   var asset = {
     changeType: "SIGNATURE",
     gas: null,
-    in: [],
-    out: [],
+    in: null,
+    out: null,
     approve: null
   }
-  let assetIn = await blurAssetHandler(order, 'Token')
-  asset.in.push(assetIn);
+  let assetIn = await blurAssetHandler(order, 'TOKEN')
+  asset.in = asset.in?asset.in:{}
+  if(!asset.in[order.paymentToken]) asset.in[order.paymentToken] = [];
+  asset.in[order.paymentToken].push(assetIn);
   let assetOut = await blurAssetHandler(order, 'NFT')
-  asset.out.push(assetOut);
+  asset.out = asset.out?asset.out:{}
+  if(!asset.out[order.collection]) asset.out[order.collection] = [];
+  asset.out[order.collection].push(assetOut);
   return asset;
 }
 
@@ -267,14 +292,18 @@ async function bulrBuyOrder(order) {
   var asset = {
     changeType: "SIGNATURE",
     gas: null,
-    in: [],
-    out: [],
+    in: null,
+    out: null,
     approve: null
   }
   let assetIn = await blurAssetHandler(order, 'NFT')
-  asset.in.push(assetIn);
+  asset.in = asset.in?asset.in:{}
+  if(!asset.in[order.collection]) asset.in[order.collection] = [];
+  asset.in[order.collection].push(assetIn);
   let assetOut = await blurAssetHandler(order, 'TOKEN')
-  asset.out.push(assetOut);
+  asset.out = asset.out?asset.out:{}
+  if(!asset.out[order.paymentToken]) asset.out[order.paymentToken] = [];
+  asset.out[order.paymentToken].push(assetOut);
   return asset;
 }
 
@@ -284,6 +313,7 @@ async function blurAssetHandler(order, type) {
     type: null,
     symbol: null,
     tokenURL: null,
+    imgURL: null,
     collectionName: null,
     collectionIconUrl: null,
     title: null,
@@ -307,7 +337,8 @@ async function blurAssetHandler(order, type) {
       if (order.paymentToken === '0x0000000000000000000000000000000000000000') { //ETH
         asset.type = 'NATIVE'
         asset.symbol = 'ETH'
-        asset.tokenURL = 'https://static.alchemyapi.io/images/network-assets/eth.png'
+        asset.imgURL = 'https://static.alchemyapi.io/images/network-assets/eth.png'
+        asset.tokenURL = null
         asset.title = 'ETH'
         asset.collectionName = 'Ethereum'
         return asset
@@ -315,13 +346,12 @@ async function blurAssetHandler(order, type) {
       else if (order.paymentToken === '0x0000000000a39bb272e79075ade125fd351887ac') { //blurtoken
         asset.type = 'ERC20'
         asset.symbol = 'BlurETH'
-        asset.tokenURL = 'https://assets-global.website-files.com/614c99cf4f23700c8aa3752a/63c1bbc0ca87e7297c7d155f_public.png'
+        asset.imgURL = 'https://assets-global.website-files.com/614c99cf4f23700c8aa3752a/63c1bbc0ca87e7297c7d155f_public.png'
+        asset.tokenURL = 'https://etherscan.io/token/0x0000000000a39bb272e79075ade125fd351887ac'
         asset.title = 'BlurETH'
         asset.collectionName = 'BlurETH'
-        console.log(asset)
         return asset
       }
-      console.log(asset)
       await erc20Metadata(asset, itemData);
       return asset;
     }
@@ -345,8 +375,8 @@ async function seaSingleList(payload) {
   var asset = {
     changeType: "SIGNATURE",
     gas: null,
-    in: [],
-    out: [],
+    in: null,
+    out: null,
     approve: null
   }
   const order = payload.message
@@ -354,12 +384,16 @@ async function seaSingleList(payload) {
   await Promise.all(order.consideration.map(async item => {
     if (address === item.recipient) {
       let Asset_in = await SeaportAssetHandler(item)
-      asset.in.push(Asset_in);
+      asset.in = asset.in?asset.in:{}
+      if(!asset.in[item.token]) asset.in[item.token] = [];
+      asset.in[item.token].push(Asset_in);
     }
   }))
   await Promise.all(order.offer.map(async item => {
     let Asset_out = await SeaportAssetHandler(item);
-    asset.out.push(Asset_out);
+    asset.out = asset.out?asset.out:{}
+    if(!asset.out[item.token]) asset.out[item.token] = [];
+    asset.out[item.token].push(Asset_out);
   }))
   return asset;
 }
@@ -368,8 +402,8 @@ async function seaMultipleList(payload) {
   var asset = {
     changeType: "SIGNATURE",
     gas: null,
-    in: [],
-    out: [],
+    in: null,
+    out: null,
     approve: null
   }
   //const address = payload.tree.offerer
@@ -378,12 +412,16 @@ async function seaMultipleList(payload) {
     await Promise.all(order.consideration.map(async item => {
       if (address === item.recipient) {
         let Asset_in = await SeaportAssetHandler(item)
-        asset.in.push(Asset_in);
+        asset.in = asset.in?asset.in:{}
+        if(!asset.in[item.token]) asset.in[item.token] = [];
+        asset.in[item.token].push(Asset_in);
       }
     }))
     await Promise.all(order.offer.map(async item => {
       let Asset_out = await SeaportAssetHandler(item);
-      asset.out.push(Asset_out);
+      asset.out = asset.out?asset.out:{}
+      if(!asset.out[item.token]) asset.out[item.token] = [];
+      asset.out[item.token].push(Asset_out);
     }))
   }
   return asset
@@ -396,12 +434,12 @@ async function SeaportAssetHandler(item) {
     type: null,
     symbol: null,
     tokenURL: null,
+    imgURL: null,
     collectionName: null,
     collectionIconUrl: null,
     title: null,
     osVerified: null,
     tokenId: null,
-
   }
   const itemData = {
     token: item.token,
@@ -415,7 +453,8 @@ async function SeaportAssetHandler(item) {
       asset.amount = Number(asset.amount).toFixed(4);
       asset.type = 'NATIVE'
       asset.symbol = 'ETH'
-      asset.tokenURL = 'https://static.alchemyapi.io/images/network-assets/eth.png'
+      asset.imgURL = 'https://static.alchemyapi.io/images/network-assets/eth.png'
+      asset.tokenURL = null
       asset.title = 'ETH'
       asset.collectionName = 'Ethereum'
       return asset
@@ -455,7 +494,8 @@ const erc20Metadata = async (asset, item) => {
     const response = await fetchWithRetry(url, options)
     const data = await response.json();
     asset.type = 'ERC20'
-    asset.tokenURL = data.result.logo ? data.result.logo : null;
+    asset.imgURL = data.result.logo ? data.result.logo : null;
+    asset.tokenURL = `https://etherscan.io/token/${item.token}`
     asset.title = data.result.symbol ? data.result.symbol : null;
     asset.symbol = data.result.symbol ? data.result.symbol : null;
     asset.collectionName = data.result.name ? data.result.name : null;
@@ -475,11 +515,13 @@ const NFTMetadata = async (asset, item) => {
     asset.symbol = data.contractMetadata.symbol ? data.contractMetadata.symbol : "NFT";
     asset.collectionName = data.contractMetadata.name ? data.contractMetadata.name : null;
 
-    if (response.error) asset.tokenURL = data.contractMetadata.openSea.imageUrl ? data.contractMetadata.openSea.imageUrl : null;
-    else asset.tokenURL = data.media[0].gateway ? data.media[0].gateway : null;
+    if (response.error) asset.imgURL = data.contractMetadata.openSea.imageUrl ? data.contractMetadata.openSea.imageUrl : null;
+    else asset.imgURL = data.media[0].gateway ? data.media[0].gateway : null;
 
     asset.osVerified = data.contractMetadata.openSea.safelistRequestStatus ? data.contractMetadata.openSea.safelistRequestStatus : null;
     asset.collectionIconUrl = data.contractMetadata.openSea.imageUrl ? data.contractMetadata.openSea.imageUrl : null;
+
+    asset.tokenURL = `https://opensea.io/zh-TW/assets/ethereum/${item.token}/${item.tokenId}`
   } catch (err) {
     console.log(err.message);
     return 'fetching error';
@@ -495,10 +537,12 @@ const ContractMetadata = async (asset, item) => {
     asset.title = data.contractMetadata.name ? data.contractMetadata.name : null;
     asset.collectionName = data.contractMetadata.name ? data.contractMetadata.name : null;
 
-    asset.tokenURL = data.contractMetadata.openSea.imageUrl ? data.contractMetadata.openSea.imageUrl : null;
+    asset.imgURL = data.contractMetadata.openSea.imageUrl ? data.contractMetadata.openSea.imageUrl : null;
 
     asset.osVerified = data.contractMetadata.openSea.safelistRequestStatus ? data.contractMetadata.openSea.safelistRequestStatus : null;
     asset.collectionIconUrl = data.contractMetadata.openSea.imageUrl ? data.contractMetadata.openSea.imageUrl : null;
+
+    asset.tokenURL = `https://opensea.io/zh-TW/assets/ethereum/${item.token}`
   } catch (err) {
     console.log(err.message);
     return 'fetching error';
