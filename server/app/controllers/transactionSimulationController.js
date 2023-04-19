@@ -32,7 +32,7 @@ const getAssetData = async (asset, txn) => {
     asset.collectionName = txn.name ?txn.name: null;
     asset.symbol = txn.symbol ? txn.symbol:null;
     asset.title = txn.symbol ? txn.symbol:null;
-    asset.tokenURL = txn.contractAddress ? `https://etherscan.io/token/${txn.contractAddress}` : '0x0000000000000000000000000000000000000000'
+    asset.tokenURL = txn.contractAddress ? `https://etherscan.io/token/${txn.contractAddress}` : null
   }
   else {
     await fetch(`https://eth-mainnet.g.alchemy.com/v2/${process.env.ALCHEMY_API_KEY}\n
@@ -71,7 +71,7 @@ const getApproveData = async (asset, txn) => {
     asset.collectionIconUrl = txn.logo ? txn.logo : null;
     asset.collectionName = txn.name ?txn.name: null;
     asset.title = txn.symbol ? txn.symbol:null;
-    asset.tokenURL = txn.contractAddress ? `https://etherscan.io/token/${txn.contractAddress}` : '0x0000000000000000000000000000000000000000'
+    asset.tokenURL = txn.contractAddress ? `https://etherscan.io/token/${txn.contractAddress}` : null
   }
   else {
     await fetch(`https://eth-mainnet.g.alchemy.com/nft/v2/${process.env.ALCHEMY_API_KEY}\n
