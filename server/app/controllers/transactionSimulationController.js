@@ -56,6 +56,7 @@ const getAssetData = async (asset, txn) => {
         asset.osVerified = response.contractMetadata.openSea.safelistRequestStatus ? response.contractMetadata.openSea.safelistRequestStatus : null;
         asset.collectionIconUrl = response.contractMetadata.openSea.imageUrl ? response.contractMetadata.openSea.imageUrl : null;
 
+        console.log('tokenID:', txn.tokenId)
         asset.tokenURL = txn.contractAddress?`https://opensea.io/zh-TW/assets/ethereum/${txn.contractAddress}/${txn.tokenId}`:null
       })
       .catch(err => {
@@ -68,9 +69,10 @@ const getAssetData = async (asset, txn) => {
 const getApproveData = async (asset, txn) => {
   if (txn.assetType === 'ERC20' || txn.assetType === 'NATIVE') {
     asset.amount = Number(txn.amount).toFixed(4);
-    asset.collectionIconUrl = txn.logo ? txn.logo : null;
+    asset.imgUrl = txn.logo ? txn.logo : null;
     asset.collectionName = txn.name ?txn.name: null;
     asset.title = txn.symbol ? txn.symbol:null;
+    asset.symbol = txn.symbol ? txn.symbol:null;
     asset.tokenURL = txn.contractAddress ? `https://etherscan.io/token/${txn.contractAddress}` : null
   }
   else {
@@ -83,6 +85,7 @@ const getApproveData = async (asset, txn) => {
         console.log('getApproveData: ', response)
         asset.collectionIconUrl = response.contractMetadata.openSea.imageUrl ? response.contractMetadata.openSea.imageUrl : null;
         asset.symbol = response.contractMetadata.symbol ? response.contractMetadata.symbol : "NFT";
+        asset.title = response.contractMetadata.name ? response.contractMetadata.name : null;
         asset.collectionName = response.contractMetadata.name ? response.contractMetadata.name : null;
         asset.osVerified = response.contractMetadata.openSea.safelistRequestStatus ? response.contractMetadata.openSea.safelistRequestStatus : null;
         asset.tokenURL = txn.contractAddress? `https://opensea.io/zh-TW/assets/ethereum/${txn.contractAddress}`:null
@@ -95,17 +98,18 @@ const getApproveData = async (asset, txn) => {
 }
 const approvalHandler = async (txn) => {
   let assetApprove = {
-    symbol: null,
-    contractAddress: null,
     amount: null,
+    type: null,
+    symbol: null,
     imgURL: null,
     tokenURL: null,
     collectionName: null,
+    collectionIconUrl: null,
     title: null,
-    osVerified: null
+    osVerified: null,
+    tokenId: null,
   }
   assetApprove.symbol = txn.symbol
-  assetApprove.contractAddress = txn.to
   assetApprove.amount = txn.amount
   let err = await getApproveData(assetApprove, txn)
   console.log(err);
@@ -216,6 +220,7 @@ exports.sendTransaction = async (req, res) => {
           }
         }
         console.log('Transfer: ', transactionInfo)
+        console.log(transactionInfo.in)
         if (errStat) res.status(500).send({ message: "something wrong" })
         else if (!transactionInfo.in && !transactionInfo.out && !transactionInfo.approve) res.status(500).send({ message: "something wrong" })
         else res.status(200).send(transactionInfo)
