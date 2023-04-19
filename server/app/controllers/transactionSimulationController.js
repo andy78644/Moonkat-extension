@@ -217,7 +217,7 @@ exports.sendTransaction = async (req, res) => {
         }
         console.log('Transfer: ', transactionInfo)
         if (errStat) res.status(500).send({ message: "something wrong" })
-        else if (transactionInfo.in.length === 0 && transactionInfo.out.length === 0 && !transactionInfo.approve) res.status(500).send({ message: "something wrong" })
+        else if (!transactionInfo.in && !transactionInfo.out && !transactionInfo.approve) res.status(500).send({ message: "something wrong" })
         else res.status(200).send(transactionInfo)
       })
   } catch (error) {
