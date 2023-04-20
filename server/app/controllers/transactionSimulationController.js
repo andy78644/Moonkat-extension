@@ -264,20 +264,22 @@ async function openseaTransInfo(payload) {
 async function blurTransInfo(payload) {
   // side = 1 sell NFT
   // side = 0 buy NFT
-  if (payload.message.side === '1') return await bulrSellOrder(payload.message);
-  else if (payload.message.side === '0') return bulrBuyOrder(payload.message);
+  if (payload.message.side === '1') return await bulrSellOrder(payload.message, payload.domain.verifyingContract);
+  else if (payload.message.side === '0') return bulrBuyOrder(payload.message, payload.domain.verifyingContract);
   else return "error";
 }
 
 
-async function bulrSellOrder(order) {
+async function bulrSellOrder(order, address) {
   var asset = {
     changeType: "SIGNATURE",
     gas: null,
     in: null,
     out: null,
-    approve: null
+    approve: null,
+    to: null
   }
+  asset.to = address;
   let assetIn = await blurAssetHandler(order, 'TOKEN')
   asset.in = asset.in?asset.in:{}
   if(!asset.in[order.paymentToken]) asset.in[order.paymentToken] = [];
@@ -289,14 +291,16 @@ async function bulrSellOrder(order) {
   return asset;
 }
 
-async function bulrBuyOrder(order) {
+async function bulrBuyOrder(order, address) {
   var asset = {
     changeType: "SIGNATURE",
     gas: null,
     in: null,
     out: null,
-    approve: null
+    approve: null,
+    to: null
   }
+  asset.to = address;
   let assetIn = await blurAssetHandler(order, 'NFT')
   asset.in = asset.in?asset.in:{}
   if(!asset.in[order.collection]) asset.in[order.collection] = [];
@@ -378,8 +382,10 @@ async function seaSingleList(payload) {
     gas: null,
     in: null,
     out: null,
-    approve: null
+    approve: null,
+    to: null
   }
+  asset.to = payload.domain.verifyingContract;
   const order = payload.message
   const address = order.offerer
   await Promise.all(order.consideration.map(async item => {
@@ -405,9 +411,11 @@ async function seaMultipleList(payload) {
     gas: null,
     in: null,
     out: null,
-    approve: null
+    approve: null,
+    to: null
   }
   //const address = payload.tree.offerer
+  asset.to = payload.domain.verifyingContract;
   for (const order of payload.message.tree) {
     const address = order.offerer
     await Promise.all(order.consideration.map(async item => {
