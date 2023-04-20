@@ -110,7 +110,7 @@ const approvalHandler = async (txn) => {
   }
   assetApprove.symbol = txn.symbol
   assetApprove.amount = txn.amount
-  asset.type = txn.assetType
+  assetApprove.type = txn.assetType
   let err = await getApproveData(assetApprove, txn)
   console.log(err);
   if (err) return err
@@ -226,6 +226,7 @@ exports.sendTransaction = async (req, res) => {
         else res.status(200).send(transactionInfo)
       })
   } catch (error) {
+    console.log(error)
     res.status(500).send({
       message:
         error.message
