@@ -42,7 +42,7 @@ const Out = (props: Props) => {
     }
 
     const displayOperator = (amount: string) => {
-        if (parseFloat(amount) < 0.0001) return '<'
+        if (0 < parseFloat(amount) && parseFloat(amount) < 0.0001) return '<'
         else return theme.operator
     }
 

@@ -12,9 +12,9 @@ interface Props {
 
 const ContractInfo = (props: Props) => {
     const { mode, transaction } = props;
+    console.log('[ContractInfo.tsx]: ', transaction)
     let contractAddress = ''
-    if(mode === 'transaction-assets-exchange' || mode === 'signature-712') { contractAddress = transaction }
-    else  { contractAddress = transaction.approve.contractAddress}
+    contractAddress = transaction
     
     const contractInfo = {
         contractName: undefined,

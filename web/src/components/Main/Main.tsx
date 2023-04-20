@@ -141,7 +141,7 @@ const Main = (props: Props) => {
                 return (
                     <div>
                         <MainHeader contractAddress={transactionResult.to} userAddress={userAddress}></MainHeader>
-                        <ContractInfo mode={renderMode} transaction={transactionResult} />
+                        <ContractInfo mode={renderMode} transaction={transactionResult.to} />
                         <Transfer mode={renderMode} transaction={transactionResult} />
                         <Footer onAccept={accept} onReject={reject} />
                     </div>
