@@ -264,13 +264,13 @@ async function openseaTransInfo(payload) {
 async function blurTransInfo(payload) {
   // side = 1 sell NFT
   // side = 0 buy NFT
-  if (payload.message.side === '1') return await bulrSellOrder(payload.message, payload.domain.verifyingContract);
-  else if (payload.message.side === '0') return bulrBuyOrder(payload.message, payload.domain.verifyingContract);
+  if (payload.message.side === '1') return await blurSellOrder(payload.message, payload.domain.verifyingContract);
+  else if (payload.message.side === '0') return blurBuyOrder(payload.message, payload.domain.verifyingContract);
   else return "error";
 }
 
 
-async function bulrSellOrder(order, address) {
+async function blurSellOrder(order, address) {
   var asset = {
     changeType: "SIGNATURE",
     gas: null,
@@ -291,7 +291,7 @@ async function bulrSellOrder(order, address) {
   return asset;
 }
 
-async function bulrBuyOrder(order, address) {
+async function blurBuyOrder(order, address) {
   var asset = {
     changeType: "SIGNATURE",
     gas: null,
