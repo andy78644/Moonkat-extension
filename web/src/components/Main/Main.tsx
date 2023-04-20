@@ -74,7 +74,7 @@ const Main = (props: Props) => {
                                 setRenderMode('signature-move-assets')
                                 setHasLoaded(true)
                             } else {
-                                res.to = signatureAddress
+                                // res.to = signatureAddress
                                 setSignatureResult(res)
                                 setRenderMode('signature-712')
                                 setHasLoaded(true)
