@@ -41,7 +41,8 @@ const Approve = (props: Props) => {
                     <Withdraw
                         color={theme.color}
                         symbol={assetsApprove.symbol ?? defaultAssetsValue.symbol}
-                        imgURL={assetsApprove.collectionIconUrl ?? defaultAssetsValue.collectionIconUrl}
+                        imgURL={assetsApprove.imgURL ?? defaultAssetsValue.imgURL}
+                        tokenURL={assetsApprove.tokenURL ?? defaultAssetsValue.tokenURL}
                     />
                 </List>
             </div>

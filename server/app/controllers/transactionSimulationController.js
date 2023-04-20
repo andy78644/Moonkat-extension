@@ -249,9 +249,9 @@ exports.signatureParsing = async (req, res) => {
   else if (req.body.type === 'eth_signTypedData_v4' && payload.domain.name === 'Blur Exchange' && payload.domain.verifyingContract.toLowerCase() === blurContract) { transactionInfo = await blurTransInfo(payload); }
   if (transactionInfo === "error") transactionInfo = null; 
   console.log("simulation info:", transactionInfo)
-  console.log("simulation info in:",transactionInfo.in)
-  console.log("simulation info out:", transactionInfo.out)
-  res.status(200).send(transactionInfo);
+  // console.log("simulation info in:",transactionInfo.in)
+  // console.log("simulation info out:", transactionInfo.out)
+  res.status(200).send({transactionInfo});
 
 }
 

@@ -8,14 +8,15 @@ interface Props {
     color: string
     symbol: string
     imgURL: string
+    tokenURL: string
 }
 
 const Withdraw = (props: Props) => {
-    const { color, imgURL, symbol } = props
+    const { color, symbol, imgURL, tokenURL } = props
     return (
         <>
             <ListItem sx={{ padding: "8px 16px" }}>
-                <img src={imgURL ?? nft} alt="nft" width="48px" height="48px" />
+                <a href={tokenURL} target="_blank"><img src={imgURL ?? nft} alt="nft" width="48px" height="48px" /></a>
                 <ListItemText
                     sx={{ paddingLeft: '8px', textAlign: 'right' }}
                     primary={

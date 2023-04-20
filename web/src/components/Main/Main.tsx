@@ -68,7 +68,8 @@ const Main = (props: Props) => {
                     await dataService.postSignature({ type, payload }, "signature")
                         .then(res => {
                             console.log("[Main.tsx] -- Signature Success", res)
-                            if (res === null) {
+                            res = res.transactionInfo
+                            if (!res) {
                                 setSignatureResult(res)
                                 setRenderMode('signature-move-assets')
                                 setHasLoaded(true)
