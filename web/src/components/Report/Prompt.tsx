@@ -53,7 +53,7 @@ const Prompt = (props: Props) => {
                         if (windowId) {
                             Browser.windows.remove((await windowId).id!)
                         }
-                    }, 300000)
+                    }, 3000)
                 })
                 .catch((err) => {
                     handlePrompt(false)
@@ -63,7 +63,7 @@ const Prompt = (props: Props) => {
                         if (windowId) {
                             Browser.windows.remove((await windowId).id!)
                         }
-                    }, 300000)
+                    }, 3000)
                 })
         }
         postReport(reportInfo)
