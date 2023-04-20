@@ -75,7 +75,7 @@ const MainHeader = (props: Props) => {
                     transformOrigin={{ vertical: 'top', horizontal: 'left' }}
                 >
                     <Button
-                        sx={{ "&:hover": { backgroundColor: '#DFD8CA' }, fontFamily: 'Kiona', fontWeight: 300, fontSize: "20px", color: "#434343", paddingLeft: '11px', paddingRight: '21.3px'  }}
+                        sx={{ "&:hover": { backgroundColor: '#DFD8CA' }, fontFamily: 'Kiona', fontWeight: 300, fontSize: "20px", color: "#434343", paddingLeft: '11px', paddingRight: '25.3px'  }}
                         startIcon={<img style={{marginRight: '5.5px'}} src={Campaign} alt="campaign" width="26px" height="26px"/>}
                         onClick={handleReportPopOut}
                     >
@@ -84,7 +84,7 @@ const MainHeader = (props: Props) => {
                     <br />
                     <hr className='mainHeaderHorizontalLine'></hr>
                     <Button
-                        sx={{ "&:hover": { backgroundColor: '#DFD8CA' }, fontFamily: 'Kiona', fontWeight: 300, fontSize: "20px", color: "#434343", paddingLeft: '16px', paddingRight: '8.5px' }}
+                        sx={{ "&:hover": { backgroundColor: '#DFD8CA' }, fontFamily: 'Kiona', fontWeight: 300, fontSize: "20px", color: "#434343", paddingLeft: '16px', paddingRight: '12px' }}
                         href={"https://tally.so/r/w4QLG5"}
                         target={'_blank'}
                         startIcon={<img style={{marginRight: '8px'}} src={Feedback} alt="feedback" width="20px" height="20px" />}

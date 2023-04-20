@@ -9,7 +9,7 @@ const Malicious = () => {
         <div id="malicious">
             <img id="maliciousImage" src={maliciousImage} alt="maliciousImage" />
             <div id="maliciousTitle"> 
-                <img id="maliciousCheckImage" src={maliciousErrorImage} alt="maliciousErrorImage" />
+                <img style={{margin: 0}} id="maliciousCheckImage" src={maliciousErrorImage} alt="maliciousErrorImage" />
                 &nbsp; 
                 Need Notice !
                 May Involve Asset Transfer

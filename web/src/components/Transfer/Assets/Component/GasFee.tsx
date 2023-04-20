@@ -3,15 +3,15 @@ import ListItem from "@mui/material/ListItem"
 import ListItemText from '@mui/material/ListItemText'
 import Typography from '@mui/material/Typography'
 import gasFeeIcon from '../../../../assets/gasfee.png'
-import { TokenContext } from './Component'
 
 interface Props {
-    
+    gasFee: number
+    operator: string
 }
 
 const GasFee = (props: Props) => {
 
-    const { operator, gasFee } = useContext(TokenContext)
+    const { operator, gasFee } = props
 
     return (
         <>
@@ -29,7 +29,7 @@ const GasFee = (props: Props) => {
                     sx={{ textAlign: 'right', color: '#B8463D' }}
                     primary={
                         <Typography sx={{ fontFamily: 'Lato', fontSize: '20px', fontWeight: 100 }}>
-                            {operator}{gasFee > 0 ? gasFee.toFixed(4) + ' ETH' : gasFee.toFixed(0)}
+                            {operator}{gasFee} ETH
                         </Typography>
                     }
                 />

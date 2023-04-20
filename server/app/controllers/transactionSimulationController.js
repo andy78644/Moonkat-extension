@@ -68,7 +68,7 @@ const getAssetData = async (asset, txn) => {
 const getApproveData = async (asset, txn) => {
   if (txn.assetType === 'ERC20' || txn.assetType === 'NATIVE') {
     asset.amount = Number(txn.amount).toFixed(4);
-    asset.imgUrl = txn.logo ? txn.logo : null;
+    asset.imgURL = txn.logo ? txn.logo : null;
     asset.collectionName = txn.name ?txn.name: null;
     asset.title = txn.symbol ? txn.symbol:null;
     asset.symbol = txn.symbol ? txn.symbol:null;
@@ -110,7 +110,7 @@ const approvalHandler = async (txn) => {
   }
   assetApprove.symbol = txn.symbol
   assetApprove.amount = txn.amount
-  asset.type = txn.assetType
+  assetApprove.type = txn.assetType
   let err = await getApproveData(assetApprove, txn)
   console.log(err);
   if (err) return err
@@ -226,6 +226,7 @@ exports.sendTransaction = async (req, res) => {
         else res.status(200).send(transactionInfo)
       })
   } catch (error) {
+    console.log(error)
     res.status(500).send({
       message:
         error.message
@@ -248,9 +249,9 @@ exports.signatureParsing = async (req, res) => {
   else if (req.body.type === 'eth_signTypedData_v4' && payload.domain.name === 'Blur Exchange' && payload.domain.verifyingContract.toLowerCase() === blurContract) { transactionInfo = await blurTransInfo(payload); }
   if (transactionInfo === "error") transactionInfo = null; 
   console.log("simulation info:", transactionInfo)
-  console.log("simulation info in:",transactionInfo.in)
-  console.log("simulation info out:", transactionInfo.out)
-  res.status(200).send(transactionInfo);
+  // console.log("simulation info in:",transactionInfo.in)
+  // console.log("simulation info out:", transactionInfo.out)
+  res.status(200).send({transactionInfo});
 
 }
 

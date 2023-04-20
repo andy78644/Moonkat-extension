@@ -1,8 +1,9 @@
-import React from 'react';
-import TransferHeader from './TransferHeader';
-import Change from './Assets/Change'
-import Approve from './Assets/Approve';
-import './Transfer.css';
+import React from 'react'
+import In from './Assets/In'
+import Out from './Assets/Out'
+import Approve from './Assets/Approve'
+import TransferHeader from './TransferHeader'
+import { mockAssetsIn, nonCollapseAssetsIn, mockAssetsOut, nonCollapseAssetsOut } from './Assets/mockAssets'
 
 interface Props {
     mode: any;
@@ -10,69 +11,22 @@ interface Props {
 }
 
 const Transfer =  (props: Props) => {
+
     const {mode, transaction} = props;
-    console.log('[Transfer.tsx]: transaction is ',transaction)
+    let {out, approve, gas, gasPrice} = transaction
 
-    const getAssetsChangeInfo = {
-        assetsIn: transaction.in,
-        assetsOut: transaction.out,
-        gas: transaction.gas,
-        gasPrice: transaction.gasPrice
-    }
+    // mock data
+    // transaction.in = mockAssetsIn
+    // out = mockAssetsOut
 
-    const getAssetsApproveInfo = {
-        assetsApprove: [transaction.approve], // backend pass an object (should be an array)
-        assetsOut: transaction.out,
-        gas: transaction.gas,
-        gasPrice: transaction.gasPrice
-    }
-
-    const getSignatureInfo = {
-        assetsIn: transaction.in,
-        assetsOut: transaction.out,
-        gas: transaction.gas,
-        gasPrice: transaction.gasPrice
-    }
-
-    const renderCurrentSelection = (mode: string | null) => {
-        switch (mode) {
-            case 'transaction-assets-exchange': {
-                return (
-                    <>
-                        <TransferHeader mode={mode}></TransferHeader>
-                        <Change {...getAssetsChangeInfo}/>
-                    </>
-                )
-            }
-            case 'transaction-assets-approval': {
-                return (
-                    <>
-                        <TransferHeader mode={mode}></TransferHeader>
-                        <Approve {...getAssetsApproveInfo} />
-                    </>
-                )
-            }
-            case 'signature-712': {
-                return (
-                    <>
-                        <TransferHeader mode={mode}></TransferHeader>
-                        <Change {...getSignatureInfo} />
-                    </>
-                )
-            }
-            default: {
-                return (
-                    <>
-                        Not designed.
-                    </>
-                )
-            }
-        }
-    }
-
-    return (<div>
-        {renderCurrentSelection(mode)}
-    </div>)
+    return (
+        <>
+            <TransferHeader mode={mode}></TransferHeader>
+            {out || gas ? <Out mode={mode} assetsOut={out} gas={gas} gasPrice={gasPrice}/> : null}
+            {transaction.in ? <In assetsIn={transaction.in}/> : null}
+            {approve ? <Approve assetsApprove={approve}/> : null}
+        </>
+    )
 };
 
 export default Transfer;
