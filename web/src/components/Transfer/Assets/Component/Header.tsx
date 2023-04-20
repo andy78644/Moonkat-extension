@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from "react"
+import React, { useState } from "react"
 import Popover from '@mui/material/Popover'
 import Typography from '@mui/material/Typography'
 import ListItemText from '@mui/material/ListItemText'
@@ -7,30 +7,24 @@ import ExpandLess from '@mui/icons-material/ExpandLess'
 import ExpandMore from '@mui/icons-material/ExpandMore'
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline'
 
-import { TokenContext } from './Component'
+import '../Component.css'
 
 interface Props {
+    mode: string
+    setExpand: any
     expand: boolean
-    setExpand: any,
+    defaultExpand: boolean
+    verbForPopOver: string
 }
 
 const Header = (props: Props) => {
 
-    const { expand, setExpand } = props
-    const { type, mode, verbForPopOverText, tokenLength } = useContext(TokenContext)
-
-    const [isNFT, setIsNFT] = useState(false)
-    useEffect(() => {
-        if (type === "ERC20" || type === "NATIVE" || !type) {
-            setIsNFT(false)
-        } else setIsNFT(true)
-    }, [type])
-    
+    const { mode, expand, setExpand, defaultExpand, verbForPopOver } = props
 
     // PopOver
     const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null)
     const hover = Boolean(anchorEl)
-    const handleClick = () => { if (tokenLength > 1) setExpand(!expand) }
+    const handleClick = () => { if (defaultExpand) setExpand(!expand) }
     const handlePopoverOpen = (event: React.MouseEvent<HTMLElement>) => { setAnchorEl(event.currentTarget) }
     const handlePopoverClose = () => { setAnchorEl(null) }
 
@@ -43,16 +37,15 @@ const Header = (props: Props) => {
                 disableRipple
             >
                 {mode} &nbsp;
-                <Typography
-                    aria-owns={hover ? 'assetsComponentPopOver' : undefined}
-                    aria-haspopup="true"
+                <span
+                    style={{width: '18px', height: '18px'}}
                     onMouseEnter={handlePopoverOpen}
                     onMouseLeave={handlePopoverClose}
                 >
                     <HelpOutlineIcon sx={{ fontSize: 18 }} />
-                </Typography>
-                <Popover 
-                    id="assetsComponentPopover"
+                </span>
+                <Popover
+                    className="assetsComponentPopover"
                     sx={{ pointerEvents: 'none' }}
                     open={hover}
                     anchorEl={anchorEl}
@@ -61,21 +54,18 @@ const Header = (props: Props) => {
                     onClose={handlePopoverClose}
                     disableRestoreFocus
                 >
-                    <Typography sx={{ p: 1 }}>The assets will {verbForPopOverText} after confirm this txn.</Typography>
+                    <Typography sx={{ fontSize: '14px', color: '#434343', padding: '4px' }}>The assets will {verbForPopOver} after confirm this txn.</Typography>
                 </Popover>
                 <ListItemText />
                 {
-                    tokenLength > 1 && isNFT
-                        ?
+                    defaultExpand ?
                         expand ?
                             <ExpandLess sx={{ fontSize: '20px' }} /> :
                             <ExpandMore sx={{ fontSize: '20px' }} />
-                        :
-                        <div></div>
+                        : null
                 }
             </ListItemButton>
-
-            <hr></hr>
+            <hr style={{border: '1px solid #E6E0D3', margin: '0px 0px 8px 0px'}}></hr>
         </div>
     )
 }

@@ -12,8 +12,8 @@ interface Props {
 const Footer = (props: Props) => {
     const { onAccept, onReject } = props;
     return (
-        <div>
-            <Stack sx={{ width: '100%', backgroundColor: "#ECE5D0FF", padding: '16px', position: 'fixed', left: 0, bottom: 0 }}
+        <div id="footer">
+            <Stack sx={{ width: 'calc(100% - 32px)', backgroundColor: "#ECE5D0FF", padding: '16px', position: 'fixed', left: 0, bottom: 0 }}
                 direction="row"
                 spacing='8px'
             >

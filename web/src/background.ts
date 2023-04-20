@@ -135,7 +135,7 @@ const processRegularRequest = async (
 const createSignatureMention = async (msg: any, alive: boolean) => {
     const { id } = msg;
     const { userAddress } = msg.data;
-    if (!alive) mode = "debug-end";
+    if (!alive) mode = "simulation-failed";
     else if (!msg.data.signatureData.domain || msg.data.signatureData.domain.chainId.toString() === '1') mode = "signature-712";
     else return false;
     const window = await Browser.windows.getCurrent();
@@ -145,7 +145,7 @@ const createSignatureMention = async (msg: any, alive: boolean) => {
     const top = window.top! + Math.round((window.height! - height) * 0.2);
     console.log("[background.ts]: mode", msg.data.signatureData)
     console.log("[background.ts]: mode", msg.data.signatureData.signatureVersion)
-    if (!alive) mode = "debug-end";
+    if (!alive) mode = "simulation-failed";
     else if (msg.data.signatureData.signatureVersion)
         mode = msg.data.signatureData.signatureVersion;
     else mode = "signature-no-risk-safe";
@@ -173,7 +173,7 @@ const createSignatureMention = async (msg: any, alive: boolean) => {
 const createResult = async (msg: any, alive: boolean) => {
     const { transaction, chainId, userAddress, gasPrice } = msg.data;
     const { id } = msg;
-    if (!alive) mode = "debug-end";
+    if (!alive) mode = "simulation-failed";
     if (chainId !== 1) return false
     else mode = 'transaction'
     const window = await Browser.windows.getCurrent();

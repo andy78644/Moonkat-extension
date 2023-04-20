@@ -24,37 +24,35 @@ interface Props {
 
 const Main = (props: Props) => {
     const { id, mode, browserMsg, userAddress, gasPrice } = props;
-    const [transactionResult, settransactionResultState] = useState({ to: 'Default To' })
-    const [signatureResult, setSignatureResultState] = useState({ to: 'Default To' })
+    const [transactionResult, setTransactionResult] = useState({ to: '0x0000000000000000000000000000000000000000' })
+    const [signatureResult, setSignatureResult] = useState({ to: '0x0000000000000000000000000000000000000000' })
     const [renderMode, setRenderMode] = useState('')
     const [hasLoaded, setHasLoaded] = useState(false);
     useEffect(() => {
         if (mode === 'transaction') {
             const transaction = JSON.parse(browserMsg)
             if (!transaction) {
-                setRenderMode("debug-end")
+                setRenderMode("simulation-failed")
                 setHasLoaded(true)
             }
-            const getPreview = async (transaction: any) => {
+            const getTransaction = async (transaction: any) => {
                 await dataService.postTransactionSimulation(transaction)
                     .then(res => {
                         recordUpdate(id, res, "simulate").then((res) => { console.log(res) })
                         res.gasPrice = gasPrice
                         res.to = transaction.to
-                        settransactionResultState(res)
+                        setTransactionResult(res)
                         if (res.changeType === 'APPROVE') setRenderMode('transaction-assets-approval')
                         else setRenderMode('transaction-assets-exchange')
                         setHasLoaded(true)
                     })
                     .catch((err) => {
                         console.log('[Main.tsx]: Simulation Failed because', err.message)
-                        setRenderMode("debug-end")
+                        setRenderMode("simulation-failed")
                         setHasLoaded(true)
                     })
-                delete transaction.maxFeePerGas
-                delete transaction.maxPriorityFeePerGas
             }
-            getPreview(transaction)
+            getTransaction(transaction)
         }
         else if (mode === 'signature-712') {
             const signature = JSON.parse(browserMsg)
@@ -70,21 +68,20 @@ const Main = (props: Props) => {
                     await dataService.postSignature({ type, payload }, "signature")
                         .then(res => {
                             console.log("[Main.tsx] -- Signature Success", res)
-                            // recordUpdate(id, res, "signature").then((res)=>{console.log(res)})
-                            res.to = signatureAddress
                             if (res === null) {
-                                setSignatureResultState(res)
+                                setSignatureResult(res)
                                 setRenderMode('signature-move-assets')
                                 setHasLoaded(true)
                             } else {
-                                setSignatureResultState(res)
+                                res.to = signatureAddress
+                                setSignatureResult(res)
                                 setRenderMode('signature-712')
                                 setHasLoaded(true)
                             }
                         })
                         .catch((err) => {
                             console.log('[Main.tsx] -- Signature Failed because', err.message)
-                            setRenderMode("debug-end")
+                            setRenderMode("simulation-failed")
                             setHasLoaded(true)
                         })
                 }
@@ -150,15 +147,6 @@ const Main = (props: Props) => {
                     </div>
                 )
             }
-            case 'transaction-not-configured': {
-                return (
-                    <div>
-                        <MainHeader contractAddress={transactionResult.to} userAddress={userAddress}></MainHeader>
-                        <SimulationError />
-                        <Footer onAccept={accept} onReject={reject} />
-                    </div>
-                )
-            }
             case 'signature-no-risk-safe': {
                 return (
                     <div>
@@ -187,16 +175,6 @@ const Main = (props: Props) => {
                     </div>
                 )
             }
-            case 'signature-token-approval': {
-                return (
-                    <div>
-                        <MainHeader contractAddress={transactionResult.to} userAddress={userAddress}></MainHeader>
-                        <ContractInfo mode={renderMode} transaction={transactionResult.to} />
-                        <Transfer mode={mode} transaction={transactionResult} />
-                        <Footer onAccept={accept} onReject={reject} />
-                    </div>
-                )
-            }
             case 'signature-move-assets': {
                 return (
                     <div>
@@ -215,7 +193,7 @@ const Main = (props: Props) => {
                     </div>
                 )
             }
-            case 'debug-end': {
+            case 'simulation-failed': {
                 return (
                     <div>
                         <MainHeader contractAddress={transactionResult.to} userAddress={userAddress}></MainHeader>
