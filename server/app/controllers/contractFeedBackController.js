@@ -11,11 +11,10 @@ exports.reportFeedback = async (req, res) => {
     if (!errors.isEmpty()) {
         return res.status(422).json({ errors: errors.array() });
     }
-    
     const report = {
         Provider: req.body.Provider,
         ReportedContract: req.body.Address,
-        CategoryTag: req.body.Category,
+        isMalicious: req.body.isMalicious,
         NameTag: req.body.Name,
         Description: req.body.Description,
         FeatureTagOne: req.body.Tag[0],
@@ -23,13 +22,12 @@ exports.reportFeedback = async (req, res) => {
         FeatureTagThree: req.body.Tag[2]
     };
   
-
     ContractFeedBack.create(report)
     .then(data => {
         const report = {
             "Provider": data.Provider,
             "Address" : data.ReportedContract,
-            "Category" : data.CategoryTag,
+            "isMalicious" : data.isMalicious,
             "Name": data.NameTag,
             "Description": data.Description,
             "Tag":[
@@ -41,6 +39,7 @@ exports.reportFeedback = async (req, res) => {
         res.status(201).send(report)
     })
     .catch(err => {
+        console.log('[contractFeedBackController.js]: ', err)
         res.status(500).send({
         message:
             err.message || "Create failed"
@@ -54,7 +53,7 @@ exports.getFeedback = async (req, res) => {
     if(contract){
         const report = {
             "Address" : contract.ReportedContract,
-            "Category" : contract.CategoryTag,
+            "isMalicous" : contract.isMalicous,
             "Name": contract.NameTag,
             "Tag":[
                 contract.FeatureTagOne,

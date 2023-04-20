@@ -12,9 +12,9 @@ interface Props {
 
 const ContractInfo = (props: Props) => {
     const { mode, transaction } = props;
+    console.log('[ContractInfo.tsx]: ', transaction)
     let contractAddress = ''
-    if(mode === 'transaction-assets-exchange') { contractAddress = transaction }
-    else  { contractAddress = transaction.approve.contractAddress}
+    contractAddress = transaction
     
     const contractInfo = {
         contractName: undefined,
@@ -50,9 +50,9 @@ const ContractInfo = (props: Props) => {
                         </IconButton>
                     </div>
             }
-            <div id="contractText"> Contract &nbsp; ({truncatedAddress})
-                <IconButton href={contractLink} target="_blank">
-                    <LinkIcon sx={{ fontSize: 18, paddingBottom: 0.3 }} />
+            <div id="contractText"> Contract（{truncatedAddress}）
+                <IconButton sx={{ padding: 0 }} href={contractLink} target="_blank">
+                    <LinkIcon sx={{ fontSize: 20, paddingBottom: '3px' }} />
                 </IconButton>
             </div>
         </div>

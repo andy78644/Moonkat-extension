@@ -157,13 +157,17 @@ const proxyEthereumProvider = async (ethereumProvider: any, name: string) => {
           signMethod: request?.method,
           text: "",
           domain:{},
-          signAddress: userAddress
+          signAddress: userAddress,
+          payLoad:{}
         }
         console.log('signTypedDatav4 Website Request: ', request)
         let payLoad = JSON.parse(request.params[1])
         console.log('Payload: ', payLoad)
         signatureData.domain = payLoad.domain
-        signatureData.text = JSON.stringify(payLoad.message)
+        //signatureData.text = JSON.stringify(payLoad.message)
+        //signatureData = JSON.stringify(payLoad);
+        //payLoad.message.tree = JSON.parse()
+        signatureData.payLoad = payLoad
         console.log('NeededData: ', signatureData)
         const isOk = await sendAndAwaitResponseFromStream(stream, { signatureData, userAddress});
         if (!isOk) {
@@ -186,6 +190,8 @@ const proxyEthereumProvider = async (ethereumProvider: any, name: string) => {
   });
 
   (window as any).ethereum.request = requestProxy;
+  (window as any).ethereum.send = requestProxy;
+  (window as any).ethereum.sendAsync = requestProxy;
 
 };
 

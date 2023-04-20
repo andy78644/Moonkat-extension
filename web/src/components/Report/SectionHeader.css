@@ -1,0 +1,23 @@
+#reportSectionHeader {
+    display: flex;
+    flex-direction: row;
+    vertical-align: middle;
+    align-items: center;
+    margin: 16px;
+    margin-bottom: 8px;
+    width: calc(100% - 32px);
+    min-height: 24px;
+}
+
+#reportSectionImage {
+    vertical-align: middle;
+    align-items: center;
+}
+
+#reportSectionContent {
+    margin-left: 8px;
+    font-size: 16px;
+    vertical-align: middle;
+    align-items: center;
+    line-height: 120%;
+}

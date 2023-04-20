@@ -10,16 +10,23 @@
 
 @font-face {
     font-family: Lato-thin;
-    src: url(../../assets/Lato/Lato-Light.ttf);
+    src: url(../../assets/Lato/Lato-thin.ttf);
+}
+
+@font-face {
+    font-family: Lato-bold;
+    src: url(../../assets/Lato/Lato-Bold.ttf);
 }
 
 html, body {
     height: 100%;
     min-height: 700px;
+    margin: 0;
 }
 
 #root {
-    height: 120%;
+    padding: 70px 0px;
+    min-height: 100%;
     color: #434343;
     background: linear-gradient(180deg, #D2C9AA 0%, rgba(239, 232, 219, 0.75) 48.96%, #D2C9AA 100%);
     box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.25);
@@ -29,9 +36,4 @@ html, body {
 html::-webkit-scrollbar {
     overflow: hidden;
     width: 0px;
-}
-
-hr {
-    color: #E6E0D3;
-    padding-bottom: 8px;
 }

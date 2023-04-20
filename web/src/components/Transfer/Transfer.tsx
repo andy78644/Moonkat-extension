@@ -1,9 +1,9 @@
-import React,{useState} from 'react';
-import TransferHeader from './TransferHeader';
-import AssetsIn from './AssetsIn';
-import AssetsOut from './AssetsOut';
-import AssetsApprove from './AssetsApprove';
-import './Transfer.css';
+import React from 'react'
+import In from './Assets/In'
+import Out from './Assets/Out'
+import Approve from './Assets/Approve'
+import TransferHeader from './TransferHeader'
+import { mockAssetsIn, nonCollapseAssetsIn, mockAssetsOut, nonCollapseAssetsOut } from './Assets/mockAssets'
 
 interface Props {
     mode: any;
@@ -11,84 +11,22 @@ interface Props {
 }
 
 const Transfer =  (props: Props) => {
+
     const {mode, transaction} = props;
-    console.log('transaction: ',transaction)
-    const getAssetsSendInfo = {
-        contractType: 'ERC-20',
-        //todo: multiple asset
-        sendTokens: 
-            //{
-            //     amount: ,
-            //     type: 'NATIVE/ERC20/ERC1155',
-            //     symbol: 'ETH',
-            //     tokenURL: 'https://static.alchemyapi.io/images/network-assets/eth.png',
-            //     osVerified: ''
-            //     
-            // }
-            transaction.out,
-        NFTCategoryName: '',
-        gas: transaction.gas,
-        gasPrice: transaction.gasPrice
-    }
+    let {out, approve, gas, gasPrice} = transaction
 
-    const getAssetsReceiveInfo = {
-        contractType: 'NFT',
-        sendTokens:
-            //{
-            //     amount: ,
-            //     type: 'NATIVE/ERC20/ERC1155',
-            //     symbol: 'ETH',
-            //     tokenURL: 'https://static.alchemyapi.io/images/network-assets/eth.png',
-            //     osVerified: ''
-            //     
-            // }
-            transaction.in,
-        NFTCategoryName: "",
-        gas: 0,
-        gasPrice: transaction.gasPrice
-    }
+    // mock data
+    // transaction.in = mockAssetsIn
+    // out = mockAssetsOut
 
-    const getAssetsApproveInfo = {
-        contractType: 'NFT',
-        sendTokens: transaction.approve,
-        NFTCategoryName: "",
-        gas: 0,
-        gasPrice: transaction.gasPrice
-    }
-
-    const renderCurrentSelection = (mode: string | null) => {
-        switch (mode) {
-            case 'transaction-assets-exchange': {
-                return (
-                    <>
-                        <TransferHeader mode={mode}></TransferHeader>
-                        <AssetsOut {...getAssetsSendInfo} />
-                        <AssetsIn {...getAssetsReceiveInfo} />
-                    </>
-                )
-            }
-            case 'transaction-assets-approval': {
-                return (
-                    <>
-                        <TransferHeader mode={mode}></TransferHeader>
-                        <AssetsOut {...getAssetsSendInfo} />
-                        <AssetsApprove {...getAssetsApproveInfo} />
-                    </>
-                )
-            }
-            default: {
-                return (
-                    <>
-                        Not designed.
-                    </>
-                )
-            }
-        }
-    }
-
-    return (<div>
-        {renderCurrentSelection(mode)}
-    </div>)
+    return (
+        <>
+            <TransferHeader mode={mode}></TransferHeader>
+            {out || gas ? <Out mode={mode} assetsOut={out} gas={gas} gasPrice={gasPrice}/> : null}
+            {transaction.in ? <In assetsIn={transaction.in}/> : null}
+            {approve ? <Approve assetsApprove={approve}/> : null}
+        </>
+    )
 };
 
 export default Transfer;

@@ -2,7 +2,7 @@
     "manifest_version": 3,
 
     "name":"Moonkat",
-    "description":"Moonkat",
+    "description":"Stay safe and savvy in the Web3 world with Moonkat. Our extension makes on-chain activities easy to understand and helps you avoid scams.",
 
     "__chrome__host_permissions": ["<all_urls>"],
 
