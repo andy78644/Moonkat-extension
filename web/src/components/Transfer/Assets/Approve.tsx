@@ -1,43 +1,51 @@
 import React from "react"
-import { Component } from "./Component/Component";
-import { createTheme, ThemeProvider } from '@mui/material/styles';
 
-declare module '@mui/material/styles' {
-    interface Theme {
-        status: {
-            danger: string
-        }
-    }
-    // allow configuration using `createTheme`
-    interface ThemeOptions {
-        status?: {
-            danger?: string
-        }
-    }
-}
+import Header from './Component/Header'
+import CollectionName from "./Component/CollectionName"
+import Withdraw from "./Component/Withdraw"
+
+import List from '@mui/material/List'
+
+import { defaultAssetsValue } from "./DefaultValue"
+
+
 interface Props {
-    assetsApprove: Array<any>
-    assetsOut: Array<any>
-    gas: string
-    gasPrice: string
+    assetsApprove: any
 }
 
-const theme = createTheme({
-    palette: {
-        secondary: {
-            main: '#B8463D',
-        }
-    },
-});
+const theme = {
+    color: "#B8463D",
+    mode: "Assets Approve",
+    verbForPopOver: "approve",
+}
+
+// const antiCollectionNameList: Array<string> = ["ERC20", "NATIVE"]
 
 const Approve = (props: Props) => {
-    const { assetsApprove, assetsOut, gas, gasPrice } = props
-    const gasFee = parseInt(gas, 16) * parseInt(gasPrice) * 10 ** (-9)
+    const { assetsApprove } = props
     return (
-        <ThemeProvider theme={theme}>
-            <Component sendTokens={assetsOut} gasFee={gasFee} mode="Assets Send" />
-            <Component sendTokens={assetsApprove} gasFee={gasFee} mode="Assets Approve" />
-        </ThemeProvider>
+        <>
+            <div className="assetsComponent">
+                <List sx={{ width: '100%', bgcolor: '#FFF8EA', borderRadius: 8 }} component="nav">
+                    <Header
+                        mode={theme.mode}
+                        defaultExpand={false}
+                        expand={false}
+                        setExpand={() => { }}
+                        verbForPopOver={theme.verbForPopOver}
+                    />
+                    <CollectionName
+                        osVerified={assetsApprove.osVerified ?? defaultAssetsValue.osVerified}
+                        collectionName={assetsApprove.collectionName ?? defaultAssetsValue.collectionName}
+                    />
+                    <Withdraw
+                        color={theme.color}
+                        symbol={assetsApprove.symbol ?? defaultAssetsValue.symbol}
+                        imgURL={assetsApprove.collectionIconUrl ?? defaultAssetsValue.collectionIconUrl}
+                    />
+                </List>
+            </div>
+        </>
     )
 };
 

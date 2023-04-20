@@ -30,6 +30,11 @@
     padding: 15px 0px 15px 16px;
 }
 
+a {
+    color: #434343;
+    text-decoration: none;
+}
+
 #menu {
     order: 2;
     margin-left: auto;
@@ -39,4 +44,6 @@
 
 .mainHeaderHorizontalLine {
     padding: 0px;
+    margin: 0px;
+    border: 1px solid #DFD8CA;
 }
