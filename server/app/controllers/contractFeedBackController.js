@@ -39,6 +39,7 @@ exports.reportFeedback = async (req, res) => {
         res.status(201).send(report)
     })
     .catch(err => {
+        console.log('[contractFeedBackController.js]: ', err)
         res.status(500).send({
         message:
             err.message || "Create failed"
